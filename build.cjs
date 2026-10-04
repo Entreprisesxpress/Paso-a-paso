@@ -13,10 +13,13 @@ const head = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script src="config.js"></script>
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head><body>`;
 const tail = `<script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script></body></html>`;
 fs.writeFileSync(__dirname + '/index.html', head + src + tail);
+// config.js : adresse et clé publique du projet Supabase (ligue entre amis). Jamais écrasé s'il existe.
+if (!fs.existsSync(__dirname + '/config.js')) fs.writeFileSync(__dirname + '/config.js', '// Ligue entre amis : remplir avec l\'adresse et la clé « anon » du projet Supabase.\nwindow.PASO_CONFIG = null;\n');
 fs.writeFileSync(__dirname + '/manifest.webmanifest', JSON.stringify({
   name: 'Paso a Paso', short_name: 'Paso a Paso', description: "Espagnol d'Amérique latine pour le chantier, le voyage et le quotidien.",
   lang: 'fr', start_url: './', scope: './', display: 'standalone', orientation: 'portrait',
@@ -26,7 +29,7 @@ fs.writeFileSync(__dirname + '/manifest.webmanifest', JSON.stringify({
 }, null, 2));
 fs.writeFileSync(__dirname + '/sw.js', `// Paso a Paso : fonctionne hors ligne. L'app se met à jour en arrière-plan à chaque ouverture avec réseau.
 const CACHE = 'paso-${VERSION}';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {

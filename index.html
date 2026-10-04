@@ -9,6 +9,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script src="config.js"></script>
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head><body><title>Paso a Paso</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -410,6 +411,21 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .st-q b{font-family:var(--font-display);font-size:19px;color:var(--blue)}
 .st-q .opt{font-size:16px;padding:12px 14px}
 .st-q.answered .opt:not(.right){display:none}
+.league{margin-top:12px}
+.lg-row{display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding-block:9px}
+.lg-row + .lg-row{border-top:2px solid var(--line)}
+.lg-row .rk{font-family:var(--font-display);font-weight:800;font-size:18px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.lg-row .rk.top{color:var(--sun-deep)}
+.lg-row b{display:block;font-weight:800;overflow-wrap:anywhere}
+.lg-row small{color:var(--muted);font-weight:700;font-size:12px}
+.lg-row .val{font-family:var(--font-display);font-weight:800;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg-row.me{background:var(--blue-soft);border-radius:12px;padding-inline:8px;margin-inline:-8px}
+.lg-row .btn{padding:6px 10px;font-size:12px}
+.incoming{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding-block:8px}
+.incoming + .incoming{border-top:2px solid var(--line)}
+.incoming b{font-weight:800}
+.authform{display:grid;gap:10px;text-align:left}
+.authform label{display:grid;gap:4px;font-weight:800;font-size:14px}
 .xpfloat{position:fixed;right:20px;bottom:150px;z-index:30;font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--sun-deep);animation:floatup 1.2s ease-out forwards;pointer-events:none}
 @keyframes floatup{to{transform:translateY(-60px);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -4466,7 +4482,7 @@ function tabsBar() {
     <button class="tab${tab === 'quests' ? ' on' : ''}" data-tab="quests">${ic('target')}Défis${n ? '<span class="dot"></span>' : ''}</button>
     <button class="tab${tab === 'me' ? ' on' : ''}" data-tab="me">${ic('crown')}Profil</button></div>`;
 }
-document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { tab = b.dataset.tab; SFX.tap(); render(); window.scrollTo(0, 0); } });
+document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { tab = b.dataset.tab; SFX.tap(); render(); window.scrollTo(0, 0); if (tab === 'quests') loadSocial(); } });
 function render() {
   tabsBar();
   const body = tab === 'path' ? pathView() : tab === 'tutor' ? tutorView() : tab === 'stories' ? storiesView() : tab === 'quests' ? questsView() : meView();
@@ -4523,7 +4539,7 @@ function pathView() {
 }
 function questsView() {
   const t = T(), qs = todaysQuests();
-  let h = friendsCard() + `<h2 class="section-title">Défis du jour</h2><div class="card">`;
+  let h = leagueView() + friendsCard() + `<h2 class="section-title">Défis du jour</h2><div class="card">`;
   qs.forEach(q => {
     const v = Math.min(q.n, t[q.k] || 0), claimed = t.claimed.includes(q.id), done = v >= q.n;
     h += `<div class="quest${claimed ? ' claimed' : ''}"><div class="qicon">${ic(q.icon)}</div>
@@ -4584,8 +4600,9 @@ function meView() {
       <div class="row"><span style="font-weight:700">Voix plus lente</span><button class="switch${S.slow ? ' on' : ''}" id="sw-slow" aria-pressed="${S.slow}" aria-label="Voix plus lente"></button></div>
       <div class="row"><span style="font-weight:700">Effets sonores</span><button class="switch${S.sound ? ' on' : ''}" id="sw-sound" aria-pressed="${S.sound}" aria-label="Effets sonores"></button></div>
       <div class="row"><span style="font-weight:700">Transférer ma progression<br><small style="color:var(--muted)">Entre l'app du téléphone et la version Claude</small></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn small line" id="export">Copier</button><button class="btn small line" id="import">Coller</button></span></div>
+      ${SOC.session ? `<div class="row"><span style="font-weight:700">Compte<br><small style="color:var(--muted)">${esc(SOC.name || '')} · ${esc(SOC.email || '')}</small></span><button class="btn small line" id="logout">Se déconnecter</button></div>` : ''}
       <div class="row"><span style="font-weight:700">Progression</span><button class="btn small line" id="reset">${resetArmed ? 'Confirmer : tout effacer' : 'Réinitialiser'}</button></div>
-    </div><p style="color:var(--muted);font-size:13px;font-weight:700;margin-top:12px">Pas de pub, pas de vies, pas de limite. ${cloudState === 'cloud' ? 'Ta progression est sauvegardée dans ton compte Claude : elle te suit sur ton téléphone et ton ordinateur.' : cloudState === 'error' ? 'La sauvegarde en ligne a échoué ; ta progression reste gardée dans ce navigateur.' : 'Ta progression est gardée dans ce navigateur.'}</p>`;
+    </div><p style="color:var(--muted);font-size:13px;font-weight:700;margin-top:12px">Pas de pub, pas de vies, pas de limite. ${SOC.session ? `Connecté : ${esc(SOC.name || '')}. Ta progression est sauvegardée dans ton compte Paso a Paso.` : cloudState === 'cloud' ? 'Ta progression est sauvegardée dans ton compte Claude : elle te suit sur ton téléphone et ton ordinateur.' : cloudState === 'error' ? 'La sauvegarde en ligne a échoué ; ta progression reste gardée dans ce navigateur.' : 'Ta progression est gardée dans ce navigateur.'}</p>`;
   return h;
 }
 let resetArmed = false;
@@ -4596,6 +4613,7 @@ function bindHome() {
   H.querySelectorAll('[data-exam]').forEach(b => b.onclick = () => examPrompt(U(b.dataset.exam)));
   const ga = $('#go-arcade'); if (ga) ga.onclick = () => openArcade();
   H.querySelectorAll('[data-story]').forEach(b => b.onclick = () => openStory(STORIES.find(x => x.id === b.dataset.story)));
+  bindLeague(H);
   H.querySelectorAll('[data-invite]').forEach(b => b.onclick = inviteModal);
   H.querySelectorAll('[data-challenge-friend]').forEach(b => b.onclick = () => challengeModal(S.arcadeBest || 0));
   const cg = $('#challenge-go'); if (cg) cg.onclick = () => openArcade(S.challenge);
@@ -4648,6 +4666,7 @@ function bindHome() {
       } catch (e) { $('#code-err').textContent = "Ce code n'est pas valide. Recopie-le au complet, du début à la fin."; }
     };
   };
+  const lo = $('#logout'); if (lo) lo.onclick = logout;
   const rs = $('#reset'); if (rs) rs.onclick = () => {
     if (!resetArmed) { resetArmed = true; render(); setTimeout(() => { resetArmed = false; if (!$('#home').hidden && tab === 'me') render(); }, 4000); return; }
     resetArmed = false; S = fresh(); save(); tab = 'path'; render();
@@ -5030,6 +5049,7 @@ function arcadeEnd() {
   S.stats.bestCombo = Math.max(S.stats.bestCombo, a.best);
   const today = dayKey();
   if (S.lastDay !== today) { S.streak = S.lastDay === yesterday() ? S.streak + 1 : 1; S.lastDay = today; }
+  if (a.target && a.target.cid) answerChallenge(a.target.cid, a.score);
   if (a.target && a.score > a.target.score) { S.stats.challengesWon = (S.stats.challengesWon || 0) + 1; S.challenge = null; }
   const nb = checkBadges(); save();
   const acc = a.answered ? Math.round(a.right / a.answered * 100) : 0;
@@ -5368,6 +5388,167 @@ function readInviteParams() {
   if (changed) { saveLocal(); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
 }
 
+/* ===================== LIGUE ENTRE AMIS (comptes Supabase) =====================
+   Active seulement dans l'app publiée (pas dans le cadre Claude, qui bloque les appels
+   réseau) et seulement si config.js fournit l'adresse du projet et sa clé publique.
+   La clé « anon » est publique par conception : ce sont les règles RLS de
+   supabase/schema.sql qui protègent les données. */
+const SUPA = (!framed && window.PASO_CONFIG && window.PASO_CONFIG.url && window.PASO_CONFIG.key) ? window.PASO_CONFIG : null;
+const SESS_KEY = 'pasoapaso.session';
+const SOC = { session: null, name: '', email: '', board: [], mode: 'week', incoming: [], sent: [], loadedAt: 0, err: '' };
+function weekStart(d) { d = new Date(d || Date.now()); const k = (d.getDay() + 6) % 7; d.setDate(d.getDate() - k); return dayKey(d); }
+function weekXp() { const ws = parseDay(weekStart()); return Object.entries(S.hist || {}).filter(([k]) => parseDay(k) >= ws).reduce((a, [, v]) => a + v, 0); }
+async function supaAuth(path, body) {
+  const r = await fetch(SUPA.url + '/auth/v1/' + path, { method: 'POST', headers: { apikey: SUPA.key, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw j;
+  return j;
+}
+function setSession(j) {
+  SOC.session = { access_token: j.access_token, refresh_token: j.refresh_token, uid: j.user && j.user.id, exp: Date.now() + (j.expires_in || 3600) * 1000 };
+  SOC.email = (j.user && j.user.email) || SOC.email;
+  try { localStorage.setItem(SESS_KEY, JSON.stringify({ ...SOC.session, email: SOC.email })); } catch (e) {}
+}
+async function api(path, opts, retried) {
+  opts = opts || {};
+  if (SOC.session.exp - Date.now() < 60000) setSession(await supaAuth('token?grant_type=refresh_token', { refresh_token: SOC.session.refresh_token }));
+  const r = await fetch(SUPA.url + '/rest/v1/' + path, { ...opts, headers: { apikey: SUPA.key, Authorization: 'Bearer ' + SOC.session.access_token, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
+  if (r.status === 401 && !retried) { setSession(await supaAuth('token?grant_type=refresh_token', { refresh_token: SOC.session.refresh_token })); return api(path, opts, true); }
+  if (!r.ok) throw new Error(r.status + ' ' + (await r.text()));
+  const t = await r.text(); return t ? JSON.parse(t) : null;
+}
+const upsert = (table, row) => api(table, { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(row) });
+function profileRow() {
+  return { id: SOC.session.uid, name: (SOC.name || S.name || 'Joueur').slice(0, 24), xp: S.xp, level: levelInfo(S.xp).lv, streak: liveStreak(),
+    lessons: S.stats.lessons, arcade_best: S.arcadeBest || 0, week_xp: weekXp(), week_key: weekStart(), units_done: UNITS.filter(u => floorOf(u) >= FLOORS).length,
+    updated_at: new Date().toISOString() };
+}
+/* Même interface que la sauvegarde Claude : pushCloud() appelle CLOUD.set({updatedAt, json}) */
+const supaCloud = { async set(o) { await upsert('saves', { id: SOC.session.uid, data: { json: o.json }, updated_at: o.updatedAt }); await upsert('profiles', profileRow()); } };
+async function afterLogin() {
+  const uid = SOC.session.uid;
+  const prof = await api(`profiles?id=eq.${uid}&select=name`);
+  SOC.name = (prof && prof[0] && prof[0].name) || SOC.name || S.name || SOC.email.split('@')[0];
+  if (!S.name) S.name = SOC.name;
+  const rows = await api(`saves?id=eq.${uid}&select=data,updated_at`);
+  const r = rows && rows[0];
+  if (r && (r.updated_at || 0) > (S.updatedAt || 0) && r.data && r.data.json) {
+    const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow, track: S.track };
+    S = Object.assign(adopt(JSON.parse(r.data.json)), keep); checkStreak(); saveLocal();
+  }
+  CLOUD = supaCloud; cloudState = 'cloud';
+  if (!S.updatedAt) S.updatedAt = Date.now();
+  await pushCloud();
+}
+async function connectSocial() {
+  if (!SUPA) return;
+  let saved = null; try { saved = JSON.parse(localStorage.getItem(SESS_KEY)); } catch (e) {}
+  if (!saved || !saved.refresh_token) return;
+  SOC.session = saved; SOC.email = saved.email || '';
+  try { await afterLogin(); await loadSocial(true); }
+  catch (e) { SOC.err = "Connexion à la ligue impossible pour l'instant (réseau ?)."; }
+  if (!$('#home').hidden) render();
+}
+async function loadSocial(force) {
+  if (!SUPA || !SOC.session) return;
+  if (!force && Date.now() - SOC.loadedAt < 8000) return;
+  try {
+    const uid = SOC.session.uid;
+    const [board, inc, sent] = await Promise.all([
+      api('profiles?select=id,name,xp,level,streak,week_xp,week_key,arcade_best&order=xp.desc&limit=100'),
+      api(`challenges?to_id=eq.${uid}&status=eq.pending&select=id,from_name,score,created_at&order=created_at.desc&limit=10`),
+      api(`challenges?from_id=eq.${uid}&select=id,to_name,score,result,status,created_at&order=created_at.desc&limit=8`),
+    ]);
+    SOC.board = board || []; SOC.incoming = inc || []; SOC.sent = sent || []; SOC.loadedAt = Date.now(); SOC.err = '';
+  } catch (e) { SOC.err = 'La ligue ne répond pas pour le moment. Réessaie plus tard.'; }
+  if (!$('#home').hidden && tab === 'quests') render();
+}
+function leagueView() {
+  if (!SUPA) return '';
+  if (!SOC.session) return `<div class="card league"><div style="display:flex;gap:12px;align-items:center">${mascot('happy').replace('class="mascot"', 'class="mascot" style="width:64px;flex:none"')}
+    <div><b style="font-family:var(--font-display);font-size:20px;display:block;line-height:1.1">La ligue entre amis</b><small style="color:var(--muted);font-weight:700">Crée ton compte pour voir la progression de tes amis, vous lancer des défis et retrouver ta progression sur tous tes appareils.</small></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px"><button class="btn small teal" id="signup">Créer un compte</button><button class="btn small line" id="login">J'ai un compte</button></div></div>`;
+  const wk = weekStart(), me = SOC.session.uid;
+  const val = p => SOC.mode === 'week' ? (p.week_key === wk ? p.week_xp : 0) : p.xp;
+  const rows = SOC.board.slice().sort((a, b) => val(b) - val(a));
+  let h = `<h2 class="section-title">La ligue</h2>${SOC.err ? `<div class="notice">${esc(SOC.err)}</div>` : ''}`;
+  if (SOC.incoming.length) h += `<div class="card" style="background:var(--blue-soft);border-color:transparent"><b style="font-family:var(--font-display);font-size:18px;color:var(--blue)">Défis reçus</b>
+    ${SOC.incoming.map(c => `<div class="incoming"><span><b>${esc(c.from_name)}</b> te défie : bats <b>${c.score}</b> points</span><button class="btn small sun" data-accept="${c.id}">Relever</button></div>`).join('')}</div>`;
+  h += `<div class="card league"><div class="seg" style="grid-template-columns:1fr 1fr;margin-top:0"><button class="${SOC.mode === 'week' ? 'on' : ''}" data-lgmode="week">Cette semaine</button><button class="${SOC.mode === 'all' ? 'on' : ''}" data-lgmode="all">Depuis le début</button></div>`;
+  if (!rows.length) h += `<p style="color:var(--muted);font-weight:700">Personne encore. Invite tes amis avec le bouton ci-dessous !</p>`;
+  rows.forEach((p, i) => {
+    h += `<div class="lg-row${p.id === me ? ' me' : ''}"><span class="rk${i < 3 ? ' top' : ''}">${i + 1}</span>
+      <div style="min-width:0"><b>${esc(p.name)}${p.id === me ? ' (toi)' : ''}</b><small>Niveau ${p.level} · ${p.streak} j de suite · éclair ${p.arcade_best}</small></div>
+      <span class="val">${val(p)} XP</span>
+      ${p.id === me ? '<span></span>' : `<button class="btn blue" data-dare="${p.id}" data-dname="${esc(p.name)}" ${S.arcadeBest ? '' : 'disabled title="Joue un Défi éclair d\'abord"'}>Défier</button>`}</div>`;
+  });
+  h += `</div>`;
+  const results = SOC.sent.filter(c => c.status === 'done').slice(0, 5);
+  if (results.length) h += `<div class="card"><b style="font-family:var(--font-display);font-size:18px">Tes défis envoyés</b>${results.map(c => `<div class="incoming"><span><b>${esc(c.to_name)}</b> a fait ${c.result} contre tes ${c.score}</span><b style="color:var(--${c.result > c.score ? 'bad' : 'ok'})">${c.result > c.score ? 'Il gagne' : 'Tu gagnes'}</b></div>`).join('')}</div>`;
+  return h;
+}
+function bindLeague(H) {
+  const su = $('#signup'); if (su) su.onclick = () => authModal('signup');
+  const li = $('#login'); if (li) li.onclick = () => authModal('login');
+  H.querySelectorAll('[data-lgmode]').forEach(b => b.onclick = () => { SOC.mode = b.dataset.lgmode; render(); });
+  H.querySelectorAll('[data-accept]').forEach(b => b.onclick = () => {
+    const c = SOC.incoming.find(x => String(x.id) === b.dataset.accept);
+    if (c) openArcade({ score: c.score, from: c.from_name, cid: c.id });
+  });
+  H.querySelectorAll('[data-dare]').forEach(b => b.onclick = () => sendChallenge(b.dataset.dare, b.dataset.dname));
+}
+function authModal(mode) {
+  const up = mode === 'signup';
+  modal(`<h2>${up ? 'Créer ton compte' : 'Te connecter'}</h2><form class="authform" id="authform" novalidate>
+    ${up ? `<label>Ton prénom (visible par tes amis)<input class="namefield" id="auth-name" maxlength="24" autocomplete="given-name" value="${esc(S.name || '')}" required></label>` : ''}
+    <label>Courriel<input class="namefield" id="auth-email" type="email" autocomplete="email" inputmode="email" required></label>
+    <label>Mot de passe${up ? ' (6 caractères ou plus)' : ''}<input class="namefield" id="auth-pass" type="password" autocomplete="${up ? 'new-password' : 'current-password'}" minlength="6" required></label>
+    <button class="btn teal wide" id="auth-go" type="submit">${up ? 'Créer mon compte' : 'Me connecter'}</button>
+    <p id="auth-err" style="color:var(--bad);margin:0;font-weight:700"></p>
+    <p style="margin:0;color:var(--muted);font-size:13px">${up ? 'Ta progression actuelle sera gardée dans ton nouveau compte.' : 'Ta progression en ligne remplacera celle de cet appareil si elle est plus récente.'}</p></form>`, null, 'Annuler', 'list');
+  $('#authform').onsubmit = async e => {
+    e.preventDefault();
+    const name = up ? $('#auth-name').value.trim().slice(0, 24) : '', email = $('#auth-email').value.trim(), pass = $('#auth-pass').value;
+    const err = $('#auth-err'), go = $('#auth-go');
+    if (up && !name) return (err.textContent = 'Écris ton prénom : c\'est ce que tes amis verront.');
+    if (!/^\S+@\S+\.\S+$/.test(email)) return (err.textContent = 'Ce courriel ne semble pas valide.');
+    if (pass.length < 6) return (err.textContent = 'Le mot de passe doit avoir au moins 6 caractères.');
+    go.disabled = true; err.textContent = '';
+    try {
+      const j = up ? await supaAuth('signup', { email, password: pass, data: { name } }) : await supaAuth('token?grant_type=password', { email, password: pass });
+      if (!j.access_token) { err.style.color = 'var(--ok)'; err.textContent = 'Compte créé ! Confirme ton courriel avec le lien reçu, puis reviens te connecter.'; go.disabled = false; return; }
+      if (up) { SOC.name = name; S.name = name; }
+      setSession(j);
+      if (up) await upsert('profiles', profileRow());
+      await afterLogin(); await loadSocial(true);
+      $('#layer').innerHTML = ''; SFX.win(); render(); toast(up ? `Bienvenue dans la ligue, ${SOC.name} !` : `Re-bonjour, ${SOC.name} !`);
+    } catch (x) {
+      const m = String((x && (x.msg || x.error_description || x.message || x.error)) || '');
+      err.textContent = /already|registered|exists/i.test(m) ? 'Ce courriel a déjà un compte : choisis « J\'ai un compte ».'
+        : /invalid.*(login|credentials|grant)/i.test(m) ? 'Courriel ou mot de passe incorrect.'
+        : /confirm/i.test(m) ? 'Confirme d\'abord ton courriel avec le lien reçu.'
+        : 'Impossible de joindre la ligue. Vérifie ta connexion et réessaie.';
+      go.disabled = false;
+    }
+  };
+}
+function logout() {
+  SOC.session = null; SOC.board = []; SOC.incoming = []; SOC.sent = []; CLOUD = null; cloudState = 'local';
+  try { localStorage.removeItem(SESS_KEY); } catch (e) {}
+  render(); toast('Déconnecté. Ta progression reste sur cet appareil.');
+}
+async function sendChallenge(toId, toName) {
+  try {
+    await api('challenges', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ from_id: SOC.session.uid, to_id: toId, from_name: SOC.name, to_name: toName, score: S.arcadeBest || 0 }) });
+    SFX.coin(); toast(`Défi envoyé à ${toName} : ${S.arcadeBest} points à battre !`); countInvite();
+  } catch (e) { toast("Le défi n'est pas parti. Vérifie ta connexion."); }
+}
+async function answerChallenge(cid, score) {
+  if (!SOC.session) return;
+  SOC.incoming = SOC.incoming.filter(c => c.id !== cid);
+  try { await api(`challenges?id=eq.${cid}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ status: 'done', result: score }) }); SOC.loadedAt = 0; } catch (e) {}
+}
+
 /* ===================== LEXIQUE ===================== */
 function lexicon(u) {
   const rows = u.items.map(it => {
@@ -5552,6 +5733,7 @@ readInviteParams();
 render();
 connectCloud();
 connectSample();
+connectSocial();
 setInterval(() => { if (!$('#home').hidden && boostOn()) render(); }, 60000);
 </script>
 <script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script></body></html>
