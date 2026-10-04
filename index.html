@@ -420,8 +420,8 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .league{margin-top:12px}
 .lg-row{display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding-block:9px}
 .lg-row + .lg-row{border-top:2px solid var(--line)}
-.lg-row .rk{font-family:var(--font-display);font-weight:800;font-size:18px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
-.lg-row .rk.top{color:var(--sun-deep)}
+.lg-row .rk,.comp-row .rk{font-family:var(--font-display);font-weight:800;font-size:18px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.lg-row .rk.top,.comp-row .rk.top{color:var(--sun-deep)}
 .lg-row b{display:block;font-weight:800;overflow-wrap:anywhere}
 .lg-row small{color:var(--muted);font-weight:700;font-size:12px}
 .lg-row .val{font-family:var(--font-display);font-weight:800;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -525,6 +525,18 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .vf{background:none;border:0;padding:0;font:inherit;font-weight:800;color:var(--ink);text-align:left;cursor:pointer;font-size:16px}
 .vf:active{color:var(--blue)}
 .vk-none{color:var(--muted);font-weight:700;margin:10px 0}
+.section-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.section-row .section-title{margin-bottom:0}
+.comp-head{display:flex;align-items:center;gap:10px}
+.comp-head b{font-family:var(--font-display);font-size:18px;display:block;line-height:1.15}
+.comp-head small{color:var(--muted);font-weight:700}
+.comp-row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding-block:7px}
+.comp-row + .comp-row,.comp-head + .comp-row{border-top:2px solid var(--line)}
+.comp-row.me b{color:var(--blue)}
+.comp-row .val{font-family:var(--font-display);font-weight:800;color:var(--teal-deep)}
+.comp.over{opacity:.92}
+.comp-win{display:flex;align-items:center;gap:8px;background:var(--sun-soft);color:var(--sun-ink);border-radius:12px;padding:8px 10px;margin:10px 0 4px;font-weight:700}
+.comp-win svg{width:24px;height:24px;color:var(--sun-deep);flex:none}
 .fam-card{display:flex;align-items:center;gap:12px}
 .fam-card .art{width:48px;height:48px;border-radius:14px;background:var(--pink-soft,var(--blue-soft));color:var(--pink);display:grid;place-items:center;flex:none}
 .fam-card .art svg{width:28px;height:28px}
@@ -7638,7 +7650,7 @@ function pathView() {
 }
 function questsView() {
   const t = T(), qs = todaysQuests();
-  let h = leagueView() + familyCard() + friendsCard() + `<h2 class="section-title">Défis du jour</h2><div class="card">`;
+  let h = leagueView() + compsView() + familyCard() + friendsCard() + `<h2 class="section-title">Défis du jour</h2><div class="card">`;
   qs.forEach(q => {
     const v = Math.min(q.n, t[q.k] || 0), claimed = t.claimed.includes(q.id), done = v >= q.n;
     h += `<div class="quest${claimed ? ' claimed' : ''}"><div class="qicon">${ic(q.icon)}</div>
@@ -9673,11 +9685,12 @@ async function loadSocial(force) {
   try {
     const uid = SOC.session.uid;
     const [board, inc, sent] = await Promise.all([
-      api('profiles?select=id,name,xp,level,streak,week_xp,week_key,arcade_best&order=xp.desc&limit=100'),
+      api('profiles?select=id,name,xp,level,streak,week_xp,week_key,arcade_best,lessons,words&order=xp.desc&limit=100'),
       api(`challenges?to_id=eq.${uid}&status=eq.pending&select=id,from_name,score,created_at&order=created_at.desc&limit=10`),
       api(`challenges?from_id=eq.${uid}&select=id,to_name,score,result,status,created_at&order=created_at.desc&limit=8`),
     ]);
     SOC.board = board || []; SOC.incoming = inc || []; SOC.sent = sent || []; SOC.loadedAt = Date.now(); SOC.err = '';
+    try { await loadComps(); } catch (e) { /* tables absentes (schéma pas encore mis à jour) : la ligue marche quand même */ }
   } catch (e) { SOC.err = 'La ligue ne répond pas pour le moment. Réessaie plus tard.'; }
   if (!$('#home').hidden && tab === 'quests') render();
 }
@@ -9786,7 +9799,98 @@ function drawFamily() {
   $('#fam-invite').onclick = () => shareOut(inviteText(), APP_URL + (S.name ? '?ami=' + encodeURIComponent(S.name) : ''), countInvite);
   el.querySelectorAll('[data-famsort]').forEach(b => b.onclick = () => { FAM.sort = b.dataset.famsort; SFX.tap(); drawFamily(); });
 }
+/* ===================== COMPÉTITIONS ENTRE MEMBRES =====================
+   N'importe quel membre lance une compétition (le plus de leçons, d'XP ou de mots appris
+   en 3, 7 ou 14 jours). Les autres la rejoignent ; chacun part de son total au moment
+   d'entrer (start_value), donc seul ce qui est fait PENDANT la compétition compte. */
+const METRICS = { lessons: ['leçons', 'Le plus de leçons'], xp: ['XP', 'Le plus d\'XP'], words: ['mots', 'Le plus de mots appris'] };
+const COMP = { list: [], entries: [] };
+const unitOf = (m, n) => m === 'xp' ? 'XP' : METRICS[m][0].replace(/s$/, n === 1 ? '' : 's');
+const myMetric = m => m === 'xp' ? S.xp : m === 'lessons' ? (S.stats.lessons || 0) : Object.keys(S.progress || {}).length;
+function compValue(m, uid) {
+  if (SOC.session && uid === SOC.session.uid) return myMetric(m);
+  const p = SOC.board.find(x => x.id === uid); return p ? (p[m] || 0) : 0;
+}
+function compRanking(c) {
+  return COMP.entries.filter(e => e.comp_id === c.id)
+    .map(e => ({ ...e, score: Math.max(0, compValue(c.metric, e.user_id) - (e.start_value || 0)) }))
+    .sort((a, b) => b.score - a.score || String(a.joined_at).localeCompare(String(b.joined_at)));
+}
+function timeLeft(iso) {
+  const ms = new Date(iso).getTime() - Date.now(); if (ms <= 0) return 'Terminée';
+  const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.max(1, Math.floor(ms % 36e5 / 6e4));
+  return 'Se termine dans ' + (d ? `${d} j ${h} h` : h ? `${h} h ${m} min` : `${m} min`);
+}
+async function loadComps() {
+  const [list, entries] = await Promise.all([
+    api('competitions?select=*&order=created_at.desc&limit=30'),
+    api('comp_entries?select=*&order=joined_at.asc&limit=1000'),
+  ]);
+  const cutoff = Date.now() - 7 * 864e5; // les compétitions finies restent affichées une semaine
+  COMP.list = (list || []).filter(c => new Date(c.ends_at).getTime() > cutoff);
+  COMP.entries = entries || [];
+}
+function compsView() {
+  if (!SUPA || !SOC.session) return '';
+  const me = SOC.session.uid, now = Date.now();
+  const live = COMP.list.filter(c => new Date(c.ends_at).getTime() > now), done = COMP.list.filter(c => new Date(c.ends_at).getTime() <= now);
+  let h = `<div class="section-row"><h2 class="section-title">Compétitions</h2><button class="btn small pink" id="comp-new">Lancer</button></div>`;
+  if (!COMP.list.length) h += `<div class="card"><p style="margin:0;color:var(--muted);font-weight:700">Aucune compétition en cours. Lance la première : le plus de leçons cette semaine, le plus d'XP en 3 jours…</p></div>`;
+  live.concat(done).forEach(c => {
+    const rk = compRanking(c), joined = rk.some(e => e.user_id === me), over = new Date(c.ends_at).getTime() <= now, unit = METRICS[c.metric][0];
+    h += `<div class="card comp${over ? ' over' : ''}"><div class="comp-head"><div style="min-width:0;flex:1"><b>${esc(c.title)}</b>
+        <small>${over ? 'Terminée' : timeLeft(c.ends_at)} · lancée par ${esc(c.creator_name)} · ${rk.length} participant${rk.length > 1 ? 's' : ''}</small></div>
+        ${!over && !joined ? `<button class="btn small teal" data-comp-join="${c.id}">Rejoindre</button>` : ''}</div>`;
+    if (over && rk.length) h += `<div class="comp-win">${ic('crown')}<span><b>${esc(rk[0].name)}</b> gagne avec ${rk[0].score} ${unitOf(c.metric, rk[0].score)} !</span></div>`;
+    h += rk.slice(0, 8).map((e, i) => `<div class="comp-row${e.user_id === me ? ' me' : ''}"><span class="rk${i < 3 ? ' top' : ''}">${i + 1}</span><b>${esc(e.name)}${e.user_id === me ? ' (toi)' : ''}</b><span class="val">+${e.score} ${unitOf(c.metric, e.score)}</span></div>`).join('');
+    if (!rk.length) h += `<p style="margin:8px 0 0;color:var(--muted);font-weight:700">Personne encore.</p>`;
+    h += `</div>`;
+  });
+  return h;
+}
+function bindComps(H) {
+  const n = $('#comp-new'); if (n) n.onclick = newCompModal;
+  H.querySelectorAll('[data-comp-join]').forEach(b => b.onclick = () => joinComp(+b.dataset.compJoin));
+}
+async function joinComp(id) {
+  const c = COMP.list.find(x => x.id === id); if (!c) return;
+  try {
+    await api('comp_entries?on_conflict=comp_id,user_id', { method: 'POST', headers: { Prefer: 'resolution=ignore-duplicates,return=minimal' },
+      body: JSON.stringify({ comp_id: id, user_id: SOC.session.uid, name: (SOC.name || S.name || 'Joueur').slice(0, 24), start_value: myMetric(c.metric) }) });
+    await pushCloud(); SOC.loadedAt = 0; await loadSocial(true);
+    SFX.coin(); toast(`Tu es dans la compétition ! Tout ce que tu fais à partir de maintenant compte.`);
+  } catch (e) { toast("Impossible de rejoindre pour l'instant. Vérifie ta connexion."); }
+}
+function newCompModal() {
+  let metric = 'lessons', days = 7;
+  const title = () => `${METRICS[metric][1]} en ${days === 7 ? 'une semaine' : days + ' jours'}`;
+  const draw = () => `<span class="eyebrow" style="text-align:center">Nouvelle compétition</span><h2>Qui gagnera ?</h2>
+    <b>Ce qui compte</b><div class="seg" style="grid-template-columns:repeat(3,1fr)">${Object.entries(METRICS).map(([k, v]) => `<button type="button" class="${k === metric ? 'on' : ''}" data-cm="${k}">${v[0][0].toUpperCase() + v[0].slice(1)}</button>`).join('')}</div>
+    <b style="margin-top:6px">Durée</b><div class="seg" style="grid-template-columns:repeat(3,1fr)">${[3, 7, 14].map(d => `<button type="button" class="${d === days ? 'on' : ''}" data-cd="${d}">${d} jours</button>`).join('')}</div>
+    <label style="display:grid;gap:4px;font-weight:700;margin-top:6px">Nom (facultatif)<input class="namefield" id="comp-title" maxlength="60" placeholder="${esc(title())}"></label>
+    <p style="margin:0;color:var(--muted);font-size:14px;font-weight:700">Tous les membres de la ligue la verront et pourront la rejoindre. Seul ce qui est fait après l'inscription compte.</p>
+    <button class="btn pink wide" id="comp-go">Lancer la compétition</button>`;
+  modal(`<div id="comp-modal" style="display:grid;gap:8px">${draw()}</div>`, null, 'Annuler', 'list');
+  const bind = () => {
+    const box = $('#comp-modal');
+    box.querySelectorAll('[data-cm]').forEach(b => b.onclick = () => { metric = b.dataset.cm; const t = $('#comp-title').value; box.innerHTML = draw(); $('#comp-title').value = t; bind(); });
+    box.querySelectorAll('[data-cd]').forEach(b => b.onclick = () => { days = +b.dataset.cd; const t = $('#comp-title').value; box.innerHTML = draw(); $('#comp-title').value = t; bind(); });
+    $('#comp-go').onclick = async () => {
+      const go = $('#comp-go'); go.disabled = true;
+      try {
+        const rows = await api('competitions', { method: 'POST', headers: { Prefer: 'return=representation' }, body: JSON.stringify({
+          created_by: SOC.session.uid, creator_name: (SOC.name || S.name || 'Joueur').slice(0, 24), title: ($('#comp-title').value.trim() || title()).slice(0, 60),
+          metric, ends_at: new Date(Date.now() + days * 864e5).toISOString() }) });
+        const c = rows && rows[0]; $('#layer').innerHTML = '';
+        if (c) { COMP.list.unshift(c); await joinComp(c.id); }
+        render();
+      } catch (e) { go.disabled = false; toast("La compétition n'a pas pu être créée. Vérifie ta connexion."); }
+    };
+  };
+  bind();
+}
 function bindLeague(H) {
+  bindComps(H);
   const fm = $('#go-family'); if (fm) fm.onclick = openFamily;
   const su = $('#signup'); if (su) su.onclick = () => authModal('signup');
   const li = $('#login'); if (li) li.onclick = () => authModal('login');

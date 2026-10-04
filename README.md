@@ -32,4 +32,4 @@ La clé « anon » est publique par conception : les règles de sécurité (RLS)
 chacun ne modifie que son profil et ses défis, et que la sauvegarde complète reste privée.
 Tant que `config.js` vaut `null`, l'app fonctionne normalement, sans la ligue.
 
-Le tableau **Ma famille** (onglet Défis) lit la même table `profiles` : qui s'est inscrit et quand, qui a été actif aujourd'hui, les jours actifs de la semaine, les leçons, la série, les mots appris et l'unité en cours. Sur un projet déjà installé, relancer `supabase/schema.sql` ajoute les colonnes manquantes sans rien effacer.
+Le tableau **Ma famille** (onglet Défis) lit la même table `profiles` : qui s'est inscrit et quand, qui a été actif aujourd'hui, les jours actifs de la semaine, les leçons, la série, les mots appris et l'unité en cours. Les **compétitions** (onglet Défis) utilisent les tables `competitions` et `comp_entries` : un membre lance « le plus de leçons / d'XP / de mots en 3, 7 ou 14 jours », les autres la rejoignent, et seul ce qui est fait après l'inscription compte. Sur un projet déjà installé, relancer `supabase/schema.sql` ajoute les colonnes et les tables manquantes sans rien effacer.

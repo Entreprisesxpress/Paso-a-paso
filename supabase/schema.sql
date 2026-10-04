@@ -68,3 +68,38 @@ drop policy if exists "Envoyer un défi" on public.challenges;
 create policy "Envoyer un défi" on public.challenges for insert to authenticated with check (from_id = auth.uid() and to_id <> auth.uid());
 drop policy if exists "Répondre à un défi reçu" on public.challenges;
 create policy "Répondre à un défi reçu" on public.challenges for update to authenticated using (to_id = auth.uid()) with check (to_id = auth.uid());
+
+-- Compétitions entre membres (le plus de leçons, d'XP ou de mots en X jours)
+create table if not exists public.competitions (
+  id bigint generated always as identity primary key,
+  created_by uuid not null references auth.users on delete cascade,
+  creator_name text not null,
+  title text not null check (char_length(title) between 1 and 80),
+  metric text not null check (metric in ('xp', 'lessons', 'words')),
+  ends_at timestamptz not null,
+  created_at timestamptz not null default now()
+);
+alter table public.competitions enable row level security;
+drop policy if exists "Voir les compétitions" on public.competitions;
+create policy "Voir les compétitions" on public.competitions for select to authenticated using (true);
+drop policy if exists "Lancer une compétition" on public.competitions;
+create policy "Lancer une compétition" on public.competitions for insert to authenticated with check (created_by = auth.uid());
+drop policy if exists "Supprimer sa compétition" on public.competitions;
+create policy "Supprimer sa compétition" on public.competitions for delete to authenticated using (created_by = auth.uid());
+
+-- Inscriptions : chacun part de son total au moment d'entrer (start_value)
+create table if not exists public.comp_entries (
+  comp_id bigint not null references public.competitions on delete cascade,
+  user_id uuid not null references auth.users on delete cascade,
+  name text not null,
+  start_value int not null default 0,
+  joined_at timestamptz not null default now(),
+  primary key (comp_id, user_id)
+);
+alter table public.comp_entries enable row level security;
+drop policy if exists "Voir les participants" on public.comp_entries;
+create policy "Voir les participants" on public.comp_entries for select to authenticated using (true);
+drop policy if exists "Rejoindre une compétition" on public.comp_entries;
+create policy "Rejoindre une compétition" on public.comp_entries for insert to authenticated with check (user_id = auth.uid());
+drop policy if exists "Quitter une compétition" on public.comp_entries;
+create policy "Quitter une compétition" on public.comp_entries for delete to authenticated using (user_id = auth.uid());
