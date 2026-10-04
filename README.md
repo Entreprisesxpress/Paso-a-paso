@@ -31,3 +31,5 @@ window.PASO_CONFIG = { url: 'https://xxxx.supabase.co', key: 'eyJ…' };
 La clé « anon » est publique par conception : les règles de sécurité (RLS) du fichier SQL font que
 chacun ne modifie que son profil et ses défis, et que la sauvegarde complète reste privée.
 Tant que `config.js` vaut `null`, l'app fonctionne normalement, sans la ligue.
+
+Le tableau **Ma famille** (onglet Défis) lit la même table `profiles` : qui s'est inscrit et quand, qui a été actif aujourd'hui, les jours actifs de la semaine, les leçons, la série, les mots appris et l'unité en cours. Sur un projet déjà installé, relancer `supabase/schema.sql` ajoute les colonnes manquantes sans rien effacer.

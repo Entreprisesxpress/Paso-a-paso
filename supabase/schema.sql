@@ -13,11 +13,30 @@ create table if not exists public.profiles (
   week_xp int not null default 0,
   week_key text,
   units_done int not null default 0,
+  lessons_today int not null default 0,
+  today_key text,
+  last_day text,
+  week_days text,
+  words int not null default 0,
+  current_unit text,
+  created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+-- Tableau « Ma famille » : colonnes ajoutées après coup. Sans effet si elles existent déjà,
+-- donc on peut relancer tout ce fichier sans risque sur un projet déjà installé.
+alter table public.profiles add column if not exists lessons_today int not null default 0;
+alter table public.profiles add column if not exists today_key text;
+alter table public.profiles add column if not exists last_day text;
+alter table public.profiles add column if not exists week_days text;
+alter table public.profiles add column if not exists words int not null default 0;
+alter table public.profiles add column if not exists current_unit text;
+alter table public.profiles add column if not exists created_at timestamptz not null default now();
 alter table public.profiles enable row level security;
+drop policy if exists "Les joueurs connectés voient la ligue" on public.profiles;
 create policy "Les joueurs connectés voient la ligue" on public.profiles for select to authenticated using (true);
+drop policy if exists "Chacun crée son profil" on public.profiles;
 create policy "Chacun crée son profil" on public.profiles for insert to authenticated with check (id = auth.uid());
+drop policy if exists "Chacun modifie son profil" on public.profiles;
 create policy "Chacun modifie son profil" on public.profiles for update to authenticated using (id = auth.uid()) with check (id = auth.uid());
 
 -- Sauvegarde complète de la progression : privée, visible seulement par son propriétaire
@@ -27,6 +46,7 @@ create table if not exists public.saves (
   updated_at bigint not null default 0
 );
 alter table public.saves enable row level security;
+drop policy if exists "Sauvegarde privée" on public.saves;
 create policy "Sauvegarde privée" on public.saves for all to authenticated using (id = auth.uid()) with check (id = auth.uid());
 
 -- Défis entre amis au Défi éclair
@@ -42,6 +62,9 @@ create table if not exists public.challenges (
   created_at timestamptz not null default now()
 );
 alter table public.challenges enable row level security;
+drop policy if exists "Voir ses défis" on public.challenges;
 create policy "Voir ses défis" on public.challenges for select to authenticated using (auth.uid() in (from_id, to_id));
+drop policy if exists "Envoyer un défi" on public.challenges;
 create policy "Envoyer un défi" on public.challenges for insert to authenticated with check (from_id = auth.uid() and to_id <> auth.uid());
+drop policy if exists "Répondre à un défi reçu" on public.challenges;
 create policy "Répondre à un défi reçu" on public.challenges for update to authenticated using (to_id = auth.uid()) with check (to_id = auth.uid());

@@ -512,6 +512,38 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .vf{background:none;border:0;padding:0;font:inherit;font-weight:800;color:var(--ink);text-align:left;cursor:pointer;font-size:16px}
 .vf:active{color:var(--blue)}
 .vk-none{color:var(--muted);font-weight:700;margin:10px 0}
+.fam-card{display:flex;align-items:center;gap:12px}
+.fam-card .art{width:48px;height:48px;border-radius:14px;background:var(--pink-soft,var(--blue-soft));color:var(--pink);display:grid;place-items:center;flex:none}
+.fam-card .art svg{width:28px;height:28px}
+.fam-card .txt{flex:1;min-width:0}
+.fam-card b{font-family:var(--font-display);font-size:19px;display:block;line-height:1.1}
+.fam-card small{color:var(--muted);font-weight:700}
+.fam-card.off{opacity:.75}
+.fam-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.fam-sum > div{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:8px 6px;text-align:center;display:grid}
+.fam-sum b{font-family:var(--font-display);font-size:24px;line-height:1}
+.fam-sum small{color:var(--muted);font-weight:700;font-size:11px;line-height:1.2;margin-top:2px}
+.fam-row{background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;padding:12px 14px;margin-top:12px}
+.fam-row.me{border-color:var(--blue)}
+.fam-head{display:flex;align-items:center;gap:10px}
+.fam-head .av{width:42px;height:42px;border-radius:50%;background:var(--teal);color:var(--on);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:20px;flex:none}
+.fam-head b{font-family:var(--font-display);font-size:18px}
+.fam-head small{display:block;color:var(--muted);font-weight:700;font-size:13px}
+.fam-new{font-size:11px;font-weight:800;background:var(--sun);color:var(--sun-ink);border-radius:99px;padding:2px 8px;vertical-align:2px}
+.fam-pill{font-size:12px;font-weight:800;border-radius:99px;padding:4px 10px;white-space:nowrap;flex:none}
+.fam-pill.ok{background:var(--ok-bg);color:var(--ok-deep)}
+.fam-pill.sun{background:var(--sun-soft);color:var(--sun-deep)}
+.fam-pill.bad{background:var(--bad-bg,var(--sunk));color:var(--bad)}
+.fam-pill.muted{background:var(--sunk);color:var(--muted)}
+.fam-week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
+.fam-week span{text-align:center;font-weight:800;font-size:12px;padding:4px 0;border-radius:8px;background:var(--sunk);color:var(--muted)}
+.fam-week span.on{background:var(--ok);color:var(--on)}
+.fam-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.fam-stats > div{display:grid;text-align:center}
+.fam-stats b{font-family:var(--font-display);font-size:20px;line-height:1.1}
+.fam-stats small{color:var(--muted);font-weight:700;font-size:11px;line-height:1.2}
+.fam-unit{margin:10px 0 0;color:var(--muted);font-weight:700;font-size:14px}
+.fam-unit b{color:var(--ink)}
 .lbl-link{display:flex;align-items:center;gap:6px;margin:12px auto 0;background:none;border:0;color:var(--muted);font:inherit;font-weight:800;font-size:14px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .lbl-link svg{width:16px;height:16px}
 .lbl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
@@ -544,6 +576,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 <div class="wrap" id="audio" hidden></div>
 <div class="wrap" id="labels" hidden></div>
 <div class="wrap" id="cahier" hidden></div>
+<div class="wrap" id="famille" hidden></div>
 <div id="print-area" aria-hidden="true"></div>
 <div id="layer"></div>
 
@@ -7592,7 +7625,7 @@ function pathView() {
 }
 function questsView() {
   const t = T(), qs = todaysQuests();
-  let h = leagueView() + friendsCard() + `<h2 class="section-title">Défis du jour</h2><div class="card">`;
+  let h = leagueView() + familyCard() + friendsCard() + `<h2 class="section-title">Défis du jour</h2><div class="card">`;
   qs.forEach(q => {
     const v = Math.min(q.n, t[q.k] || 0), claimed = t.claimed.includes(q.id), done = v >= q.n;
     h += `<div class="quest${claimed ? ' claimed' : ''}"><div class="qicon">${ic(q.icon)}</div>
@@ -9594,7 +9627,8 @@ const upsert = (table, row) => api(table, { method: 'POST', headers: { Prefer: '
 function profileRow() {
   return { id: SOC.session.uid, name: (SOC.name || S.name || 'Joueur').slice(0, 24), xp: S.xp, level: levelInfo(S.xp).lv, streak: liveStreak(),
     lessons: S.stats.lessons, arcade_best: S.arcadeBest || 0, week_xp: weekXp(), week_key: weekStart(), units_done: UNITS.filter(u => floorOf(u) >= FLOORS).length,
-    updated_at: new Date().toISOString() };
+    lessons_today: T().lessons || 0, today_key: dayKey(), last_day: S.lastDay || null, week_days: weekDaysStr(),
+    words: Object.keys(S.progress || {}).length, current_unit: currentUnitTitle(), updated_at: new Date().toISOString() };
 }
 /* Même interface que la sauvegarde Claude : pushCloud() appelle CLOUD.set({updatedAt, json}) */
 const supaCloud = { async set(o) { await upsert('saves', { id: SOC.session.uid, data: { json: o.json }, updated_at: o.updatedAt }); await upsert('profiles', profileRow()); } };
@@ -9658,7 +9692,89 @@ function leagueView() {
   if (results.length) h += `<div class="card"><b style="font-family:var(--font-display);font-size:18px">Tes défis envoyés</b>${results.map(c => `<div class="incoming"><span><b>${esc(c.to_name)}</b> a fait ${c.result} contre tes ${c.score}</span><b style="color:var(--${c.result > c.score ? 'bad' : 'ok'})">${c.result > c.score ? 'Il gagne' : 'Tu gagnes'}</b></div>`).join('')}</div>`;
   return h;
 }
+/* ===================== TABLEAU DE LA FAMILLE =====================
+   Qui s'est inscrit, qui est actif, qui a fait ses leçons : une fiche par membre de la ligue.
+   Lit la table « profiles » (visible par tous les membres connectés, comme la ligue). */
+const FAM = { sort: 'recent', rows: [], loading: false, err: '' };
+function weekDaysStr() {
+  const ws = parseDay(weekStart());
+  return [0, 1, 2, 3, 4, 5, 6].map(k => { const d = new Date(ws); d.setDate(d.getDate() + k); return (S.hist || {})[dayKey(d)] > 0 ? '1' : '0'; }).join('');
+}
+function currentUnitTitle() {
+  const i = UNITS.findIndex((u, k) => unlocked(k) && floorOf(u) < FLOORS && (S.track === 'Base' ? u.tag === 'Base' : u.tag === S.track || u.tag === 'Base'));
+  const u = UNITS[i >= 0 ? i : UNITS.findIndex((x, k) => unlocked(k) && floorOf(x) < FLOORS)];
+  return u ? (u.es + ' · ' + u.fr).slice(0, 80) : 'Tout est terminé !';
+}
+function familyCard() {
+  if (!SUPA) return framed ? '' : `<div class="card fam-card off"><div class="art">${ic('user')}</div><div class="txt"><b>Ma famille</b><small>Le tableau de suivi s'ouvrira dès que la ligue sera activée.</small></div></div>`;
+  if (!SOC.session) return '';
+  const n = SOC.board.length;
+  return `<div class="card fam-card"><div class="art">${ic('user')}</div><div class="txt"><b>Ma famille</b><small>Qui s'est inscrit et qui fait ses leçons${n ? ` · ${n} membre${n > 1 ? 's' : ''}` : ''}</small></div><button class="btn small" id="go-family">Voir</button></div>`;
+}
+const daysSince = k => k ? Math.round((parseDay(dayKey()) - parseDay(k)) / 864e5) : Infinity;
+function famStatus(p) {
+  const d = daysSince(p.last_day);
+  if (d <= 0) return ['ok', 'Actif aujourd\'hui'];
+  if (d === 1) return ['sun', 'Actif hier'];
+  if (d === Infinity) return ['muted', 'Pas encore de leçon'];
+  return [d > 3 ? 'bad' : 'sun', `Inactif depuis ${d} jours`];
+}
+const fmtDate = iso => { try { return new Date(iso).toLocaleDateString('fr-CA', { day: 'numeric', month: 'long' }); } catch (e) { return ''; } };
+const joinedDays = iso => iso ? Math.floor((Date.now() - new Date(iso).getTime()) / 864e5) : Infinity;
+async function loadFamily() {
+  FAM.loading = true; FAM.err = ''; drawFamily();
+  try { FAM.rows = (await api('profiles?select=*&order=updated_at.desc&limit=200')) || []; }
+  catch (e) { FAM.err = 'Le tableau ne répond pas pour le moment. Vérifie ta connexion.'; }
+  FAM.loading = false; drawFamily();
+}
+function openFamily() {
+  $('#home').hidden = true; $('#tabs').hidden = true; $('#famille').hidden = false;
+  SFX.tap(); window.scrollTo(0, 0); loadFamily();
+}
+function drawFamily() {
+  const el = $('#famille'); if (!el || el.hidden) return;
+  const wk = weekStart(), today = dayKey(), me = SOC.session && SOC.session.uid;
+  const rows = FAM.rows.slice();
+  const actToday = rows.filter(p => daysSince(p.last_day) <= 0).length;
+  const actWeek = rows.filter(p => daysSince(p.last_day) < 7).length;
+  const fresh = rows.filter(p => joinedDays(p.created_at) < 7).length;
+  const key = { recent: p => -daysSince(p.last_day) * 1e6 + (p.week_key === wk ? p.week_xp : 0), joined: p => p.created_at ? new Date(p.created_at).getTime() : 0, week: p => p.week_key === wk ? p.week_xp : 0 }[FAM.sort];
+  rows.sort((a, b) => key(b) - key(a));
+  let h = `<div class="lesson-top"><button class="x" id="fam-close" aria-label="Fermer">${ic('close')}</button><b style="font-family:var(--font-display);font-size:20px;flex:1">Ma famille</b>
+      <button class="btn small line" id="fam-refresh" ${FAM.loading ? 'disabled' : ''}>${FAM.loading ? 'Chargement…' : 'Actualiser'}</button></div>
+    <div class="fam-sum"><div><b>${rows.length}</b><small>inscrits</small></div><div><b>${actToday}</b><small>actifs aujourd'hui</small></div><div><b>${actWeek}</b><small>actifs (7 jours)</small></div><div><b>${fresh}</b><small>nouveaux (7 jours)</small></div></div>
+    ${FAM.err ? `<div class="notice">${esc(FAM.err)}</div>` : ''}
+    <div class="seg" style="grid-template-columns:repeat(3,1fr);margin-top:12px">${[['recent', 'Activité'], ['joined', 'Inscription'], ['week', 'XP semaine']].map(([k, l]) => `<button class="${FAM.sort === k ? 'on' : ''}" data-famsort="${k}">${l}</button>`).join('')}</div>`;
+  if (!rows.length && !FAM.loading) h += `<p class="ch-sub">Personne encore. Envoie le lien de l'app à ta famille : chacun crée son compte dans l'onglet Défis.</p>`;
+  rows.forEach(p => {
+    const [cls, txt] = famStatus(p), days = p.week_key === wk ? String(p.week_days || '0000000').padEnd(7, '0') : '0000000';
+    const jd = joinedDays(p.created_at);
+    h += `<article class="fam-row${p.id === me ? ' me' : ''}">
+      <div class="fam-head"><div class="av">${esc((p.name || '?').slice(0, 1).toUpperCase())}</div>
+        <div style="min-width:0;flex:1"><b>${esc(p.name || 'Joueur')}${p.id === me ? ' (toi)' : ''}</b>${jd < 7 ? ' <span class="fam-new">Nouveau</span>' : ''}
+          <small>${p.created_at ? `Inscrit le ${fmtDate(p.created_at)}` : 'Inscrit'}</small></div>
+        <span class="fam-pill ${cls}">${txt}</span></div>
+      <div class="fam-week" aria-label="Jours actifs cette semaine">${'LMMJVSD'.split('').map((d, k) => `<span class="${days[k] === '1' ? 'on' : ''}">${d}</span>`).join('')}</div>
+      <div class="fam-stats">
+        <div><b>${p.today_key === today ? p.lessons_today || 0 : 0}</b><small>leçons aujourd'hui</small></div>
+        <div><b>${p.week_key === wk ? p.week_xp : 0}</b><small>XP cette semaine</small></div>
+        <div><b>${p.lessons || 0}</b><small>leçons en tout</small></div>
+        <div><b>${p.streak || 0}</b><small>jours de suite</small></div>
+        <div><b>${p.words || 0}</b><small>mots appris</small></div>
+        <div><b>${p.units_done || 0}</b><small>unités finies</small></div>
+      </div>
+      ${p.current_unit ? `<p class="fam-unit">En ce moment : <b>${esc(p.current_unit)}</b></p>` : ''}
+    </article>`;
+  });
+  h += `<button class="btn wide line" id="fam-invite" style="margin:16px 0 28px">Inviter un membre de la famille</button>`;
+  el.innerHTML = h;
+  $('#fam-close').onclick = () => { $('#famille').hidden = true; showHome(); };
+  $('#fam-refresh').onclick = loadFamily;
+  $('#fam-invite').onclick = () => shareOut(inviteText(), APP_URL + (S.name ? '?ami=' + encodeURIComponent(S.name) : ''), countInvite);
+  el.querySelectorAll('[data-famsort]').forEach(b => b.onclick = () => { FAM.sort = b.dataset.famsort; SFX.tap(); drawFamily(); });
+}
 function bindLeague(H) {
+  const fm = $('#go-family'); if (fm) fm.onclick = openFamily;
   const su = $('#signup'); if (su) su.onclick = () => authModal('signup');
   const li = $('#login'); if (li) li.onclick = () => authModal('login');
   H.querySelectorAll('[data-lgmode]').forEach(b => b.onclick = () => { SOC.mode = b.dataset.lgmode; render(); });
