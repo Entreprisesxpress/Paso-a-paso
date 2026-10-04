@@ -1,0 +1,1980 @@
+<title>Paso a Paso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Layout : jeu mobile en une colonne (max 560px). Barre d'état collée en haut, parcours en zigzag d'étapes rondes, onglets collés en bas. Palette : rose mexicain, turquoise et jaune casque de chantier. */
+:root{
+  --bg:#f7f5fb; --surface:#ffffff; --sunk:#efebf6; --ink:#221c35; --muted:#6c6582; --line:#e3ddee;
+  --pink:#e4007c; --pink-deep:#a6005a; --pink-soft:#fde2f0;
+  --teal:#00a99d; --teal-deep:#00786f; --teal-soft:#d4f3f0;
+  --sun:#ffb81c; --sun-deep:#d48a00; --sun-soft:#fff0cc; --sun-ink:#3d2600;
+  --blue:#3a72e0; --blue-deep:#2450a8; --blue-soft:#dfe8fb;
+  --ok:#14a26b; --ok-deep:#0b774d; --ok-bg:#d8f5e7;
+  --bad:#e0402e; --bad-deep:#a3281b; --bad-bg:#fde3df;
+  --lock:#dcd6e6; --lock-deep:#bdb5cc;
+  --on:#ffffff; --eye:#221c35;
+  --font-display:"Baloo 2","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
+  --font-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141022; --surface:#1f1933; --sunk:#2a2342; --ink:#f2eefa; --muted:#a69dbf; --line:#352d51;
+  --pink:#ff3d9e; --pink-deep:#b1166b; --pink-soft:#3d1631;
+  --teal:#21c6b8; --teal-deep:#0f897f; --teal-soft:#103633;
+  --sun:#ffc23d; --sun-deep:#c88800; --sun-soft:#3a2d0c; --sun-ink:#2a1a00;
+  --blue:#5b8ff0; --blue-deep:#2f5cbc; --blue-soft:#1b2747;
+  --ok:#2bcf8a; --ok-deep:#139260; --ok-bg:#10301f;
+  --bad:#ff6a57; --bad-deep:#b5382a; --bad-bg:#3b1813;
+  --lock:#3a3352; --lock-deep:#29233f;
+  --on:#ffffff; --eye:#141022; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#141022; --surface:#1f1933; --sunk:#2a2342; --ink:#f2eefa; --muted:#a69dbf; --line:#352d51;
+  --pink:#ff3d9e; --pink-deep:#b1166b; --pink-soft:#3d1631;
+  --teal:#21c6b8; --teal-deep:#0f897f; --teal-soft:#103633;
+  --sun:#ffc23d; --sun-deep:#c88800; --sun-soft:#3a2d0c; --sun-ink:#2a1a00;
+  --blue:#5b8ff0; --blue-deep:#2f5cbc; --blue-soft:#1b2747;
+  --ok:#2bcf8a; --ok-deep:#139260; --ok-bg:#10301f;
+  --bad:#ff6a57; --bad-deep:#b5382a; --bad-bg:#3b1813;
+  --lock:#3a3352; --lock-deep:#29233f;
+  --on:#ffffff; --eye:#141022; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.1}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:12px 120px}
+.eyebrow{font-family:var(--font-display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+
+/* Boutons 3D */
+.btn{--c:var(--pink);--d:var(--pink-deep);border:0;border-radius:16px;padding:13px 20px;font-family:var(--font-display);font-weight:800;font-size:17px;letter-spacing:.04em;text-transform:uppercase;background:var(--c);color:var(--on);box-shadow:0 4px 0 var(--d);transition:transform .06s,box-shadow .06s}
+.btn:active:not(:disabled){transform:translateY(4px);box-shadow:0 0 0 var(--d)}
+.btn:disabled{--c:var(--lock);--d:var(--lock-deep);color:var(--muted);cursor:default}
+.btn.teal{--c:var(--teal);--d:var(--teal-deep)}
+.btn.sun{--c:var(--sun);--d:var(--sun-deep);color:var(--sun-ink)}
+.btn.blue{--c:var(--blue);--d:var(--blue-deep)}
+.btn.ok{--c:var(--ok);--d:var(--ok-deep)}
+.btn.bad{--c:var(--bad);--d:var(--bad-deep)}
+.btn.line{--c:var(--surface);--d:var(--line);color:var(--muted);border:2px solid var(--line)}
+.btn.small{padding:8px 14px;font-size:14px;border-radius:12px}
+.btn.wide{width:100%}
+
+/* Barre d'état */
+.status{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:8px;padding-block:8px;border-bottom:2px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.chip{display:flex;align-items:center;gap:5px;font-family:var(--font-display);font-weight:800;font-size:18px;font-variant-numeric:tabular-nums;background:none;border:0;padding:4px 6px;border-radius:10px}
+.chip svg{width:24px;height:24px}
+.chip.flame{color:var(--sun-deep)} .chip.flame.off{color:var(--muted)}
+.chip.peso{color:var(--teal-deep)}
+.chip.lvl{color:var(--pink)}
+.boost{font-size:12px;font-weight:800;background:var(--sun);color:var(--sun-ink);border-radius:99px;padding:2px 8px;font-family:var(--font-display)}
+
+/* Onglets */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:2px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
+.tabs .in{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%;max-width:560px}
+.tab{border:2px solid transparent;background:none;border-radius:14px;padding:6px;display:grid;justify-items:center;gap:0;font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--muted);position:relative}
+.tab svg{width:28px;height:28px}
+.tab.on{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+.tab .dot{position:absolute;top:4px;right:calc(50% - 22px);width:12px;height:12px;border-radius:50%;background:var(--bad);border:2px solid var(--surface)}
+
+/* Parcours */
+.goalcard{margin-top:16px;display:flex;align-items:center;gap:14px;background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:12px 14px}
+.goalcard .txt{flex:1;min-width:0}
+.goalcard b{font-family:var(--font-display);font-size:18px;display:block;line-height:1.1}
+.goalcard small{color:var(--muted)}
+.pbar{height:16px;border-radius:99px;background:var(--sunk);overflow:hidden;position:relative}
+.pbar i{display:block;height:100%;border-radius:99px;background:var(--c,var(--sun));transition:width .5s cubic-bezier(.2,.8,.2,1);position:relative}
+.pbar i::after{content:"";position:absolute;left:8px;right:8px;top:3px;height:4px;border-radius:99px;background:rgba(255,255,255,.35)}
+.review{margin-top:12px;display:flex;align-items:center;gap:12px;background:var(--teal-soft);border-radius:20px;padding:12px 14px}
+.review .txt{flex:1;min-width:0}
+.review b{font-family:var(--font-display);font-size:18px;display:block;line-height:1.1}
+.review small{color:var(--muted)}
+.unit-banner{margin-top:28px;border-radius:20px;padding:14px 16px;background:var(--uc);color:var(--on);box-shadow:0 4px 0 var(--ud);display:flex;gap:12px;align-items:center}
+.unit-banner .txt{flex:1;min-width:0}
+.unit-banner .eyebrow{color:var(--on);opacity:.85}
+.unit-banner h2{font-size:24px;font-weight:800}
+.unit-banner p{margin:0;opacity:.9;font-weight:700}
+.unit-banner.locked{--uc:var(--lock);--ud:var(--lock-deep);color:var(--muted)}
+.unit-banner.locked .eyebrow{color:var(--muted)}
+.floors{display:grid;justify-items:center;gap:18px;padding-block:64px 4px}
+.node-wrap{position:relative;display:grid;justify-items:center}
+.node-wrap.p1{transform:translateX(64px)} .node-wrap.p3{transform:translateX(-64px)}
+.node{width:74px;height:70px;border-radius:50%;border:0;background:var(--uc);box-shadow:0 7px 0 var(--ud);color:var(--on);display:grid;place-items:center;position:relative;transition:transform .08s,box-shadow .08s}
+.node svg.ic{width:34px;height:34px}
+.node:active:not(:disabled){transform:translateY(6px);box-shadow:0 1px 0 var(--ud)}
+.node.done{--uc:var(--sun);--ud:var(--sun-deep);color:var(--sun-ink)}
+.node.locked{--uc:var(--lock);--ud:var(--lock-deep);color:var(--muted);cursor:default}
+.node-ring{position:absolute;inset:-12px;pointer-events:none}
+.bubble{position:absolute;bottom:calc(100% + 18px);white-space:nowrap;background:var(--surface);color:var(--uc2,var(--pink));border:2px solid var(--line);border-radius:12px;padding:5px 12px;font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;animation:bob 1.6s ease-in-out infinite}
+.bubble::after{content:"";position:absolute;left:50%;top:100%;width:12px;height:12px;background:var(--surface);border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translate(-50%,-6px) rotate(45deg)}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.locknote{text-align:center;color:var(--muted);font-weight:700;font-size:14px;margin-top:8px}
+.notice{background:var(--sun-soft);border-radius:16px;padding:12px 14px;font-size:14px;margin-top:12px;display:grid;gap:8px}
+.notice b{font-family:var(--font-display);font-size:16px}
+
+/* Défis & profil */
+.section-title{font-size:24px;font-weight:800;margin-top:24px}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:14px 16px;margin-top:12px}
+.quest{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding-block:10px}
+.quest + .quest{border-top:2px solid var(--line)}
+.qicon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--sun-soft);color:var(--sun-deep)}
+.qicon svg{width:26px;height:26px}
+.quest b{font-weight:800;display:block;margin-bottom:6px;font-size:15px}
+.quest .pbar{height:12px}
+.quest .reward{font-family:var(--font-display);font-weight:800;color:var(--teal-deep);font-size:15px;display:flex;align-items:center;gap:3px}
+.quest .reward svg{width:18px;height:18px}
+.quest.claimed{opacity:.55}
+.chest{display:flex;align-items:center;gap:14px}
+.chest svg.big{width:64px;height:64px;flex:none}
+.chest .txt{flex:1;min-width:0}
+.chest b{font-family:var(--font-display);font-size:18px;display:block}
+.chest.ready svg.big{animation:wiggle 1s ease-in-out infinite}
+@keyframes wiggle{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-4deg)}}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.seg button{border:2px solid var(--line);border-bottom-width:4px;background:var(--surface);border-radius:14px;padding:8px 4px;font-family:var(--font-display);font-weight:800;font-size:16px;line-height:1.1}
+.seg button small{display:block;font-family:var(--font-body);font-weight:700;font-size:11px;color:var(--muted)}
+.seg button.on{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+.shop{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;padding-block:10px}
+.shop + .shop{border-top:2px solid var(--line)}
+.shop .art{width:52px;height:52px;border-radius:14px;display:grid;place-items:center}
+.shop .art svg{width:32px;height:32px}
+.shop b{font-weight:800;display:block}
+.shop small{color:var(--muted)}
+.levelcard{display:flex;gap:16px;align-items:center}
+.lvbadge{width:84px;height:84px;flex:none;border-radius:24px;background:var(--pink);box-shadow:0 5px 0 var(--pink-deep);color:var(--on);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:40px;transform:rotate(-4deg)}
+.levelcard .txt{flex:1;min-width:0;display:grid;gap:6px}
+.levelcard h2{font-size:26px}
+.levelcard small{color:var(--muted);font-weight:700}
+.statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.stat{display:flex;gap:10px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:10px 12px}
+.stat svg{width:28px;height:28px;flex:none}
+.stat b{font-family:var(--font-display);font-size:22px;display:block;line-height:1;font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted);font-size:12px;font-weight:700}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.badge{display:grid;justify-items:center;text-align:center;gap:6px;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:12px 6px}
+.badge .medal{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--bc);box-shadow:0 4px 0 var(--bd);color:var(--on)}
+.badge .medal svg{width:28px;height:28px}
+.badge b{font-size:13px;font-weight:800;line-height:1.15}
+.badge small{font-size:11px;color:var(--muted);line-height:1.2}
+.badge.locked .medal{--bc:var(--lock);--bd:var(--lock-deep);color:var(--muted)}
+.badge.locked b{color:var(--muted)}
+.voice{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding-block:8px}
+.voice + .voice{border-top:2px solid var(--line)}
+.voice label{display:flex;gap:10px;align-items:center;min-width:0;cursor:pointer}
+.voice input{width:20px;height:20px;accent-color:var(--blue);flex:none}
+.voice .nm{font-weight:800;overflow-wrap:anywhere}
+.q{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:99px;padding:1px 8px;margin-left:4px;white-space:nowrap}
+.q.top{background:var(--ok-bg);color:var(--ok-deep)} .q.mid{background:var(--sun-soft);color:var(--sun-deep)} .q.low{background:var(--bad-bg);color:var(--bad-deep)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:8px}
+.row + .row{border-top:2px solid var(--line)}
+.switch{width:52px;height:30px;border-radius:99px;border:0;background:var(--lock);position:relative;flex:none}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--on);transition:left .15s}
+.switch.on{background:var(--ok)} .switch.on::after{left:25px}
+
+/* Leçon */
+.lesson-top{display:flex;align-items:center;gap:12px;padding-top:8px}
+.x{border:0;background:none;color:var(--muted);padding:4px;display:grid;place-items:center}
+.x svg{width:28px;height:28px}
+.lbar{flex:1}
+.combo{font-family:var(--font-display);font-weight:800;font-size:18px;color:var(--sun-deep);display:flex;align-items:center;gap:2px;min-width:52px;justify-content:flex-end}
+.combo svg{width:22px;height:22px}
+.combo.pop{animation:pop .35s}
+@keyframes pop{40%{transform:scale(1.35)}}
+.combo-banner{color:var(--sun-deep);font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px;min-height:22px}
+.stage{margin-top:18px;display:grid;gap:20px}
+.prompt-label{font-family:var(--font-display);font-size:26px;font-weight:800}
+.tagnew{justify-self:start;display:flex;gap:6px;align-items:center;color:var(--pink);font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.tagnew svg{width:20px;height:20px}
+.scene{display:flex;align-items:flex-end;gap:10px}
+.scene .mascot{width:110px;flex:none}
+.speech{position:relative;border:2px solid var(--line);border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0;margin-bottom:20px;background:var(--surface)}
+.speech::before{content:"";position:absolute;left:-9px;bottom:16px;width:14px;height:14px;background:var(--surface);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+.speech .big{font-family:var(--font-display);font-size:26px;font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.speech .fr{font-size:20px;font-weight:800;overflow-wrap:anywhere}
+.speak{width:44px;height:44px;border-radius:12px;border:0;background:var(--blue);box-shadow:0 3px 0 var(--blue-deep);color:var(--on);display:grid;place-items:center;flex:none}
+.speak:active{transform:translateY(3px);box-shadow:none}
+.speak svg{width:24px;height:24px}
+.listen-row{display:flex;gap:14px;align-items:flex-end;justify-content:center;padding-block:6px}
+.listen-row .speak{width:104px;height:104px;border-radius:26px;box-shadow:0 6px 0 var(--blue-deep)}
+.listen-row .speak svg{width:52px;height:52px}
+.listen-row .speak.slow{width:64px;height:64px;border-radius:18px;background:var(--blue-soft);color:var(--blue);box-shadow:0 5px 0 var(--line)}
+.listen-row .speak.slow svg{width:32px;height:32px}
+.options{display:grid;gap:12px}
+.opt{text-align:left;background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;border-radius:16px;padding:14px 16px;font-size:18px;font-weight:700;transition:transform .06s}
+.opt:active:not(:disabled){transform:translateY(2px)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+.opt:disabled{cursor:default}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.match .col{display:grid;gap:12px;align-content:start}
+.match .opt{text-align:center;padding:14px 8px;font-size:16px}
+.opt.done{opacity:.3;border-color:var(--line);background:var(--surface);color:var(--ink)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg);color:var(--bad);animation:shake .3s}
+.opt.right{border-color:var(--ok);background:var(--ok-bg);color:var(--ok-deep)}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.answer-line{min-height:120px;background:repeating-linear-gradient(to bottom,transparent 0 56px,var(--line) 56px 58px);display:flex;flex-wrap:wrap;gap:8px;padding:6px 0;align-content:flex-start}
+.bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding-top:6px}
+.tile{background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;border-radius:14px;padding:8px 14px;font-size:18px;font-weight:700;height:48px}
+.tile.ghosted{background:var(--sunk);color:transparent;border-color:var(--sunk);box-shadow:none;cursor:default}
+.type-box{width:100%;font:inherit;font-size:20px;font-weight:700;padding:16px;border-radius:16px;border:2px solid var(--line);background:var(--sunk);color:var(--ink);min-height:110px;resize:none}
+.accents{display:flex;gap:8px;flex-wrap:wrap}
+.accents button{border:2px solid var(--line);border-bottom-width:4px;background:var(--surface);border-radius:10px;min-width:42px;padding:4px 8px;font-size:18px;font-weight:800}
+.checkbar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--bg);border-top:2px solid var(--line);padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.checkbar .in{max-width:528px;margin:0 auto;display:grid;gap:14px}
+.checkbar.ok{background:var(--ok-bg);border-color:transparent}
+.checkbar.bad{background:var(--bad-bg);border-color:transparent}
+.fb{display:flex;gap:12px;align-items:flex-start}
+.fb .ico{width:52px;height:52px;border-radius:50%;background:var(--surface);display:grid;place-items:center;flex:none}
+.fb .ico svg{width:32px;height:32px}
+.checkbar.ok .fb .ico{color:var(--ok)} .checkbar.bad .fb .ico{color:var(--bad)}
+.fb .txt{min-width:0}
+.fb h3{font-size:24px;font-weight:800}
+.checkbar.ok .fb h3{color:var(--ok-deep)} .checkbar.bad .fb h3{color:var(--bad-deep)}
+.checkbar.ok .fb p,.checkbar.bad .fb p{margin:2px 0 0;font-weight:700}
+.checkbar.ok .fb p{color:var(--ok-deep)} .checkbar.bad .fb p{color:var(--bad-deep)}
+.fb .note{font-weight:600!important;font-size:14px;color:var(--ink)!important;opacity:.85}
+
+/* Fin de leçon */
+.done{display:grid;gap:18px;justify-items:center;text-align:center;padding-top:24px}
+.done .mascot{width:150px;animation:jump .9s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes jump{0%{transform:translateY(30px) scale(.8);opacity:0}100%{transform:none;opacity:1}}
+.done h2{font-size:36px;font-weight:800;color:var(--sun-deep)}
+.tiles3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.res{border-radius:16px;border:2px solid var(--rc);overflow:hidden;background:var(--rc)}
+.res .h{color:var(--on);font-family:var(--font-display);font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:4px}
+.res .v{background:var(--surface);border-radius:12px 12px 0 0;padding:10px 4px;font-family:var(--font-display);font-weight:800;font-size:24px;color:var(--rc);font-variant-numeric:tabular-nums;display:flex;justify-content:center;align-items:center;gap:4px}
+.res .v svg{width:22px;height:22px}
+.rewards{display:grid;gap:10px;width:100%}
+.reward-item{display:flex;gap:12px;align-items:center;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:10px 12px;animation:slidein .45s cubic-bezier(.2,.9,.3,1.2) both}
+.reward-item .medal{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--bc);box-shadow:0 3px 0 var(--bd);color:var(--on);flex:none}
+.reward-item .medal svg{width:24px;height:24px}
+.reward-item b{display:block;font-weight:800}
+.reward-item small{color:var(--muted);font-weight:700}
+@keyframes slidein{from{opacity:0;transform:translateY(16px)}}
+
+/* Superpositions */
+.overlay{position:fixed;inset:0;z-index:20;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);max-height:90vh;overflow:auto;border:2px solid var(--line);border-radius:28px;padding:24px 20px;max-width:380px;width:100%;display:grid;gap:12px;justify-items:center;text-align:center;animation:jump .6s cubic-bezier(.3,1.6,.5,1) both}
+.modal .mascot{width:120px}
+.modal h2{font-size:34px;font-weight:800;color:var(--pink)}
+.modal p{margin:0;font-weight:700;color:var(--muted)}
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,.2);animation:slidein .3s both;max-width:calc(100% - 32px);text-align:center}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:25}
+.modal.list{max-height:84vh;overflow:auto;justify-items:stretch;text-align:left}
+.modal.list h2{text-align:center}
+.lex{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;padding-block:8px}
+.lex + .lex{border-top:2px solid var(--line)}
+.lex b{display:block;font-family:var(--font-display);font-size:18px;line-height:1.15}
+.lex small{color:var(--muted);font-weight:700}
+.dots{display:flex;gap:3px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--lock)}
+.dots i.on{background:var(--ok)}
+.lexbtn{border:0;border-radius:12px;padding:8px 12px;background:rgba(255,255,255,.22);color:var(--on);font-family:var(--font-display);font-weight:800;font-size:14px;letter-spacing:.04em;text-transform:uppercase;flex:none}
+/* Tuteur */
+.scenes{display:grid;gap:12px;margin-top:12px}
+.scene-card{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;text-align:left;background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;padding:12px 14px}
+.scene-card .art{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--sc);color:var(--on);box-shadow:0 3px 0 var(--sd)}
+.scene-card .art svg{width:28px;height:28px}
+.scene-card b{font-family:var(--font-display);font-size:19px;display:block;line-height:1.15}
+.scene-card small{color:var(--muted);font-weight:700}
+.scene-card .go{color:var(--muted)} .scene-card .go svg{width:22px;height:22px}
+.tutor-hero{display:flex;gap:14px;align-items:center;margin-top:16px}
+.tutor-hero .mascot{width:92px;flex:none}
+.tutor-hero h2{font-size:26px;font-weight:800}
+.tutor-hero p{margin:4px 0 0;color:var(--muted);font-weight:700}
+.chat-top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;align-items:center;gap:10px;padding-block:8px;border-bottom:2px solid var(--line);margin-inline:-16px;padding-inline:16px}
+.chat-top .t{flex:1;min-width:0}
+.chat-top b{font-family:var(--font-display);font-size:19px;display:block;line-height:1.1}
+.chat-top small{color:var(--muted);font-weight:700}
+.msgs{display:grid;gap:14px;padding-block:16px 8px}
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:100%}
+.msg .av{width:40px;flex:none}
+.msg.me{justify-content:flex-end}
+.bub{border-radius:18px;padding:10px 14px;min-width:0;max-width:85%;overflow-wrap:anywhere}
+.msg.tutor .bub{background:var(--surface);border:2px solid var(--line);border-bottom-left-radius:6px}
+.msg.me .bub{background:var(--blue);color:var(--on);border-bottom-right-radius:6px;font-weight:700;font-size:17px}
+.bub .es{font-size:18px;font-weight:700;line-height:1.35}
+.bub .tr{color:var(--muted);font-weight:700;margin-top:6px;font-size:15px}
+.bub .acts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.mini{border:2px solid var(--line);background:var(--surface);border-radius:10px;padding:4px 10px;font-weight:800;font-size:13px;color:var(--blue);display:flex;align-items:center;gap:4px}
+.mini svg{width:18px;height:18px}
+.corr{margin-left:auto;max-width:85%;border-radius:14px;padding:8px 12px;font-size:14px;font-weight:700;display:flex;gap:8px;align-items:flex-start}
+.corr svg{width:20px;height:20px;flex:none;margin-top:1px}
+.corr.good{background:var(--ok-bg);color:var(--ok-deep)}
+.corr.fix{background:var(--sun-soft);color:var(--ink)}
+.corr.fix svg{color:var(--sun-deep)}
+.typing{display:flex;gap:5px;padding:6px 2px}
+.typing i{width:9px;height:9px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s} .typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.composer{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:2px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.composer .in{max-width:528px;margin:0 auto;display:grid;gap:8px}
+.sugs{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.sug{flex:none;border:2px solid var(--line);border-bottom-width:4px;background:var(--bg);border-radius:14px;padding:6px 12px;text-align:left;max-width:260px}
+.sug b{display:block;font-weight:800;font-size:15px}
+.sug small{color:var(--muted);font-weight:700;font-size:12px}
+.crow{display:flex;gap:8px;align-items:flex-end}
+.crow textarea{flex:1;min-width:0;font:inherit;font-size:17px;font-weight:700;padding:10px 12px;border-radius:14px;border:2px solid var(--line);background:var(--sunk);color:var(--ink);resize:none;max-height:120px}
+.crow .btn{padding:11px 14px}
+.composer .accents{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.composer .accents button{min-width:36px;padding:2px 6px;font-size:16px}
+.chat-err{background:var(--bad-bg);color:var(--bad-deep);border-radius:14px;padding:10px 12px;font-weight:700;font-size:14px}
+.node.exam{cursor:pointer}
+.daily{margin-top:12px;background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:12px 14px}
+.daily .row1{display:flex;gap:10px;align-items:center}
+.daily .es{font-family:var(--font-display);font-size:20px;font-weight:700;line-height:1.2;flex:1;min-width:0}
+.daily summary{cursor:pointer;color:var(--blue);font-weight:800;font-size:14px;margin-top:6px;list-style:none}
+.daily summary::-webkit-details-marker{display:none}
+.daily details p{margin:4px 0 0;font-weight:700;color:var(--muted)}
+.arcade-card{margin-top:12px;display:flex;align-items:center;gap:12px;border-radius:20px;padding:12px 14px;background:var(--sun);color:var(--sun-ink);box-shadow:0 4px 0 var(--sun-deep)}
+.arcade-card .art{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.35);display:grid;place-items:center;flex:none}
+.arcade-card .art svg{width:30px;height:30px}
+.arcade-card .txt{flex:1;min-width:0}
+.arcade-card b{font-family:var(--font-display);font-size:19px;display:block;line-height:1.1}
+.arcade-card small{font-weight:700;opacity:.85}
+.arc-top{display:flex;align-items:center;gap:12px;padding-top:8px}
+.arc-time{font-family:var(--font-display);font-weight:800;font-size:20px;min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
+.arc-time.low{color:var(--bad)}
+.arc-score{display:flex;justify-content:center;align-items:baseline;gap:10px;margin-top:22px}
+.arc-score b{font-family:var(--font-display);font-size:64px;font-weight:800;line-height:1;color:var(--sun-deep);font-variant-numeric:tabular-nums}
+.arc-score span{font-weight:800;color:var(--muted)}
+.arc-q{text-align:center;margin-top:20px;display:grid;gap:6px;justify-items:center}
+.arc-q .dir{font-family:var(--font-display);font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.arc-q .w{font-family:var(--font-display);font-size:34px;font-weight:800;line-height:1.1;overflow-wrap:anywhere}
+.arc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.arc-grid .opt{text-align:center;min-height:76px;font-size:17px;padding:10px 8px}
+.arc-penalty{position:fixed;left:50%;top:120px;transform:translateX(-50%);z-index:30;font-family:var(--font-display);font-weight:800;font-size:26px;color:var(--bad);animation:floatup 1s ease-out forwards;pointer-events:none}
+.hearts{display:flex;gap:2px;color:var(--bad);min-width:52px;justify-content:flex-end}
+.hearts svg{width:22px;height:22px}
+.hearts .gone{color:var(--lock)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:130px;margin-top:10px}
+.week .col{display:grid;gap:4px;justify-items:center;align-self:stretch;grid-template-rows:auto 1fr auto}
+.week .v{font-size:11px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
+.week .barwrap{width:100%;display:flex;align-items:flex-end;justify-content:center}
+.week .bar{width:70%;max-width:30px;border-radius:8px 8px 4px 4px;background:var(--pink-soft);min-height:4px}
+.week .col.today .bar{background:var(--pink)}
+.week .d{font-size:12px;font-weight:800;color:var(--muted)}
+.week .col.today .d{color:var(--pink)}
+.tip{background:var(--blue-soft);border-radius:14px;padding:10px 12px;margin-top:8px}
+.tip b{display:block;font-family:var(--font-display);font-size:16px;color:var(--blue)}
+.tip p{margin:2px 0 0;font-size:14px;font-weight:600}
+.xpfloat{position:fixed;right:20px;bottom:150px;z-index:30;font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--sun-deep);animation:floatup 1.2s ease-out forwards;pointer-events:none}
+@keyframes floatup{to{transform:translateY(-60px);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap" id="home"></div>
+<div class="wrap" id="lesson" hidden></div>
+<div class="wrap" id="done" hidden></div>
+<nav class="tabs" id="tabs" aria-label="Sections"></nav>
+<canvas id="confetti" hidden></canvas>
+<div class="wrap" id="chat" hidden></div>
+<div class="wrap" id="arcade" hidden></div>
+<div id="layer"></div>
+
+<script>
+/* ===================== CONTENU — espagnol d'Amérique latine pour un francophone du Québec ===================== */
+const UNITS = [
+  { id:'saludos', es:'Saludos', fr:'Les salutations', tag:'Base', color:'pink', items:[
+    {es:'Hola', fr:'Salut'},
+    {es:'Buenos días', fr:'Bonjour (le matin)'},
+    {es:'Buenas tardes', fr:'Bon après-midi'},
+    {es:'Gracias', fr:'Merci'},
+    {es:'Por favor', fr:"S'il te plaît"},
+    {es:'De nada', fr:'De rien'},
+    {es:'Mucho gusto', fr:'Enchanté'},
+    {es:'¿Cómo estás?', fr:'Comment ça va ?', note:"Avec quelqu'un que tu ne connais pas : « ¿Cómo está? » (forme polie, usted)."},
+    {es:'Estoy bien, gracias', fr:'Je vais bien, merci'},
+    {es:'¿Cómo te llamas?', fr:"Comment tu t'appelles ?"},
+    {es:'Hasta mañana', fr:'À demain', note:"« Mañana » veut dire demain, mais « la mañana », c'est le matin."},
+  ]},
+  { id:'herramientas', es:'Las herramientas', fr:'Les outils', tag:'Chantier', color:'teal', items:[
+    {es:'el martillo', fr:'le marteau'},
+    {es:'el taladro', fr:'la perceuse'},
+    {es:'la escalera', fr:"l'échelle", note:"« Escalera » veut aussi dire escalier. Le contexte tranche."},
+    {es:'el clavo', fr:'le clou'},
+    {es:'el tornillo', fr:'la vis'},
+    {es:'la sierra', fr:'la scie'},
+    {es:'el casco', fr:'le casque'},
+    {es:'los guantes', fr:'les gants'},
+    {es:'la cinta métrica', fr:'le ruban à mesurer'},
+    {es:'la madera', fr:'le bois'},
+    {es:'Pásame el martillo', fr:'Passe-moi le marteau'},
+    {es:'¿Dónde está el taladro?', fr:'Où est la perceuse ?'},
+  ]},
+  { id:'ordenes', es:'En la obra', fr:'Sur le chantier', tag:'Chantier', color:'blue', items:[
+    {es:'¡Cuidado!', fr:'Attention !'},
+    {es:'Espera', fr:'Attends'},
+    {es:'Ven aquí', fr:'Viens ici'},
+    {es:'Ayúdame', fr:'Aide-moi'},
+    {es:'la pared', fr:'le mur'},
+    {es:'Mide la pared', fr:'Mesure le mur'},
+    {es:'Corta la madera', fr:'Coupe le bois'},
+    {es:'Ponte el casco', fr:'Mets ton casque'},
+    {es:'¿Necesitas algo?', fr:'As-tu besoin de quelque chose ?'},
+    {es:'Buen trabajo', fr:'Bon travail'},
+    {es:'Vamos a almorzar', fr:'On va dîner', note:"« Almorzar », c'est le repas du midi : notre dîner au Québec."},
+    {es:'No entiendo', fr:'Je ne comprends pas'},
+  ]},
+  { id:'tablaroca', es:'La tablaroca', fr:'Le gypse', tag:'Chantier', color:'sun', items:[
+    {es:'la tablaroca', fr:'le gypse (panneau)', note:"Au Mexique : « tablaroca ». Ailleurs en Amérique latine, on entend aussi « drywall » ou « placa de yeso »."},
+    {es:'el techo', fr:'le plafond', note:"« Techo » veut aussi dire le toit."},
+    {es:'la cinta', fr:'le ruban à joints'},
+    {es:'el compuesto', fr:'le composé à joints', note:"On dit aussi « la pasta » dans plusieurs pays."},
+    {es:'la espátula', fr:'la spatule'},
+    {es:'la esquinera', fr:'la cornière'},
+    {es:'la lija', fr:'le papier sablé'},
+    {es:'el desarmador', fr:'le tournevis', note:"« Desarmador » au Mexique ; « destornillador » ailleurs."},
+    {es:'Atornilla la tablaroca', fr:'Visse le gypse'},
+    {es:'Pon otra capa', fr:'Mets une autre couche'},
+    {es:'Hay que lijar', fr:'Il faut sabler'},
+    {es:'Todavía está mojado', fr:"C'est encore mouillé"},
+    {es:'Ya está seco', fr:"C'est sec maintenant"},
+  ]},
+  { id:'plomeria', es:'La plomería', fr:'La plomberie', tag:'Chantier', color:'teal', items:[
+    {es:'el plomero', fr:'le plombier'},
+    {es:'el tubo', fr:'le tuyau'},
+    {es:'la llave', fr:'le robinet', note:"« Llave » veut aussi dire la clé (et la clé à molette)."},
+    {es:'la fuga', fr:'la fuite'},
+    {es:'el fregadero', fr:"l'évier"},
+    {es:'el lavabo', fr:'le lavabo'},
+    {es:'el inodoro', fr:'la toilette', note:"Au Mexique, on entend aussi « el excusado » ou « la taza »."},
+    {es:'la regadera', fr:'la douche', note:"« Regadera » au Mexique ; « ducha » dans d'autres pays."},
+    {es:'el desagüe', fr:'le drain'},
+    {es:'el agua caliente', fr:"l'eau chaude"},
+    {es:'Cierra el agua', fr:"Ferme l'eau"},
+    {es:'Hay una fuga', fr:'Il y a une fuite'},
+    {es:'¿Dónde está la llave de paso?', fr:"Où est la valve d'arrêt ?"},
+  ]},
+  { id:'electricidad', es:'La electricidad', fr:"L'électricité", tag:'Chantier', color:'blue', items:[
+    {es:'el electricista', fr:"l'électricien"},
+    {es:'el cable', fr:'le fil électrique'},
+    {es:'el enchufe', fr:'la prise de courant'},
+    {es:'el apagador', fr:"l'interrupteur", note:"« Apagador » au Mexique ; « interruptor » ailleurs."},
+    {es:'el foco', fr:"l'ampoule", note:"« Foco » au Mexique ; « bombilla » ou « bombillo » ailleurs."},
+    {es:'la luz', fr:'la lumière'},
+    {es:'la corriente', fr:'le courant'},
+    {es:'el fusible', fr:'le fusible'},
+    {es:'el panel eléctrico', fr:'le panneau électrique'},
+    {es:'Corta la corriente', fr:'Coupe le courant'},
+    {es:'¿Hay corriente?', fr:'Y a-t-il du courant ?'},
+    {es:'No toques ese cable', fr:'Ne touche pas à ce fil'},
+    {es:'Pasa el cable por aquí', fr:'Passe le fil par ici'},
+  ]},
+  { id:'pintura', es:'La pintura', fr:'La peinture', tag:'Chantier', color:'pink', items:[
+    {es:'la pintura', fr:'la peinture'},
+    {es:'el pintor', fr:'le peintre'},
+    {es:'la brocha', fr:'le pinceau'},
+    {es:'el rodillo', fr:'le rouleau'},
+    {es:'la charola', fr:'le bac à peinture', note:"« Charola » au Mexique ; « bandeja » ailleurs."},
+    {es:'la cinta de pintor', fr:'le ruban de masquage'},
+    {es:'el sellador', fr:"l'apprêt (scellant)"},
+    {es:'blanco', fr:'blanc'},
+    {es:'Dale otra mano', fr:'Donne une deuxième couche', note:"Pour la peinture, une couche se dit « una mano »."},
+    {es:'Cubre el piso', fr:'Couvre le plancher'},
+    {es:'Pinta el techo primero', fr:"Peins le plafond d'abord"},
+    {es:'¿De qué color?', fr:'De quelle couleur ?'},
+  ]},
+  { id:'carpinteria', es:'La carpintería', fr:'La menuiserie', tag:'Chantier', color:'sun', items:[
+    {es:'el carpintero', fr:'le menuisier'},
+    {es:'la tabla', fr:'la planche'},
+    {es:'el serrucho', fr:"l'égoïne (scie à main)"},
+    {es:'la puerta', fr:'la porte'},
+    {es:'la ventana', fr:'la fenêtre'},
+    {es:'el piso', fr:'le plancher'},
+    {es:'el marco', fr:'le cadre'},
+    {es:'el zoclo', fr:'la plinthe', note:"« Zoclo » au Mexique ; « rodapié » ou « zócalo » ailleurs."},
+    {es:'la escuadra', fr:"l'équerre"},
+    {es:'el pegamento', fr:'la colle'},
+    {es:'Está chueco', fr:"C'est croche", note:"« Chueco » : exactement notre « croche » québécois."},
+    {es:'Está nivelado', fr:"C'est de niveau"},
+    {es:'Mide dos veces, corta una', fr:'Mesure deux fois, coupe une fois'},
+  ]},
+  { id:'seguridad', es:'La seguridad', fr:'La sécurité', tag:'Chantier', color:'teal', items:[
+    {es:'los lentes de seguridad', fr:'les lunettes de sécurité'},
+    {es:'las botas', fr:'les bottes'},
+    {es:'el arnés', fr:'le harnais'},
+    {es:'el chaleco', fr:'la veste de sécurité'},
+    {es:'el botiquín', fr:'la trousse de premiers soins'},
+    {es:'el extintor', fr:"l'extincteur"},
+    {es:'Despacio', fr:'Doucement'},
+    {es:'¡Cuidado con la cabeza!', fr:'Attention à ta tête !'},
+    {es:'Usa los guantes', fr:'Mets tes gants'},
+    {es:'No subas sin arnés', fr:'Ne monte pas sans harnais'},
+    {es:'¿Estás bien?', fr:'Es-tu correct ?'},
+    {es:'Me lastimé', fr:'Je me suis blessé'},
+    {es:'Llama al 911', fr:'Appelle le 911'},
+  ]},
+  { id:'tiempo', es:'Números y horas', fr:'Les nombres et les heures', tag:'Chantier', color:'blue', items:[
+    {es:'uno', fr:'un'}, {es:'dos', fr:'deux'}, {es:'tres', fr:'trois'}, {es:'cuatro', fr:'quatre'},
+    {es:'cinco', fr:'cinq'}, {es:'seis', fr:'six'}, {es:'siete', fr:'sept'}, {es:'ocho', fr:'huit'},
+    {es:'hoy', fr:"aujourd'hui"}, {es:'mañana', fr:'demain'},
+    {es:'¿Qué hora es?', fr:'Quelle heure est-il ?'},
+    {es:'Empezamos a las siete', fr:'On commence à sept heures'},
+    {es:'Terminamos a las cuatro', fr:'On finit à quatre heures'},
+  ]},
+  { id:'viaje', es:'De viaje', fr:'En voyage', tag:'Voyage', color:'pink', items:[
+    {es:'el agua', fr:"l'eau"},
+    {es:'una cerveza', fr:'une bière'},
+    {es:'el aeropuerto', fr:"l'aéroport"},
+    {es:'a la derecha', fr:'à droite'},
+    {es:'a la izquierda', fr:'à gauche'},
+    {es:'derecho', fr:'tout droit', note:"En Espagne, on dit plutôt « todo recto ». En Amérique latine, c'est « derecho »."},
+    {es:'¿Dónde está el baño?', fr:'Où sont les toilettes ?'},
+    {es:'La cuenta, por favor', fr:"L'addition, s'il vous plaît"},
+    {es:'¿Cuánto cuesta?', fr:'Combien ça coûte ?'},
+    {es:'Más despacio, por favor', fr:"Plus lentement, s'il vous plaît"},
+    {es:'¿Habla inglés?', fr:'Parlez-vous anglais ?', note:"« Habla » sans « tú » : c'est la forme polie (usted), la bonne avec un inconnu."},
+    {es:'Estoy embarazada', fr:'Je suis enceinte', note:"Faux ami célèbre ! « Embarazada » ne veut pas dire embarrassé. Pour ça : « Tengo vergüenza »."},
+  ]},
+  { id:'aeropuerto', es:'En el aeropuerto', fr:"À l'aéroport", tag:'Voyage', color:'blue', items:[
+    {es:'el pasaporte', fr:'le passeport'},
+    {es:'el vuelo', fr:'le vol'},
+    {es:'la maleta', fr:'la valise'},
+    {es:'el boleto', fr:'le billet', note:"« Boleto » au Mexique ; « pasaje » ou « billete » ailleurs."},
+    {es:'la salida', fr:'la sortie (ou le départ)'},
+    {es:'la llegada', fr:"l'arrivée"},
+    {es:'la aduana', fr:'la douane'},
+    {es:'Mi vuelo está retrasado', fr:'Mon vol est retardé'},
+    {es:'¿Dónde está la puerta cinco?', fr:'Où est la porte cinq ?'},
+    {es:'Perdí mi maleta', fr:"J'ai perdu ma valise"},
+    {es:'Voy a Cancún', fr:'Je vais à Cancún'},
+    {es:'Vengo de vacaciones', fr:'Je viens en vacances'},
+  ]},
+  { id:'ciudad', es:'En la ciudad', fr:'En ville', tag:'Voyage', color:'teal', items:[
+    {es:'la calle', fr:'la rue'},
+    {es:'la esquina', fr:'le coin de rue'},
+    {es:'cerca', fr:'proche'},
+    {es:'lejos', fr:'loin'},
+    {es:'el centro', fr:'le centre-ville'},
+    {es:'la farmacia', fr:'la pharmacie'},
+    {es:'el banco', fr:'la banque'},
+    {es:'el camión', fr:"l'autobus", note:"Au Mexique, le bus s'appelle « el camión ». Ailleurs : « el bus », « la guagua »…"},
+    {es:'la parada', fr:"l'arrêt (d'autobus)"},
+    {es:'¿Está lejos?', fr:"C'est loin ?"},
+    {es:'Dé vuelta a la izquierda', fr:'Tournez à gauche', note:"Forme polie (usted). À un ami : « Da vuelta a la izquierda »."},
+    {es:'¿Cómo llego al centro?', fr:'Comment je me rends au centre-ville ?'},
+  ]},
+  { id:'dinero', es:'El dinero', fr:"L'argent", tag:'Voyage', color:'blue', items:[
+    {es:'nueve', fr:'neuf'}, {es:'diez', fr:'dix'}, {es:'veinte', fr:'vingt'}, {es:'cincuenta', fr:'cinquante'},
+    {es:'cien', fr:'cent'}, {es:'mil', fr:'mille'},
+    {es:'el dinero', fr:"l'argent"},
+    {es:'en efectivo', fr:'en argent comptant'},
+    {es:'la tarjeta', fr:'la carte (de crédit)'},
+    {es:'¿Cuánto es?', fr:"C'est combien ?"},
+    {es:'Son cien pesos', fr:'Ça fait cent pesos'},
+    {es:'¿Aceptan tarjeta?', fr:'Prenez-vous la carte ?'},
+    {es:'Es muy caro', fr:"C'est très cher"},
+  ]},
+  { id:'restaurante', es:'En el restaurante', fr:'Au restaurant', tag:'Voyage', color:'sun', items:[
+    {es:'el menú', fr:'le menu'},
+    {es:'la mesa', fr:'la table'},
+    {es:'el desayuno', fr:'le déjeuner (le matin)', note:"Attention au décalage : « desayuno » = notre déjeuner, « comida » = le repas principal vers 14 h, « cena » = le souper."},
+    {es:'la cena', fr:'le souper'},
+    {es:'la propina', fr:'le pourboire'},
+    {es:'picante', fr:'épicé'},
+    {es:'Una mesa para dos', fr:'Une table pour deux'},
+    {es:'Sin picante, por favor', fr:"Pas épicé, s'il vous plaît"},
+    {es:'¿Qué me recomienda?', fr:"Qu'est-ce que vous me recommandez ?"},
+    {es:'Quiero tres tacos', fr:'Je veux trois tacos'},
+    {es:'Otra cerveza, por favor', fr:"Une autre bière, s'il vous plaît"},
+    {es:'Está delicioso', fr:"C'est délicieux"},
+  ]},
+  { id:'hotel', es:'En el hotel', fr:"À l'hôtel", tag:'Voyage', color:'teal', items:[
+    {es:'la habitación', fr:'la chambre'},
+    {es:'la cama', fr:'le lit'},
+    {es:'la toalla', fr:'la serviette'},
+    {es:'la playa', fr:'la plage'},
+    {es:'la alberca', fr:'la piscine', note:"« Alberca » au Mexique ; « piscina » ailleurs."},
+    {es:'la reservación', fr:'la réservation'},
+    {es:'Tengo una reservación', fr:"J'ai une réservation"},
+    {es:'¿A qué hora es el desayuno?', fr:'À quelle heure est le déjeuner ?'},
+    {es:'¿Hay wifi?', fr:'Y a-t-il du wifi ?'},
+    {es:'No funciona el aire acondicionado', fr:'La climatisation ne marche pas'},
+    {es:'Necesito otra toalla', fr:"J'ai besoin d'une autre serviette"},
+    {es:'¿Dónde está la playa?', fr:'Où est la plage ?'},
+  ]},
+  { id:'compras', es:'De compras', fr:'Le magasinage', tag:'Voyage', color:'pink', items:[
+    {es:'el mercado', fr:'le marché'},
+    {es:'la tienda', fr:'le magasin'},
+    {es:'barato', fr:'pas cher'},
+    {es:'la talla', fr:'la taille (vêtement)'},
+    {es:'un recuerdo', fr:'un souvenir'},
+    {es:'Solo estoy mirando', fr:'Je regarde seulement'},
+    {es:'¿Tiene otra talla?', fr:'Avez-vous une autre taille ?'},
+    {es:'¿Me hace un descuento?', fr:'Vous me faites un rabais ?', note:"Au marché, négocier un peu est normal et attendu."},
+    {es:'¿Puedo probármelo?', fr:'Je peux l\'essayer ?'},
+    {es:'Me lo llevo', fr:'Je le prends'},
+  ]},
+  { id:'emergencias', es:'Emergencias', fr:'Les urgences', tag:'Voyage', color:'sun', items:[
+    {es:'¡Ayuda!', fr:"À l'aide !"},
+    {es:'el hospital', fr:"l'hôpital"},
+    {es:'el médico', fr:'le médecin'},
+    {es:'la policía', fr:'la police'},
+    {es:'la embajada de Canadá', fr:"l'ambassade du Canada"},
+    {es:'Es urgente', fr:"C'est urgent"},
+    {es:'Necesito un médico', fr:"J'ai besoin d'un médecin"},
+    {es:'Soy alérgico', fr:'Je suis allergique'},
+    {es:'Me robaron la cartera', fr:'On m\'a volé mon portefeuille'},
+    {es:'Perdí mi pasaporte', fr:"J'ai perdu mon passeport"},
+    {es:'¿Dónde está el hospital?', fr:"Où est l'hôpital ?"},
+  ]},
+  { id:'conversacion', es:'Conversación', fr:'La petite jasette', tag:'Quotidien', color:'pink', items:[
+    {es:'¿Qué tal?', fr:'Quoi de neuf ?'},
+    {es:'¿De dónde eres?', fr:"D'où viens-tu ?"},
+    {es:'Soy de Quebec', fr:'Je viens du Québec'},
+    {es:'Hablo un poco de español', fr:'Je parle un peu espagnol'},
+    {es:'¿Puedes repetir?', fr:'Peux-tu répéter ?'},
+    {es:'¿Cómo se dice en español?', fr:'Comment on dit ça en espagnol ?'},
+    {es:'¿Qué significa?', fr:"Qu'est-ce que ça veut dire ?"},
+    {es:'Claro', fr:'Bien sûr'},
+    {es:'Tal vez', fr:'Peut-être'},
+    {es:'Nos vemos', fr:'À plus tard'},
+    {es:'Buen fin de semana', fr:'Bonne fin de semaine'},
+    {es:'Que te vaya bien', fr:'Bonne journée (que ça aille bien)'},
+  ]},
+  { id:'verbos', es:'Los verbos del día', fr:'Les verbes de tous les jours', tag:'Quotidien', color:'blue', items:[
+    {es:'quiero', fr:'je veux'},
+    {es:'puedo', fr:'je peux'},
+    {es:'necesito', fr:"j'ai besoin de"},
+    {es:'tengo', fr:"j'ai"},
+    {es:'voy', fr:'je vais'},
+    {es:'hago', fr:'je fais'},
+    {es:'¿Puedes ayudarme?', fr:"Peux-tu m'aider ?"},
+    {es:'Necesito más tornillos', fr:"J'ai besoin de plus de vis"},
+    {es:'Voy a la tienda', fr:'Je vais au magasin'},
+    {es:'No puedo mañana', fr:'Je ne peux pas demain'},
+    {es:'Quiero hablar contigo', fr:'Je veux te parler'},
+    {es:'¿Qué haces?', fr:"Qu'est-ce que tu fais ?"},
+  ]},
+  { id:'familia', es:'La familia', fr:'La famille', tag:'Quotidien', color:'teal', items:[
+    {es:'la familia', fr:'la famille'},
+    {es:'mi esposa', fr:'ma femme'},
+    {es:'mi esposo', fr:'mon mari'},
+    {es:'el hijo', fr:'le fils'},
+    {es:'la hija', fr:'la fille'},
+    {es:'los niños', fr:'les enfants'},
+    {es:'el hermano', fr:'le frère'},
+    {es:'la mamá', fr:'la mère'},
+    {es:'el papá', fr:'le père'},
+    {es:'¿Tienes hijos?', fr:'As-tu des enfants ?', note:"« Hijos » désigne les enfants en général, garçons et filles."},
+    {es:'Tengo dos hijos', fr:"J'ai deux enfants"},
+    {es:'¿Cómo está tu familia?', fr:'Comment va ta famille ?'},
+  ]},
+  { id:'semana', es:'Los días y el clima', fr:'Les jours et la météo', tag:'Quotidien', color:'sun', items:[
+    {es:'lunes', fr:'lundi'}, {es:'martes', fr:'mardi'}, {es:'miércoles', fr:'mercredi'}, {es:'jueves', fr:'jeudi'},
+    {es:'viernes', fr:'vendredi'}, {es:'sábado', fr:'samedi'}, {es:'domingo', fr:'dimanche'},
+    {es:'Hace calor', fr:'Il fait chaud'},
+    {es:'Hace frío', fr:'Il fait froid'},
+    {es:'Está lloviendo', fr:'Il pleut'},
+    {es:'¿Trabajamos el sábado?', fr:'Travaille-t-on samedi ?'},
+    {es:'la semana que viene', fr:'la semaine prochaine'},
+  ]},
+  { id:'sentir', es:'¿Cómo te sientes?', fr:'Comment tu te sens', tag:'Quotidien', color:'pink', items:[
+    {es:'Estoy cansado', fr:'Je suis fatigué'},
+    {es:'Estoy contento', fr:'Je suis content'},
+    {es:'Estoy enfermo', fr:'Je suis malade'},
+    {es:'Tengo hambre', fr:"J'ai faim", note:"En espagnol on « a » faim et soif comme en français : « tengo hambre », « tengo sed »."},
+    {es:'Tengo sed', fr:"J'ai soif"},
+    {es:'Me duele la espalda', fr:"J'ai mal au dos"},
+    {es:'Me duele la cabeza', fr:"J'ai mal à la tête"},
+    {es:'¿Quieres agua?', fr:"Veux-tu de l'eau ?"},
+    {es:'Tomamos un descanso', fr:'On prend une pause'},
+    {es:'el café', fr:'le café'},
+    {es:'Tranquilo', fr:'Relaxe, pas de stress'},
+    {es:'¿Qué te pasa?', fr:"Qu'est-ce qui ne va pas ?"},
+  ]},
+  { id:'ceramica', es:'La cerámica', fr:'La céramique', tag:'Chantier', color:'blue', items:[
+    {es:'el azulejo', fr:'la tuile murale', note:"« Azulejo » pour le mur, « loseta » pour le plancher."},
+    {es:'la loseta', fr:'la tuile de plancher'},
+    {es:'la boquilla', fr:'le coulis (joint)', note:"« Boquilla » au Mexique ; « lechada » ou « fragua » ailleurs."},
+    {es:'el pegazulejo', fr:"l'adhésif à céramique"},
+    {es:'la cortadora', fr:'la coupe-tuile'},
+    {es:'las crucetas', fr:'les croisillons'},
+    {es:'la llana', fr:'la truelle dentelée'},
+    {es:'la esponja', fr:"l'éponge"},
+    {es:'Pon las crucetas', fr:'Mets les croisillons'},
+    {es:'Limpia la boquilla', fr:'Nettoie le coulis'},
+    {es:'Corta esta loseta', fr:'Coupe cette tuile'},
+    {es:'Está desnivelado', fr:"Ce n'est pas de niveau"},
+  ]},
+  { id:'albanileria', es:'La albañilería', fr:'La maçonnerie et le béton', tag:'Chantier', color:'sun', items:[
+    {es:'el albañil', fr:'le maçon'},
+    {es:'el cemento', fr:'le ciment'},
+    {es:'el concreto', fr:'le béton'},
+    {es:'la mezcla', fr:'le mélange (mortier)'},
+    {es:'el ladrillo', fr:'la brique'},
+    {es:'el block', fr:'le bloc de béton'},
+    {es:'la cuchara', fr:'la truelle', note:"« Cuchara » veut aussi dire cuillère."},
+    {es:'la carretilla', fr:'la brouette'},
+    {es:'la pala', fr:'la pelle'},
+    {es:'la grava', fr:'le gravier'},
+    {es:'Prepara la mezcla', fr:'Prépare le mélange'},
+    {es:'Trae la carretilla', fr:'Apporte la brouette'},
+  ]},
+  { id:'medidas', es:'Medidas y cantidades', fr:'Les mesures et les quantités', tag:'Chantier', color:'teal', items:[
+    {es:'una pulgada', fr:'un pouce'},
+    {es:'un pie', fr:'un pied', note:"Les ouvriers mexicains connaissent souvent les pieds et pouces, mais pensent en mètres."},
+    {es:'un metro', fr:'un mètre'},
+    {es:'la mitad', fr:'la moitié'},
+    {es:'un cuarto', fr:'un quart', note:"« Cuarto » veut aussi dire une pièce (chambre)."},
+    {es:'largo', fr:'long'},
+    {es:'ancho', fr:'large'},
+    {es:'alto', fr:'haut'},
+    {es:'más', fr:'plus'},
+    {es:'menos', fr:'moins'},
+    {es:'Mide el largo', fr:'Mesure la longueur'},
+    {es:'Necesito diez tablas', fr:"J'ai besoin de dix planches"},
+    {es:'Corta a ocho pies', fr:'Coupe à huit pieds'},
+    {es:'¿Cuántos necesitas?', fr:"Combien t'en faut-il ?"},
+  ]},
+  { id:'limpieza', es:'Limpieza y demolición', fr:'Le ménage et la démolition', tag:'Chantier', color:'pink', items:[
+    {es:'la basura', fr:'les déchets'},
+    {es:'el contenedor', fr:'le conteneur'},
+    {es:'la escoba', fr:'le balai'},
+    {es:'el polvo', fr:'la poussière'},
+    {es:'la aspiradora', fr:"l'aspirateur"},
+    {es:'el escombro', fr:'les gravats (débris)'},
+    {es:'la mascarilla', fr:'le masque'},
+    {es:'Barre el piso', fr:'Balaie le plancher'},
+    {es:'Tira la basura', fr:'Jette les déchets'},
+    {es:'Recoge las herramientas', fr:'Ramasse les outils'},
+    {es:'Hay que demoler esta pared', fr:'Il faut démolir ce mur'},
+    {es:'Deja todo limpio', fr:'Laisse tout propre'},
+  ]},
+  { id:'playa', es:'Playa y paseos', fr:'La plage et les sorties', tag:'Voyage', color:'blue', items:[
+    {es:'el sol', fr:'le soleil'},
+    {es:'el mar', fr:'la mer'},
+    {es:'la arena', fr:'le sable'},
+    {es:'el bloqueador', fr:'la crème solaire'},
+    {es:'nadar', fr:'nager'},
+    {es:'el barco', fr:'le bateau'},
+    {es:'las ruinas', fr:'les ruines', note:"Chichén Itzá, Tulum, Cobá : les ruines mayas près de Cancún."},
+    {es:'la excursión', fr:"l'excursion"},
+    {es:'¿A qué hora sale el tour?', fr:'À quelle heure part le tour ?'},
+    {es:'¿Se puede nadar aquí?', fr:'Peut-on se baigner ici ?'},
+    {es:'Una foto, por favor', fr:"Une photo, s'il vous plaît"},
+    {es:'¡Qué bonito!', fr:'Que c\'est beau !'},
+  ]},
+  { id:'carro', es:'En carro', fr:'En voiture', tag:'Voyage', color:'sun', items:[
+    {es:'el carro', fr:'la voiture', note:"« Carro » en Amérique latine ; « coche » en Espagne."},
+    {es:'la gasolinera', fr:'la station-service'},
+    {es:'el estacionamiento', fr:'le stationnement'},
+    {es:'la llanta', fr:'le pneu'},
+    {es:'la carretera', fr:'la route (autoroute)'},
+    {es:'la licencia', fr:'le permis de conduire'},
+    {es:'el tope', fr:"le dos d'âne", note:"Au Mexique, les « topes » sont partout, même sur l'autoroute. Ralentis !"},
+    {es:'Quiero rentar un carro', fr:'Je veux louer une voiture'},
+    {es:'Lleno, por favor', fr:"Le plein, s'il vous plaît"},
+    {es:'¿Dónde puedo estacionarme?', fr:'Où puis-je me stationner ?'},
+    {es:'Tengo una llanta ponchada', fr:"J'ai un pneu crevé"},
+  ]},
+  { id:'telefono', es:'Teléfono y mensajes', fr:'Le téléphone et les textos', tag:'Quotidien', color:'blue', items:[
+    {es:'el celular', fr:'le cellulaire'},
+    {es:'el mensaje', fr:'le texto (message)'},
+    {es:'¿Bueno?', fr:'Allô ?', note:"Au Mexique, on répond au téléphone par « ¿Bueno? ». Ailleurs : « ¿Aló? » ou « ¿Diga? »."},
+    {es:'¿Cuál es tu número?', fr:"C'est quoi ton numéro ?"},
+    {es:'Te llamo más tarde', fr:"Je t'appelle plus tard"},
+    {es:'Mándame un mensaje', fr:'Envoie-moi un texto'},
+    {es:'No te escucho', fr:'Je ne t\'entends pas'},
+    {es:'Estoy en camino', fr:'Je suis en chemin'},
+    {es:'Llego en diez minutos', fr:"J'arrive dans dix minutes"},
+    {es:'Llego tarde', fr:'Je vais être en retard'},
+    {es:'¿Dónde estás?', fr:'Où es-tu ?'},
+    {es:'Mándame la dirección', fr:"Envoie-moi l'adresse"},
+  ]},
+  { id:'preguntas', es:'Las preguntas', fr:'Les questions', tag:'Quotidien', color:'teal', items:[
+    {es:'¿Quién?', fr:'Qui ?'},
+    {es:'¿Qué?', fr:'Quoi ?'},
+    {es:'¿Dónde?', fr:'Où ?'},
+    {es:'¿Cuándo?', fr:'Quand ?'},
+    {es:'¿Por qué?', fr:'Pourquoi ?'},
+    {es:'¿Cómo?', fr:'Comment ?'},
+    {es:'¿Cuántos?', fr:'Combien (de) ?'},
+    {es:'porque', fr:'parce que', note:"« ¿Por qué? » en deux mots pour demander, « porque » en un mot pour répondre."},
+    {es:'¿Quién tiene el taladro?', fr:'Qui a la perceuse ?'},
+    {es:'¿Cuándo terminas?', fr:'Quand finis-tu ?'},
+    {es:'¿Por qué no viniste?', fr:"Pourquoi tu n'es pas venu ?"},
+    {es:'¿Qué pasó?', fr:"Qu'est-ce qui s'est passé ?"},
+  ]},
+  { id:'trabajo', es:'El trabajo y la paga', fr:'La paye et les horaires', tag:'Quotidien', color:'sun', items:[
+    {es:'el jefe', fr:'le patron'},
+    {es:'el trabajador', fr:'le travailleur'},
+    {es:'la paga', fr:'la paye'},
+    {es:'el cheque', fr:'le chèque'},
+    {es:'las horas extra', fr:'les heures supplémentaires'},
+    {es:'el día libre', fr:'le jour de congé'},
+    {es:'¿Cuándo pagan?', fr:'Quand est-ce que la paye rentre ?'},
+    {es:'Te pago el viernes', fr:'Je te paie vendredi'},
+    {es:'Mañana no hay trabajo', fr:"Demain, il n'y a pas d'ouvrage"},
+    {es:'Llegas tarde otra vez', fr:'Tu arrives encore en retard'},
+    {es:'¿Puedes trabajar el sábado?', fr:'Peux-tu travailler samedi ?'},
+    {es:'Gracias por tu trabajo', fr:'Merci pour ton travail'},
+  ]},
+  { id:'casa', es:'La casa', fr:'La maison', tag:'Quotidien', color:'pink', items:[
+    {es:'la cocina', fr:'la cuisine'},
+    {es:'la recámara', fr:'la chambre à coucher', note:"« Recámara » au Mexique ; « dormitorio » ou « cuarto » ailleurs."},
+    {es:'la sala', fr:'le salon'},
+    {es:'el baño', fr:'la salle de bain'},
+    {es:'el sótano', fr:'le sous-sol'},
+    {es:'el garaje', fr:'le garage'},
+    {es:'el patio', fr:'la cour'},
+    {es:'la azotea', fr:'le toit plat'},
+    {es:'Vamos a renovar la cocina', fr:'On va rénover la cuisine'},
+    {es:'El cliente vive aquí', fr:'Le client habite ici'},
+    {es:'Quítate las botas', fr:'Enlève tes bottes'},
+    {es:'No hagas ruido', fr:'Ne fais pas de bruit'},
+  ]},
+  { id:'comida', es:'La comida', fr:'La nourriture', tag:'Quotidien', color:'teal', items:[
+    {es:'el pan', fr:'le pain'},
+    {es:'el pollo', fr:'le poulet'},
+    {es:'la carne', fr:'la viande'},
+    {es:'el arroz', fr:'le riz'},
+    {es:'los frijoles', fr:'les fèves (haricots)'},
+    {es:'el huevo', fr:"l'œuf"},
+    {es:'la fruta', fr:'les fruits'},
+    {es:'la tortilla', fr:'la tortilla', note:"Au Mexique, la tortilla est une galette de maïs. En Espagne, c'est une omelette !"},
+    {es:'el jugo', fr:'le jus'},
+    {es:'la leche', fr:'le lait'},
+    {es:'¿Ya comiste?', fr:'As-tu déjà mangé ?'},
+    {es:'La comida está lista', fr:'Le repas est prêt'},
+  ]},
+];
+/* Guide : grammaire et prononciation, une unité à la fois */
+const TIPS = {
+  saludos: [['Le H est muet', "« Hola » se dit « ola ». Le H ne se prononce jamais en espagnol."],
+            ['Les points à l\'envers', "Une question s'ouvre avec ¿ et une exclamation avec ¡ : « ¿Cómo estás? », « ¡Hola! »."],
+            ['Tú ou usted ?', "« Tú » pour tes employés, tes amis, les enfants. « Usted » (le vouvoiement) pour un client, un inconnu, une personne âgée."]],
+  herramientas: [['El, la, los, las', "« el » et « la » = le, la. Au pluriel : « los » et « las ». Les mots en -o sont presque toujours masculins, ceux en -a féminins."],
+                 ['Le genre change parfois', "La vis devient « el tornillo », le ruban devient « la cinta ». Apprends toujours le mot avec son article."]],
+  ordenes: [['Donner un ordre', "Pour dire à quelqu'un (tú) de faire quelque chose : verbes en -ar → -a (« Corta », « Espera »), verbes en -er/-ir → -e (« Mide »)."],
+            ['Les irréguliers à connaître', "« Ven » (viens), « Ponte » (mets-toi), « Haz » (fais), « Ve » (va). Très utiles sur un chantier."],
+            ['Adoucir', "Ajoute « por favor » : « Pásame el martillo, por favor ». Ça passe toujours mieux."]],
+  tablaroca: [['Hay que… = il faut…', "« Hay que » + verbe à l'infinitif : « Hay que lijar » (il faut sabler), « Hay que esperar » (il faut attendre)."],
+              ['Estar pour un état', "« Está mojado », « Está seco » : on utilise « estar » pour un état qui change."]],
+  plomeria: [['Hay = il y a', "« Hay una fuga » (il y a une fuite). « ¿Hay agua? » (Y a-t-il de l'eau ?). Le même mot sert à la question."],
+             ['Ouvrir et fermer', "« Cierra el agua » (ferme l'eau), « Abre el agua » (ouvre l'eau)."]],
+  electricidad: [['Dire non', "« No » se place devant le verbe : « No hay corriente » (il n'y a pas de courant)."],
+                 ['Interdire', "Une interdiction change la fin du verbe : « toca » → « No toques », « sube » → « No subas ». Apprends-les telles quelles."]],
+  pintura: [["L'adjectif suit le nom", "« la pared blanca » (le mur blanc). L'adjectif s'accorde : « el techo blanco », « la pared blanca »."]],
+  carpinteria: [['Está + état', "« Está chueco » (c'est croche), « Está nivelado » (c'est de niveau). Comme pour « seco » et « mojado »."]],
+  seguridad: [['Au Mexique', "Le numéro d'urgence est aussi le 911."],
+              ['Me lastimé', "« Me lastimé » = je me suis blessé. « Se lastimó » = il s'est blessé."]],
+  tiempo: [["Dire l'heure", "« Son las siete » (il est sept heures), mais « Es la una » (il est une heure). « A las siete » = à sept heures."]],
+  viaje: [["L'accent latino", "En Amérique latine, « ll » se dit comme « y » (« calle » = « caye ») et « z » ou « ce/ci » se disent « s » (« cerveza » = « servessa »)."],
+          ['Le J de la gorge', "« J » et « ge/gi » se prononcent du fond de la gorge, comme un « r » français raclé : « Jorge », « gente »."]],
+  dinero: [['Cien et ciento', "100 tout seul = « cien ». À partir de 101 : « ciento uno », « ciento cincuenta »."]],
+  restaurante: [['Commander', "« Quiero… » (je veux) est normal au Mexique. Plus poli : « Me da… » (vous me donnez…) ou « Quisiera… » (je voudrais)."]],
+  aeropuerto: [['Perdí = j\'ai perdu', "Le passé simple sert pour ce qui vient d'arriver : « Perdí mi maleta », « Perdí mi pasaporte »."]],
+  ciudad: [['Demander son chemin', "Commence par « Disculpe » (excusez-moi), puis « ¿Dónde está…? » ou « ¿Cómo llego a…? »."]],
+  compras: [['Me lo llevo', "« Lo » remplace la chose : « Me lo llevo » = je le prends. Pour une chose féminine : « Me la llevo »."]],
+  emergencias: [['Garde ça en tête', "« ¡Ayuda! » pour crier à l'aide, « Es urgente » pour qu'on se dépêche. Au Mexique, le 911 répond à tout."]],
+  conversacion: [['Quand tu bloques', "« ¿Puedes repetir? », « Más despacio, por favor » et « ¿Cómo se dice…? » : trois phrases qui sauvent n'importe quelle conversation."]],
+  verbos: [['Le « je » finit en -o', "Au présent, le « yo » se termine presque toujours en -o : quiero, puedo, necesito, tengo, hago. Exception fréquente : « voy » (je vais), « soy » (je suis)."],
+           ['Verbe + infinitif', "« Quiero hablar », « Puedo venir », « Necesito comprar » : le deuxième verbe reste à l'infinitif, comme en français."]],
+  familia: [['Mi et tu', "« mi » = mon/ma, « tu » = ton/ta (sans accent). Au pluriel : « mis hijos », « tus hijos »."]],
+  semana: [['Hace pour la météo', "« Hace calor », « Hace frío », « Hace sol » : on « fait » le temps, comme en français. Les jours s'écrivent sans majuscule."]],
+  sentir: [['Me duele…', "« Me duele la espalda » = j'ai mal au dos (littéralement « le dos me fait mal »). Utile après une grosse journée !"]],
+  ceramica: [['Azulejo ou loseta', "Les deux sont des tuiles : « azulejo » au mur, « loseta » au plancher."]],
+  albanileria: [['Trae, prepara', "« Trae » = apporte, « Prepara » = prépare, « Llena » = remplis. Encore des ordres en -a."]],
+  medidas: [['Les nombres avant le nom', "« diez tablas », « ocho pies » : comme en français, le nombre vient d'abord. « un » devient « una » au féminin : « una pulgada »."]],
+  limpieza: [['Tirar', "« Tirar » = jeter (« Tira la basura »). Pour démolir, dis plutôt « demoler » ou « tumbar »."]],
+  playa: [['Se puede…?', "« ¿Se puede…? » = est-ce qu'on peut… ? : « ¿Se puede nadar? », « ¿Se puede pagar con tarjeta? »."]],
+  carro: [['Ponchada', "Au Mexique, un pneu crevé est « ponchado » (de l'anglais « punch »)."]],
+  telefono: [['Llego…', "« Llego » = j'arrive. « Llego tarde » = je vais être en retard, « Llego en cinco minutos » = j'arrive dans cinq minutes."]],
+  preguntas: [['Les accents des questions', "Les mots de question portent un accent : qué, quién, dónde, cuándo, cómo, cuánto. Sans question, pas d'accent : « porque », « cuando »."]],
+  trabajo: [['Ojo : le dîner', "Si tu offres « el almuerzo » à ton équipe, c'est le repas du midi."]],
+  casa: [['Quítate…', "« Quítate » = enlève (sur toi) : « Quítate las botas », « Quítate los guantes ». C'est le contraire de « Ponte »."]],
+  comida: [['Ya', "« Ya » = déjà / maintenant : « ¿Ya comiste? » (as-tu déjà mangé ?), « Ya voy » (j'arrive)."]],
+  hotel: [['Ne marche pas', "« No funciona » = ça ne marche pas. Très utile : « No funciona la ducha », « No funciona el wifi »."]],
+};
+UNITS.forEach(u => u.items.forEach(it => it.unit = u.id));
+const ALL = UNITS.flatMap(u => u.items);
+const FLOORS = 4, LPF = 2; // 4 étages par unité, 2 leçons par étage
+
+/* Titres de niveau : on monte les échelons du chantier */
+const TITLES = [[1,'Apprenti'],[3,'Manœuvre'],[5,'Compagnon'],[8,"Chef d'équipe"],[12,'Contremaître'],[16,"Maître d'œuvre"],[20,'El Patrón']];
+
+/* ===================== ICÔNES ===================== */
+const P = {
+  flame:'<path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 1.5-4.5 3-6 .5 2 1.5 3 3 3-1-3-1-6 0-9z" fill="currentColor"/>',
+  peso:'<circle cx="12" cy="12" r="9" fill="currentColor"/><path d="M12 6.5v11M15 9c-.5-1.2-1.7-1.6-3-1.6-1.7 0-3 .8-3 2.2 0 3.3 6 1.7 6 4.9 0 1.4-1.3 2.3-3 2.3-1.5 0-2.7-.6-3.2-1.8" stroke="var(--surface)" stroke-width="1.8" fill="none" stroke-linecap="round"/>',
+  helmet:'<path d="M3 17a9 8 0 0 1 18 0z" fill="currentColor"/><rect x="1.5" y="16" width="21" height="3.5" rx="1.75" fill="currentColor"/><rect x="10.5" y="5" width="3" height="8" rx="1.5" fill="var(--surface)" opacity=".5"/>',
+  path:'<path d="M12 3l9 7v11h-6v-6H9v6H3V10z" fill="currentColor"/>',
+  target:'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/>',
+  crown:'<path d="M3 18l1.5-11 5 4.5L12 4l2.5 7.5 5-4.5L21 18z" fill="currentColor"/>',
+  star:'<path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5-4.8-4.6 6.6-.9z" fill="currentColor"/>',
+  book:'<path d="M3 5c3-1 6-1 9 1v14c-3-2-6-2-9-1zM21 5c-3-1-6-1-9 1v14c3-2 6-2 9-1z" fill="currentColor"/>',
+  bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="currentColor"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>',
+  cross:'<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/>',
+  lock:'<rect x="5" y="10" width="14" height="11" rx="3" fill="currentColor"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.6"/>',
+  close:'<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/>',
+  spk:'<path d="M3 9v6h4l5 4.5v-15L7 9z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
+  turtle:'<path d="M4 15a7 6 0 0 1 14 0z" fill="currentColor"/><circle cx="20" cy="12.5" r="2.2" fill="currentColor"/><path d="M6 15v3M15 15v3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
+  snow:'<path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 4l3 2.5L15 4M9 20l3-2.5 3 2.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+  cup:'<path d="M4 8h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z" fill="currentColor"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 2.5c-.8 1 .8 2-0 3M12 2.5c-.8 1 .8 2 0 3" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+  chat:'<path d="M4 4.5h16a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-5 4v-4H4A1.5 1.5 0 0 1 2.5 15V6A1.5 1.5 0 0 1 4 4.5z" fill="currentColor"/>',
+  arrow:'<path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
+  send:'<path d="M3 11.5L21 3l-6.5 18-3-7.5z" fill="currentColor"/>',
+  heart:'<path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" fill="currentColor"/>',
+  chest:'<rect x="5" y="26" width="54" height="30" rx="5" fill="var(--sun-deep)"/><path d="M5 30a27 18 0 0 1 54 0v4H5z" fill="var(--sun)"/><rect x="5" y="32" width="54" height="6" fill="var(--pink)"/><rect x="27" y="30" width="10" height="14" rx="3" fill="var(--pink-deep)"/><circle cx="32" cy="38" r="2.5" fill="var(--sun-soft)"/>',
+  sun:'<circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
+  plane:'<path d="M2.5 13.5l19-8.5-6.5 16-3-6.5z" fill="currentColor"/>',
+  drop:'<path d="M12 2.5C9 7 6 10 6 14a6 6 0 0 0 12 0c0-4-3-7-6-11.5z" fill="currentColor"/>',
+  user:'<circle cx="12" cy="8" r="4.5" fill="currentColor"/><path d="M3.5 21a8.5 7 0 0 1 17 0z" fill="currentColor"/>',
+  ear:'<path d="M7 9a5 5 0 0 1 10 0c0 3-3 4-3 7a3 3 0 0 1-6 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>',
+  pencil:'<path d="M4 20l1-5L16 4l4 4L9 19z" fill="currentColor"/>',
+};
+const ic = (n, cls) => `<svg viewBox="0 0 24 24" class="${cls || ''}" aria-hidden="true">${P[n]}</svg>`;
+function mascot(mood) {
+  const mouth = mood === 'sad' ? '<path d="M50 90q10-7 20 0" stroke="var(--eye)" stroke-width="4" fill="none" stroke-linecap="round"/>'
+    : mood === 'wow' ? '<ellipse cx="60" cy="88" rx="7" ry="8" fill="var(--eye)"/>'
+    : '<path d="M48 84q12 12 24 0" stroke="var(--eye)" stroke-width="4" fill="none" stroke-linecap="round"/>';
+  return `<svg class="mascot" viewBox="0 0 120 120" aria-hidden="true">
+    <ellipse cx="60" cy="114" rx="34" ry="5" fill="var(--line)"/>
+    <circle cx="60" cy="72" r="40" fill="var(--teal)"/>
+    <ellipse cx="60" cy="90" rx="24" ry="18" fill="var(--teal-soft)"/>
+    <path d="M22 52a38 34 0 0 1 76 0z" fill="var(--sun)"/>
+    <rect x="14" y="48" width="92" height="11" rx="5.5" fill="var(--sun-deep)"/>
+    <rect x="55" y="20" width="10" height="30" rx="5" fill="var(--sun-deep)"/>
+    <circle cx="45" cy="70" r="11" fill="var(--on)"/><circle cx="75" cy="70" r="11" fill="var(--on)"/>
+    <circle cx="47" cy="72" r="5.5" fill="var(--eye)"/><circle cx="77" cy="72" r="5.5" fill="var(--eye)"/>
+    <circle cx="49" cy="70" r="1.8" fill="var(--on)"/><circle cx="79" cy="70" r="1.8" fill="var(--on)"/>
+    <circle cx="32" cy="84" r="5" fill="var(--pink)" opacity=".45"/><circle cx="88" cy="84" r="5" fill="var(--pink)" opacity=".45"/>
+    ${mouth}</svg>`;
+}
+
+/* ===================== OUTILS ===================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const toks = s => s.replace(/[¿?¡!.,]/g, '').split(/\s+/).filter(Boolean);
+const loose = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[¿?¡!.,'’]/g, '').replace(/\s+/g, ' ').trim();
+const strict = s => s.toLowerCase().replace(/[¿?¡!.,'’]/g, '').replace(/\s+/g, ' ').trim();
+const isSentence = it => toks(it.es).length >= 3;
+const dayKey = d => { d = d || new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
+const parseDay = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const daysBetween = (a, b) => Math.round((parseDay(b) - parseDay(a)) / 864e5);
+const yesterday = () => dayKey(new Date(Date.now() - 864e5));
+const U = id => UNITS.find(u => u.id === id);
+
+/* ===================== SAUVEGARDE (dans ce navigateur) ===================== */
+const KEY = 'pasoapaso.v1';
+const fresh = () => ({ xp:0, streak:0, lastDay:null, progress:{}, done:{}, pesos:0, freezes:0, boostUntil:0, goal:3, track:'Chantier',
+  sound:true, voiceURI:null, slow:false, stats:{lessons:0, perfect:0, bestCombo:0, quests:0, early:0, tutor:0, exams:0, bestDay:0}, badges:{}, today:null, updatedAt:0, arcadeBest:0, hist:{} });
+let S = fresh();
+const adopt = o => { const n = Object.assign(fresh(), o); n.stats = Object.assign(fresh().stats, o.stats || {}); return n; };
+try { const raw = localStorage.getItem(KEY); if (raw) S = adopt(JSON.parse(raw)); } catch (e) {}
+const saveLocal = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+/* Sauvegarde dans le compte Claude : la progression suit d'un appareil à l'autre.
+   Le navigateur garde une copie ; la plus récente gagne au démarrage. */
+let CLOUD = null, cloudState = 'local', cloudTimer = null, cloudBusy = false, cloudAgain = false;
+function save() { S.updatedAt = Date.now(); saveLocal(); queueCloud(); }
+function queueCloud() { if (!CLOUD) return; clearTimeout(cloudTimer); cloudTimer = setTimeout(pushCloud, 1500); }
+async function pushCloud() {
+  if (!CLOUD) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  cloudBusy = true;
+  try { await CLOUD.set({ updatedAt: S.updatedAt, json: JSON.stringify(S) }); cloudState = 'cloud'; }
+  catch (e) { cloudState = 'error'; }
+  cloudBusy = false;
+  if (cloudAgain) { cloudAgain = false; pushCloud(); }
+}
+async function connectCloud() {
+  if (!window.claude || !window.claude.use) return;
+  try {
+    const [db, user] = await Promise.all([claude.use('db'), claude.use('user')]);
+    if (!db || !user) return;
+    const id = await user.id();
+    if (!id) return;
+    const ref = db.doc('data/users/' + id + '/progress');
+    const snap = await ref.get();
+    CLOUD = ref; cloudState = 'cloud';
+    const r = snap.exists ? snap.data() : null;
+    if (r && (r.updatedAt || 0) > (S.updatedAt || 0)) {
+      const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow }; // réglages propres à l'appareil
+      S = Object.assign(adopt(JSON.parse(r.json)), keep);
+      checkStreak(); saveLocal(); loadVoices();
+    } else if (S.updatedAt && (!r || S.updatedAt > (r.updatedAt || 0))) pushCloud();
+  } catch (e) { cloudState = 'error'; }
+  if (!$('#home').hidden) render();
+}
+function T() {
+  if (!S.today || S.today.day !== dayKey()) S.today = { day:dayKey(), lessons:0, xp:0, bestCombo:0, perfect:0, typed:0, listen:0, newWords:0, claimed:[], chest:false, goalHit:false };
+  return S.today;
+}
+/* Série : un gel de série couvre chaque jour manqué */
+let frozeNotice = 0;
+checkStreak();
+function checkStreak() {
+  if (!S.lastDay) return;
+  const gap = daysBetween(S.lastDay, dayKey());
+  if (gap <= 1) return;
+  const missed = gap - 1;
+  if (S.streak > 0 && S.freezes >= missed) { S.freezes -= missed; S.lastDay = yesterday(); frozeNotice = missed; }
+  else S.streak = 0;
+  saveLocal();
+}
+function addXp(n) {
+  const d = dayKey(); S.xp += n; T().xp += n;
+  S.hist = S.hist || {}; S.hist[d] = (S.hist[d] || 0) + n;
+  S.stats.bestDay = Math.max(S.stats.bestDay || 0, S.hist[d]);
+  const keys = Object.keys(S.hist); if (keys.length > 40) keys.sort((a, b) => parseDay(a) - parseDay(b)).slice(0, keys.length - 40).forEach(k => delete S.hist[k]);
+}
+const liveStreak = () => (S.lastDay === dayKey() || S.lastDay === yesterday()) ? S.streak : 0;
+
+/* Niveaux */
+function levelInfo(xp) { let lv = 1, base = 0, need = 40; while (xp >= base + need) { base += need; lv++; need = 40 + 20 * (lv - 1); } return { lv, into: xp - base, need }; }
+const titleOf = lv => TITLES.filter(t => t[0] <= lv).pop()[1];
+const nextTitle = lv => TITLES.find(t => t[0] > lv);
+const boostOn = () => S.boostUntil > Date.now();
+
+/* Étages et déblocage */
+const floorOf = u => Math.min(FLOORS, Math.floor((S.done[u.id] || 0) / LPF));
+/* Trois parcours en parallèle (Chantier, Voyage, Quotidien) qui partent tous de l'unité de base */
+const TRACKS = [['Chantier', 'helmet'], ['Voyage', 'plane'], ['Quotidien', 'chat']];
+function prereqOf(u) { const tr = UNITS.filter(x => x.tag === u.tag), j = tr.indexOf(u); return j > 0 ? tr[j - 1] : UNITS[0]; }
+function unlocked(i) { const u = UNITS[i]; return i === 0 || (S.done[u.id] || 0) > 0 || (S.done[prereqOf(u).id] || 0) >= LPF; }
+
+/* Répétition espacée (boîtes de Leitner) */
+const INTERVALS = [0, 10*60e3, 864e5, 3*864e5, 7*864e5, 21*864e5];
+function grade(it, ok) {
+  const p = S.progress[it.es] || { box:0, due:0, seen:0, wrong:0 };
+  p.seen++;
+  if (ok) p.box = Math.min(5, p.box + 1); else { p.box = 0; p.wrong++; }
+  p.due = Date.now() + INTERVALS[p.box];
+  S.progress[it.es] = p;
+}
+const mastered = it => (S.progress[it.es]?.box || 0) >= 3;
+const dueItems = () => ALL.filter(it => S.progress[it.es] && S.progress[it.es].due <= Date.now());
+
+/* ===================== DÉFIS DU JOUR ===================== */
+const QUESTS = [
+  {id:'l2', txt:'Termine 2 leçons', k:'lessons', n:2, r:10, icon:'book'},
+  {id:'l3', txt:'Termine 3 leçons', k:'lessons', n:3, r:15, icon:'book'},
+  {id:'x40', txt:'Gagne 40 XP', k:'xp', n:40, r:10, icon:'bolt'},
+  {id:'x80', txt:'Gagne 80 XP', k:'xp', n:80, r:20, icon:'bolt'},
+  {id:'c8', txt:'Fais un combo de 8', k:'bestCombo', n:8, r:15, icon:'flame'},
+  {id:'c12', txt:'Fais un combo de 12', k:'bestCombo', n:12, r:20, icon:'flame'},
+  {id:'p1', txt:'Termine une leçon sans faute', k:'perfect', n:1, r:20, icon:'star'},
+  {id:'t5', txt:'Réussis 5 réponses écrites', k:'typed', n:5, r:15, icon:'pencil'},
+  {id:'e5', txt:"Réussis 5 exercices d'écoute", k:'listen', n:5, r:15, icon:'ear'},
+  {id:'n6', txt:'Découvre 6 nouveaux mots', k:'newWords', n:6, r:10, icon:'sun'},
+  {id:'a1', txt:'Joue un Défi éclair', k:'arcade', n:1, r:10, icon:'bolt'},
+  {id:'m5', txt:'Échange 5 messages avec Paco', k:'tutor', n:5, r:20, icon:'chat'},
+];
+function seeded(str) { let h = 1779033703 ^ str.length; for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; } return () => { h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; }; }
+function todaysQuests() {
+  const rnd = seeded('q' + dayKey()); const out = []; const used = new Set();
+  const pool = QUESTS.filter(q => (hasSpeech || q.k !== 'listen') && (sampleState !== 'off' || q.k !== 'tutor'));
+  while (out.length < 3) { const q = pool[Math.floor(rnd() * pool.length)]; if (!used.has(q.k)) { used.add(q.k); out.push(q); } }
+  return out;
+}
+const questDone = q => (T()[q.k] || 0) >= q.n;
+const claimable = () => todaysQuests().filter(q => questDone(q) && !T().claimed.includes(q.id)).length + (T().claimed.length === 3 && !T().chest ? 1 : 0);
+
+/* ===================== TROPHÉES ===================== */
+const obraUnits = UNITS.filter(u => u.tag === 'Chantier');
+const BADGES = [
+  ['primera','Premier coup de marteau','Termine ta première leçon','helmet','pink', s => s.stats.lessons >= 1],
+  ['l10','Bon rythme','Termine 10 leçons','book','teal', s => s.stats.lessons >= 10],
+  ['l50','Infatigable','Termine 50 leçons','book','blue', s => s.stats.lessons >= 50],
+  ['r3','Trois jours de suite','Série de 3 jours','flame','sun', s => s.streak >= 3],
+  ['r7','Semaine complète','Série de 7 jours','flame','pink', s => s.streak >= 7],
+  ['r30','Un mois sans relâche','Série de 30 jours','flame','blue', s => s.streak >= 30],
+  ['perf','Sans faute','Une leçon parfaite','star','sun', s => s.stats.perfect >= 1],
+  ['perf10','Travail impeccable','10 leçons parfaites','star','teal', s => s.stats.perfect >= 10],
+  ['c10','Sur une lancée','Combo de 10','bolt','pink', s => s.stats.bestCombo >= 10],
+  ['c20','Inarrêtable','Combo de 20','bolt','blue', s => s.stats.bestCombo >= 20],
+  ['w50','Vocabulaire solide','50 mots découverts','sun','teal', s => Object.keys(s.progress).length >= 50],
+  ['toit','Premier toit','Une unité au 4e étage','path','sun', () => UNITS.some(u => floorOf(u) >= FLOORS)],
+  ['obra','Chantier complet','Toutes les unités Chantier au 4e étage','helmet','teal', () => obraUnits.every(u => floorOf(u) >= FLOORS)],
+  ['viaje','Prêt pour le voyage','« De viaje » au 4e étage','plane','pink', () => floorOf(U('viaje')) >= FLOORS],
+  ['routard','Grand voyageur','Toutes les unités Voyage au 4e étage','plane','blue', () => UNITS.filter(u => u.tag === 'Voyage').every(u => floorOf(u) >= FLOORS)],
+  ['jasette','Jaseux','Toutes les unités Quotidien au 4e étage','chat','pink', () => UNITS.filter(u => u.tag === 'Quotidien').every(u => floorOf(u) >= FLOORS)],
+  ['n5','Compagnon','Atteins le niveau 5','crown','blue', s => levelInfo(s.xp).lv >= 5],
+  ['n12','Contremaître','Atteins le niveau 12','crown','sun', s => levelInfo(s.xp).lv >= 12],
+  ['early','Lève-tôt','Une leçon avant 7 h','sun','sun', s => s.stats.early >= 1],
+  ['q10','Chasseur de défis','Réussis 10 défis','target','pink', s => s.stats.quests >= 10],
+  ['tut1','Première jasette','Un message avec Paco','chat','teal', s => s.stats.tutor >= 1],
+  ['ar20','Éclair','20 points au Défi éclair','bolt','sun', s => (s.arcadeBest || 0) >= 20],
+  ['ar40','Foudre','40 points au Défi éclair','bolt','pink', s => (s.arcadeBest || 0) >= 40],
+  ['exam','Saut d\'étages','Réussis un examen d\'unité','crown','teal', s => (s.stats.exams || 0) >= 1],
+  ['tut50','Ça jase en espagnol','50 messages avec Paco','chat','blue', s => s.stats.tutor >= 50],
+];
+function checkBadges() {
+  const fresh = [];
+  BADGES.forEach(b => { if (!S.badges[b[0]] && b[5](S)) { S.badges[b[0]] = dayKey(); fresh.push(b); } });
+  return fresh;
+}
+
+/* ===================== VOIX ===================== */
+const hasSpeech = 'speechSynthesis' in window;
+let voices = [], voice = null;
+function voiceScore(v) {
+  const l = v.lang.replace('_', '-'), n = v.name;
+  if (!/^es\b/i.test(l)) return -1;
+  let s = /MX/i.test(l) ? 30 : /US|419/i.test(l) ? 26 : /-(CO|AR|CL|PE|VE|CR|UY|EC|GT|PR|DO)/i.test(l) ? 20 : 6;
+  if (/natural|neural/i.test(n)) s += 100;
+  if (/premium/i.test(n)) s += 95;
+  if (/enhanced|améliorée|mejorada|optimizada/i.test(n)) s += 75;
+  if (/google/i.test(n)) s += 65;
+  if (/online/i.test(n)) s += 50;
+  if (/eloquence|espeak|compact|Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Bells|Bubbles|Jester|Organ|Whisper|Zarvox|Trinoids|Bahh|Boing|Albert|Cellos|Wobble/i.test(n)) s -= 60;
+  return s;
+}
+const quality = s => s >= 60 ? ['top', 'Excellente'] : s >= 25 ? ['mid', 'Correcte'] : ['low', 'Robotique'];
+function loadVoices() {
+  if (!hasSpeech) return;
+  voices = speechSynthesis.getVoices().filter(v => voiceScore(v) >= 0).sort((a, b) => voiceScore(b) - voiceScore(a));
+  voice = voices.find(v => v.voiceURI === S.voiceURI) || voices[0] || null;
+}
+if (hasSpeech) { loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (!$('#home').hidden) render(); }; }
+function say(text, slow) {
+  if (!hasSpeech) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = voice ? voice.lang : 'es-MX';
+    if (voice) u.voice = voice;
+    u.rate = (slow ? 0.6 : 0.92) * (S.slow ? 0.85 : 1);
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const speakBtn = (text, slow) => `<button class="speak${slow ? ' slow' : ''}" data-say="${esc(text)}" data-slow="${slow ? 1 : ''}" aria-label="${slow ? 'Écouter lentement' : 'Écouter'}">${ic(slow ? 'turtle' : 'spk')}</button>`;
+document.addEventListener('click', e => { const b = e.target.closest('[data-say]'); if (b) say(b.dataset.say, !!b.dataset.slow); });
+
+/* ===================== SONS ===================== */
+let AC = null;
+function tone(seq) {
+  if (!S.sound) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = AC.currentTime + 0.01;
+    seq.forEach(([f, at, dur, type, vol]) => {
+      const o = AC.createOscillator(), g = AC.createGain();
+      o.type = type || 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0, t0 + at); g.gain.linearRampToValueAtTime(vol || 0.18, t0 + at + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + at + dur);
+      o.connect(g).connect(AC.destination); o.start(t0 + at); o.stop(t0 + at + dur + 0.05);
+    });
+  } catch (e) {}
+}
+const SFX = {
+  ok: () => tone([[784, 0, .12, 'triangle'], [1175, .09, .22, 'triangle']]),
+  bad: () => tone([[220, 0, .18, 'square', .08], [180, .12, .25, 'square', .08]]),
+  tap: () => tone([[600, 0, .05, 'sine', .07]]),
+  win: () => tone([[523, 0, .15, 'triangle'], [659, .12, .15, 'triangle'], [784, .24, .15, 'triangle'], [1047, .36, .4, 'triangle']]),
+  coin: () => tone([[988, 0, .08, 'square', .07], [1319, .07, .25, 'square', .07]]),
+  level: () => tone([[392, 0, .12, 'triangle'], [523, .1, .12, 'triangle'], [659, .2, .12, 'triangle'], [784, .3, .12, 'triangle'], [1047, .42, .5, 'triangle'], [1319, .42, .5, 'sine', .1]]),
+};
+
+/* ===================== EFFETS ===================== */
+function confetti(n) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv = $('#confetti'); cv.hidden = false;
+  const W = cv.width = innerWidth, H = cv.height = innerHeight, cx = cv.getContext('2d');
+  const cs = getComputedStyle(document.documentElement);
+  const cols = ['--pink', '--teal', '--sun', '--blue'].map(v => cs.getPropertyValue(v).trim());
+  const ps = Array.from({ length: n || 120 }, () => ({ x: W / 2 + (Math.random() - .5) * 80, y: H * .35, vx: (Math.random() - .5) * 14, vy: -Math.random() * 14 - 4, r: Math.random() * 6 + 4, a: Math.random() * 6, va: (Math.random() - .5) * .4, c: pick(cols) }));
+  const t0 = performance.now();
+  (function frame(t) {
+    cx.clearRect(0, 0, W, H);
+    ps.forEach(p => { p.vy += .35; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va; cx.save(); cx.translate(p.x, p.y); cx.rotate(p.a); cx.fillStyle = p.c; cx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); cx.restore(); });
+    if (t - t0 < 2800) requestAnimationFrame(frame); else { cx.clearRect(0, 0, W, H); cv.hidden = true; }
+  })(t0);
+}
+function toast(msg) {
+  const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
+  document.body.appendChild(el); setTimeout(() => el.remove(), 2400);
+}
+function modal(html, onClose, label, cls) {
+  $('#layer').innerHTML = `<div class="overlay"><div class="modal ${cls || ''}">${html}<button class="btn wide" id="modal-ok">${label || 'Continuer'}</button></div></div>`;
+  $('#modal-ok').focus({ preventScroll: true });
+  $('#modal-ok').onclick = () => { $('#layer').innerHTML = ''; onClose && onClose(); };
+}
+
+/* ===================== ÉCRANS PRINCIPAUX ===================== */
+let tab = 'path';
+function statusBar() {
+  const st = liveStreak(), lv = levelInfo(S.xp).lv;
+  return `<div class="status">
+    <button class="chip lvl" data-tab="me" aria-label="Niveau ${lv}">${ic('helmet')}${lv}</button>
+    <button class="chip flame${st ? '' : ' off'}" data-tab="quests" aria-label="Série de ${st} jours">${ic('flame')}${st}${S.freezes ? `<span style="color:var(--blue);display:flex;align-items:center;margin-left:2px">${ic('snow')}</span>` : ''}</button>
+    <button class="chip peso" data-tab="quests" aria-label="${S.pesos} pesos">${ic('peso')}${S.pesos}</button>
+    ${boostOn() ? `<span class="boost">XP ×2 · ${Math.ceil((S.boostUntil - Date.now()) / 60000)} min</span>` : ''}
+  </div>`;
+}
+function tabsBar() {
+  const n = claimable();
+  $('#tabs').innerHTML = `<div class="in">
+    <button class="tab${tab === 'path' ? ' on' : ''}" data-tab="path">${ic('path')}Parcours</button>
+    <button class="tab${tab === 'tutor' ? ' on' : ''}" data-tab="tutor">${ic('chat')}Tuteur</button>
+    <button class="tab${tab === 'quests' ? ' on' : ''}" data-tab="quests">${ic('target')}Défis${n ? '<span class="dot"></span>' : ''}</button>
+    <button class="tab${tab === 'me' ? ' on' : ''}" data-tab="me">${ic('crown')}Profil</button></div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { tab = b.dataset.tab; SFX.tap(); render(); window.scrollTo(0, 0); } });
+function render() {
+  tabsBar();
+  const body = tab === 'path' ? pathView() : tab === 'tutor' ? tutorView() : tab === 'quests' ? questsView() : meView();
+  $('#home').innerHTML = statusBar() + body;
+  bindHome();
+}
+function goalCard() {
+  const t = T(), g = S.goal, frac = Math.min(1, t.lessons / g);
+  return `<div class="goalcard">${mascot(frac >= 1 ? 'wow' : 'happy').replace('class="mascot"', 'class="mascot" style="width:58px;flex:none"')}
+    <div class="txt"><b>${frac >= 1 ? 'Objectif du jour atteint !' : `Objectif : ${g} leçon${g > 1 ? 's' : ''} aujourd'hui`}</b>
+    <small>${t.lessons} / ${g} terminée${t.lessons > 1 ? 's' : ''}</small>
+    <div class="pbar" style="margin-top:6px"><i style="width:${frac * 100}%"></i></div></div></div>`;
+}
+function voiceNotice() {
+  if (!hasSpeech) return `<div class="notice"><b>Pas d'audio dans ce navigateur</b>Les exercices d'écoute sont remplacés par de la lecture.</div>`;
+  if (!voices.length && speechSynthesis.getVoices().length) return `<div class="notice"><b>Aucune voix espagnole sur cet appareil</b>Installe-en une pour bien entendre la prononciation. <button class="btn small blue" data-tab="me" style="justify-self:start">Voir comment</button></div>`;
+  if (voice && voiceScore(voice) < 60) return `<div class="notice"><b>Ta voix espagnole est robotique</b>Une voix de bien meilleure qualité s'installe gratuitement en 2 minutes. <button class="btn small blue" data-tab="me" style="justify-self:start">Voir comment</button></div>`;
+  return '';
+}
+function pathView() {
+  const due = dueItems();
+  let h = goalCard() + voiceNotice();
+  const sents = ALL.filter(isSentence), dp = sents[Math.floor(seeded('p' + dayKey())() * sents.length)];
+  h += `<div class="daily"><span class="eyebrow">Phrase du jour</span><div class="row1">${speakBtn(dp.es)}<span class="es">${esc(dp.es)}</span></div>
+    <details><summary>Voir la traduction</summary><p>${esc(dp.fr)}</p></details></div>`;
+  h += `<div class="arcade-card"><div class="art">${ic('bolt')}</div><div class="txt"><b>Défi éclair</b><small>60 secondes, un max de bonnes réponses${S.arcadeBest ? ` · record ${S.arcadeBest}` : ''}</small></div><button class="btn small" id="go-arcade">Jouer</button></div>`;
+  if (frozeNotice) h += `<div class="notice"><b>Ta série est sauvée</b>${frozeNotice > 1 ? frozeNotice + ' gels de série ont été utilisés' : 'Un gel de série a été utilisé'} pour ton absence.</div>`;
+  if (due.length >= 3) h += `<div class="review"><div class="txt"><b>Révision</b><small>${due.length} mots à revoir avant de les oublier</small></div><button class="btn small teal" id="go-review">Réviser</button></div>`;
+  h += `<div class="seg tracks" style="grid-template-columns:repeat(3,1fr);margin-top:24px">${TRACKS.map(([t, icn]) => {
+    const tu = UNITS.filter(u => u.tag === t), dn = tu.filter(u => floorOf(u) >= FLOORS).length;
+    return `<button class="${S.track === t ? 'on' : ''}" data-track="${t}">${ic(icn).replace('<svg', '<svg style="width:22px;height:22px;display:block;margin:0 auto 2px"')}${t}<small>${dn} / ${tu.length} unités</small></button>`; }).join('')}</div>`;
+  [UNITS[0], ...UNITS.filter(u => u.tag === S.track)].forEach((u, pos) => {
+    const i = UNITS.indexOf(u);
+    const open = unlocked(i), f = floorOf(u), n = S.done[u.id] || 0;
+    const col = `--uc:var(--${u.color});--ud:var(--${u.color}-deep);--uc2:var(--${u.color === 'sun' ? 'sun-deep' : u.color})`;
+    h += `<div class="unit-banner${open ? '' : ' locked'}" style="${open ? col : ''}">
+      <div class="txt"><div class="eyebrow">Unité ${pos + 1} · ${u.tag}</div><h2>${esc(u.es)}</h2><p>${esc(u.fr)}</p></div>
+      ${open ? `<button class="lexbtn" data-lex="${u.id}" style="${u.color === 'sun' ? 'color:var(--sun-ink)' : ''}">Guide</button>` : ic('lock').replace('<svg', '<svg style="width:30px;height:30px;flex:none"')}</div>
+      <div class="floors" style="${col}">`;
+    for (let k = 0; k < FLOORS; k++) {
+      const state = !open ? 'locked' : k < f ? 'done' : k === f ? 'current' : 'locked';
+      const icon = k === FLOORS - 1 ? 'crown' : state === 'done' ? 'check' : 'star';
+      const inFloor = n - k * LPF;
+      const ring = state === 'current' ? (() => { const r = 46, c = 2 * Math.PI * r, fr = Math.max(0, Math.min(1, inFloor / LPF)); return `<svg class="node-ring" viewBox="0 0 98 98"><circle cx="49" cy="49" r="${r}" fill="none" stroke="var(--line)" stroke-width="7"/><circle cx="49" cy="49" r="${r}" fill="none" stroke="var(--uc)" stroke-width="7" stroke-linecap="round" stroke-dasharray="${c * fr} ${c}" transform="rotate(-90 49 49)"/></svg>`; })() : '';
+      const bubble = state === 'current' ? `<span class="bubble">${n === 0 ? 'Commencer' : inFloor > 0 ? `${inFloor}/${LPF}` : 'Étape ' + (k + 1)}</span>` : '';
+      if (open && state === 'locked' && k === FLOORS - 1) { h += `<div class="node-wrap p${k % 4}"><button class="node locked exam" data-exam="${u.id}" aria-label="Examen : sauter directement au toit de ${esc(u.fr)}">${ic('crown', 'ic')}</button></div>`; continue; }
+      h += `<div class="node-wrap p${k % 4}">${bubble}${ring}<button class="node ${state}" ${state === 'locked' ? 'disabled' : ''} data-unit="${u.id}" aria-label="${esc(u.fr)}, étage ${k + 1}${state === 'done' ? ', terminé' : state === 'locked' ? ', verrouillé' : ''}">${ic(icon, 'ic')}</button></div>`;
+    }
+    h += `</div>`;
+    if (!open) h += `<p class="locknote">Termine l'étape 1 de « ${esc(prereqOf(u).fr)} » pour débloquer</p>`;
+    else if (f >= FLOORS) h += `<p class="locknote">Toit posé ! Touche une étape pour pratiquer.</p>`;
+  });
+  return h;
+}
+function questsView() {
+  const t = T(), qs = todaysQuests();
+  let h = `<h2 class="section-title">Défis du jour</h2><div class="card">`;
+  qs.forEach(q => {
+    const v = Math.min(q.n, t[q.k] || 0), claimed = t.claimed.includes(q.id), done = v >= q.n;
+    h += `<div class="quest${claimed ? ' claimed' : ''}"><div class="qicon">${ic(q.icon)}</div>
+      <div style="min-width:0"><b>${q.txt}</b><div class="pbar"><i style="width:${v / q.n * 100}%;--c:var(--sun)"></i></div><small style="color:var(--muted);font-weight:700">${v} / ${q.n}</small></div>
+      ${claimed ? `<span class="reward" style="color:var(--ok)">${ic('check')}</span>` : done ? `<button class="btn small sun" data-claim="${q.id}">+${q.r}</button>` : `<span class="reward">${ic('peso')}${q.r}</span>`}</div>`;
+  });
+  const ready = t.claimed.length === 3 && !t.chest;
+  h += `</div><div class="card chest${ready ? ' ready' : ''}"><svg viewBox="0 0 64 64" class="big" aria-hidden="true">${P.chest}</svg>
+    <div class="txt"><b>${t.chest ? 'Coffre ouvert' : 'Coffre du jour'}</b><small style="color:var(--muted);font-weight:700">${t.chest ? 'Reviens demain pour un nouveau coffre.' : ready ? 'Tes 3 défis sont réussis !' : 'Réussis les 3 défis pour l\'ouvrir.'}</small></div>
+    ${ready ? `<button class="btn small pink" id="open-chest">Ouvrir</button>` : ''}</div>`;
+  h += `<h2 class="section-title">Objectif quotidien</h2><div class="card"><div style="font-weight:700">Combien de leçons par jour ? Chaque objectif atteint rapporte 10 XP de bonus.</div><div class="seg">
+    ${[[1,'Relax'],[2,'Normal'],[3,'Sérieux'],[5,'Intense']].map(([n, l]) => `<button class="${S.goal === n ? 'on' : ''}" data-goal="${n}">${n}<small>${l}</small></button>`).join('')}</div></div>`;
+  h += `<h2 class="section-title">Boutique</h2><div class="card">
+    <div class="shop"><div class="art" style="background:var(--blue-soft);color:var(--blue)">${ic('snow')}</div><div><b>Gel de série</b><small>Protège ta série si tu manques un jour. ${S.freezes}/2 en réserve.</small></div>
+      <button class="btn small blue" data-buy="freeze" ${S.freezes >= 2 || S.pesos < 40 ? 'disabled' : ''}>40 ${ic('peso').replace('<svg', '<svg style="width:16px;height:16px;vertical-align:-3px"')}</button></div>
+    <div class="shop"><div class="art" style="background:var(--sun-soft);color:var(--sun-deep)">${ic('cup')}</div><div><b>Café cubano</b><small>XP doublés pendant 15 minutes.</small></div>
+      <button class="btn small sun" data-buy="boost" ${S.pesos < 30 || boostOn() ? 'disabled' : ''}>30 ${ic('peso').replace('<svg', '<svg style="width:16px;height:16px;vertical-align:-3px"')}</button></div>
+    </div><p style="color:var(--muted);font-size:14px;font-weight:700;margin-top:12px">Gagne des pesos en terminant des leçons (5 par leçon, 10 si elle est parfaite) et en réussissant les défis.</p>`;
+  return h;
+}
+function weekChart() {
+  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(Date.now() - (6 - i) * 864e5); return { k: dayKey(d), l: 'DLMMJVS'[d.getDay()] }; });
+  const vals = days.map(d => (S.hist || {})[d.k] || 0), max = Math.max(20, ...vals), total = vals.reduce((a, b) => a + b, 0);
+  return `<div class="card"><div style="display:flex;justify-content:space-between;gap:8px;font-weight:800"><span>${total} XP en 7 jours</span><span style="color:var(--muted)">Record : ${S.stats.bestDay || 0} XP en un jour</span></div>
+    <div class="week">${days.map((d, i) => `<div class="col${i === 6 ? ' today' : ''}"><span class="v">${vals[i] || ''}</span><div class="barwrap"><div class="bar" style="height:${Math.round(vals[i] / max * 100)}%"></div></div><span class="d">${d.l}</span></div>`).join('')}</div></div>`;
+}
+function meView() {
+  const L = levelInfo(S.xp), nt = nextTitle(L.lv);
+  const learned = Object.keys(S.progress).length, mast = ALL.filter(mastered).length;
+  let h = `<div class="card levelcard" style="margin-top:16px"><div class="lvbadge">${L.lv}</div><div class="txt">
+    <span class="eyebrow">Niveau ${L.lv}</span><h2>${titleOf(L.lv)}</h2>
+    <div class="pbar"><i style="width:${L.into / L.need * 100}%;--c:var(--pink)"></i></div>
+    <small>${L.into} / ${L.need} XP vers le niveau ${L.lv + 1}${nt ? ` · « ${nt[1]} » au niveau ${nt[0]}` : ''}</small></div></div>
+    <div class="statgrid">
+      <div class="stat" style="color:var(--sun-deep)">${ic('flame')}<div><b style="color:var(--ink)">${liveStreak()}</b><small>jours de suite</small></div></div>
+      <div class="stat" style="color:var(--pink)">${ic('bolt')}<div><b style="color:var(--ink)">${S.xp}</b><small>XP au total</small></div></div>
+      <div class="stat" style="color:var(--teal)">${ic('book')}<div><b style="color:var(--ink)">${learned}<span style="font-size:14px;color:var(--muted)"> / ${ALL.length}</span></b><small>mots découverts</small></div></div>
+      <div class="stat" style="color:var(--blue)">${ic('star')}<div><b style="color:var(--ink)">${mast}</b><small>mots maîtrisés</small></div></div>
+      <div class="stat" style="color:var(--teal)">${ic('check')}<div><b style="color:var(--ink)">${S.stats.lessons}</b><small>leçons terminées</small></div></div>
+      <div class="stat" style="color:var(--sun-deep)">${ic('bolt')}<div><b style="color:var(--ink)">${S.stats.bestCombo}</b><small>meilleur combo</small></div></div>
+    </div>
+    <h2 class="section-title">Cette semaine</h2>${weekChart()}
+    <h2 class="section-title">Trophées <span style="color:var(--muted);font-size:18px">${Object.keys(S.badges).length} / ${BADGES.length}</span></h2>
+    <div class="badges">${BADGES.map(b => `<div class="badge${S.badges[b[0]] ? '' : ' locked'}" style="--bc:var(--${b[4]});--bd:var(--${b[4]}-deep)"><div class="medal">${ic(b[3])}</div><b>${b[1]}</b><small>${b[2]}</small></div>`).join('')}</div>
+    <h2 class="section-title">Voix espagnole</h2><div class="card">`;
+  if (!hasSpeech) h += `<p style="margin:0">Ce navigateur ne lit pas l'audio.</p>`;
+  else if (!voices.length) h += `<p style="margin:0;font-weight:700">Aucune voix espagnole trouvée sur cet appareil.</p>`;
+  else voices.slice(0, 8).forEach((v, i) => {
+    const [qc, ql] = quality(voiceScore(v));
+    h += `<div class="voice"><label><input type="radio" name="voice" id="voice-${i}" value="${esc(v.voiceURI)}" ${voice && v.voiceURI === voice.voiceURI ? 'checked' : ''}><span><span class="nm">${esc(v.name.replace(/^Microsoft |^Google /, m => m))}</span><span class="q ${qc}">${ql}</span><br><small style="color:var(--muted)">${esc(v.lang)}</small></span></label>
+      <button class="btn small line" data-test="${esc(v.voiceURI)}">Tester</button></div>`;
+  });
+  h += `</div><div class="card" style="font-size:15px"><b style="font-family:var(--font-display);font-size:18px">Installer une voix de qualité Duolingo</b>
+    <p style="margin:6px 0 0"><b>iPhone / iPad :</b> Réglages › Accessibilité › Contenu énoncé › Voix › Espagnol › <b>Paulina (Mexique)</b>, puis télécharge la version <b>Premium</b> ou <b>Améliorée</b>. Reviens ici et choisis-la.</p>
+    <p style="margin:6px 0 0"><b>Android :</b> Paramètres › Accessibilité › Synthèse vocale › Moteur Google › Installer les données vocales › <b>Español (Estados Unidos)</b>, version haute qualité.</p>
+    <p style="margin:6px 0 0"><b>Ordinateur :</b> Microsoft Edge offre des voix « Natural » excellentes (Dalia, Jorge). Chrome offre « Google español de Estados Unidos ».</p></div>
+    <h2 class="section-title">Réglages</h2><div class="card">
+      <div class="row"><span style="font-weight:700">Voix plus lente</span><button class="switch${S.slow ? ' on' : ''}" id="sw-slow" aria-pressed="${S.slow}" aria-label="Voix plus lente"></button></div>
+      <div class="row"><span style="font-weight:700">Effets sonores</span><button class="switch${S.sound ? ' on' : ''}" id="sw-sound" aria-pressed="${S.sound}" aria-label="Effets sonores"></button></div>
+      <div class="row"><span style="font-weight:700">Transférer ma progression<br><small style="color:var(--muted)">Entre l'app du téléphone et la version Claude</small></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn small line" id="export">Copier</button><button class="btn small line" id="import">Coller</button></span></div>
+      <div class="row"><span style="font-weight:700">Progression</span><button class="btn small line" id="reset">${resetArmed ? 'Confirmer : tout effacer' : 'Réinitialiser'}</button></div>
+    </div><p style="color:var(--muted);font-size:13px;font-weight:700;margin-top:12px">Pas de pub, pas de vies, pas de limite. ${cloudState === 'cloud' ? 'Ta progression est sauvegardée dans ton compte Claude : elle te suit sur ton téléphone et ton ordinateur.' : cloudState === 'error' ? 'La sauvegarde en ligne a échoué ; ta progression reste gardée dans ce navigateur.' : 'Ta progression est gardée dans ce navigateur.'}</p>`;
+  return h;
+}
+let resetArmed = false;
+function bindHome() {
+  const H = $('#home');
+  H.querySelectorAll('[data-lex]').forEach(b => b.onclick = () => lexicon(U(b.dataset.lex)));
+  H.querySelectorAll('[data-track]').forEach(b => b.onclick = () => { S.track = b.dataset.track; saveLocal(); SFX.tap(); render(); });
+  H.querySelectorAll('[data-exam]').forEach(b => b.onclick = () => examPrompt(U(b.dataset.exam)));
+  const ga = $('#go-arcade'); if (ga) ga.onclick = openArcade;
+  H.querySelectorAll('[data-scene]').forEach(b => b.onclick = () => openScene(SCENES.find(x => x.id === b.dataset.scene)));
+  H.querySelectorAll('[data-unit]').forEach(b => b.onclick = () => startLesson(U(b.dataset.unit)));
+  const rv = $('#go-review'); if (rv) rv.onclick = () => startLesson(null);
+  H.querySelectorAll('[data-claim]').forEach(b => b.onclick = () => {
+    const q = QUESTS.find(x => x.id === b.dataset.claim); const t = T();
+    if (t.claimed.includes(q.id)) return;
+    t.claimed.push(q.id); S.pesos += q.r; S.stats.quests++; SFX.coin();
+    const nb = checkBadges(); save(); render(); toast(`+${q.r} pesos !`);
+    if (nb.length) setTimeout(() => toast(`Trophée débloqué : ${nb[0][1]}`), 1200);
+  });
+  const ch = $('#open-chest'); if (ch) ch.onclick = () => {
+    const t = T(); if (t.chest) return; t.chest = true;
+    const gain = 20 + Math.floor(Math.random() * 3) * 10; S.pesos += gain; save();
+    SFX.level(); confetti(140);
+    modal(`<svg viewBox="0 0 64 64" style="width:96px;height:96px" aria-hidden="true">${P.chest}</svg><h2>¡Tesoro!</h2><p>Le coffre contenait <b style="color:var(--teal-deep)">${gain} pesos</b>.</p>`, render);
+  };
+  H.querySelectorAll('[data-goal]').forEach(b => b.onclick = () => { S.goal = +b.dataset.goal; save(); SFX.tap(); render(); });
+  H.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => {
+    if (b.dataset.buy === 'freeze' && S.pesos >= 40 && S.freezes < 2) { S.pesos -= 40; S.freezes++; toast('Gel de série ajouté'); }
+    if (b.dataset.buy === 'boost' && S.pesos >= 30 && !boostOn()) { S.pesos -= 30; S.boostUntil = Date.now() + 15 * 60000; toast('XP doublés pendant 15 minutes !'); }
+    SFX.coin(); save(); render();
+  });
+  H.querySelectorAll('input[name="voice"]').forEach(r => r.onchange = () => { S.voiceURI = r.value; save(); loadVoices(); say('¡Hola! Pásame el martillo, por favor.'); });
+  H.querySelectorAll('[data-test]').forEach(b => b.onclick = () => {
+    const v = voices.find(x => x.voiceURI === b.dataset.test); const keep = voice; voice = v; say('¡Hola! Pásame el martillo, por favor.'); voice = keep;
+  });
+  const sw = $('#sw-sound'); if (sw) sw.onclick = () => { S.sound = !S.sound; save(); render(); SFX.tap(); };
+  const sl = $('#sw-slow'); if (sl) sl.onclick = () => { S.slow = !S.slow; save(); render(); say('Más despacio, por favor'); };
+  const ex = $('#export'); if (ex) ex.onclick = () => {
+    const code = 'PASO1:' + btoa(unescape(encodeURIComponent(JSON.stringify(S))));
+    const done = () => toast('Code copié : colle-le dans l\'autre version (Profil › Coller)');
+    const show = () => { modal(`<h2>Ton code</h2><p>Copie tout ce texte, puis colle-le dans l'autre version (Profil › Coller).</p><textarea id="code-out" class="type-box" style="min-height:140px;font-size:12px" readonly>${code}</textarea>`, null, 'Fermer', 'list'); const t = $('#code-out'); t.focus(); t.select(); };
+    try { navigator.clipboard.writeText(code).then(done, show); } catch (e) { show(); }
+  };
+  const im = $('#import'); if (im) im.onclick = () => {
+    modal(`<h2>Coller un code</h2><p>Colle le code copié dans l'autre version. Ta progression ici sera remplacée.</p><textarea id="code-in" class="type-box" style="min-height:140px;font-size:12px" placeholder="PASO1:…"></textarea><button class="btn teal wide" id="code-go">Importer</button><p id="code-err" style="color:var(--bad);margin:0"></p>`, null, 'Annuler', 'list');
+    $('#code-go').onclick = () => {
+      try {
+        const raw = $('#code-in').value.trim().replace(/^PASO1:/, '');
+        const o = JSON.parse(decodeURIComponent(escape(atob(raw))));
+        if (typeof o.xp !== 'number' || !o.progress) throw 0;
+        const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow };
+        S = Object.assign(adopt(o), keep); checkStreak(); save();
+        $('#layer').innerHTML = ''; SFX.win(); render(); toast('Progression importée : niveau ' + levelInfo(S.xp).lv);
+      } catch (e) { $('#code-err').textContent = "Ce code n'est pas valide. Recopie-le au complet, du début à la fin."; }
+    };
+  };
+  const rs = $('#reset'); if (rs) rs.onclick = () => {
+    if (!resetArmed) { resetArmed = true; render(); setTimeout(() => { resetArmed = false; if (!$('#home').hidden && tab === 'me') render(); }, 4000); return; }
+    resetArmed = false; S = fresh(); save(); tab = 'path'; render();
+  };
+}
+
+/* ===================== CONSTRUCTION D'UNE LEÇON ===================== */
+function weakness(it) { const p = S.progress[it.es]; return p ? p.box * 1e13 + p.due : -1; }
+function distractors(it, field, n) {
+  const same = ALL.filter(o => o !== it && isSentence(o) === isSentence(it) && loose(o[field]) !== loose(it[field]));
+  return shuffle(same.filter(o => o.unit === it.unit)).concat(shuffle(same.filter(o => o.unit !== it.unit))).slice(0, n);
+}
+/* Plus on monte d'étage, plus on écrit et on écoute au lieu de choisir */
+function typesFor(it, floor) {
+  const sp = hasSpeech, f = Math.min(floor, 3);
+  if (isSentence(it)) return [
+    ['build', 'build', 'fr2es'],
+    ['build', sp ? 'listenBuild' : 'build', 'fr2es'],
+    ['build', sp ? 'listenBuild' : 'build', 'type'],
+    ['type', sp ? 'listenBuild' : 'type', 'build'],
+  ][f];
+  return [
+    ['es2fr', 'fr2es', sp ? 'listen' : 'fr2es', 'fr2es'],
+    ['fr2es', sp ? 'listen' : 'es2fr', 'type'],
+    ['type', sp ? 'listen' : 'fr2es', 'fr2es', 'type'],
+    ['type', 'type', sp ? 'listen' : 'type'],
+  ][f];
+}
+function buildLesson(unit) {
+  let pool, fresh = [];
+  const floor = unit ? floorOf(unit) : 2;
+  if (unit) {
+    const unseen = unit.items.filter(it => !S.progress[it.es]);
+    fresh = unseen.slice(0, 4);
+    const seen = unit.items.filter(it => S.progress[it.es]).sort((a, b) => weakness(a) - weakness(b));
+    pool = fresh.concat(seen.slice(0, 7 - fresh.length));
+  } else {
+    pool = dueItems().sort((a, b) => weakness(a) - weakness(b)).slice(0, 8);
+  }
+  const ex = fresh.map(it => ({ t:'intro', it }));
+  const words = shuffle(pool.filter(it => !isSentence(it)));
+  const rest = [];
+  if (words.length >= 4) rest.push({ t:'match', items: words.slice(0, 4) });
+  pool.forEach(it => {
+    rest.push({ t: pick(typesFor(it, floor)), it });
+    if (fresh.includes(it)) rest.push({ t: isSentence(it) ? 'build' : 'fr2es', it });
+  });
+  return { queue: ex.concat(shuffle(rest)), fresh, floor };
+}
+
+/* ===================== DÉROULEMENT ===================== */
+let L = null;
+function examPrompt(u) {
+  modal(`${mascot('happy')}<span class="eyebrow">Examen · ${esc(u.fr)}</span><h2>Sauter au toit ?</h2>
+    <p>Tu connais déjà ces mots ? Réponds à ${u.items.length} questions avec 3 vies. Réussis et l'unité est terminée d'un coup, avec l'unité suivante débloquée.</p>
+    <button class="btn sun wide" id="exam-go">Passer l'examen</button>`, null, 'Pas maintenant');
+  $('#exam-go').onclick = () => { $('#layer').innerHTML = ''; startLesson(u, true); };
+}
+function startLesson(unit, exam) {
+  const b = exam ? { queue: shuffle(unit.items).map(it => ({ t: pick(typesFor(it, 3)), it })), fresh: [], floor: 3 } : buildLesson(unit);
+  L = { unit, floor: b.floor, queue: b.queue, fresh: b.fresh, pos: 0, total: b.queue.length, answered: 0, correct: 0, firstOk: 0,
+        results: {}, xp: 0, combo: 0, best: 0, typed: 0, listen: 0, exam: !!exam, lives: 3 };
+  $('#home').hidden = true; $('#done').hidden = true; $('#tabs').hidden = true; $('#lesson').hidden = false;
+  SFX.tap(); window.scrollTo(0, 0); next();
+}
+function record(it, ok) { L.results[it.es] = (L.results[it.es] ?? true) && ok; }
+function next() {
+  if (L.exam && L.lives <= 0) return examFail();
+  if (L.pos >= L.queue.length) return finish();
+  const ex = L.queue[L.pos];
+  const pct = Math.min(100, L.answered / L.total * 100);
+  $('#lesson').innerHTML = `
+    <div class="lesson-top"><button class="x" id="quit" aria-label="Quitter la leçon">${ic('close')}</button>
+      <div class="lbar pbar"><i style="width:${pct}%;--c:var(--ok)"></i></div>
+      ${L.exam ? `<div class="hearts" id="hearts">${[0,1,2].map(k => `<span class="${k < L.lives ? '' : 'gone'}">${ic('heart')}</span>`).join('')}</div>` : ''}<div class="combo" id="combo">${L.combo >= 2 ? ic('flame') + L.combo : ''}</div></div>
+    <div class="combo-banner" id="combo-banner">${ex.retry ? 'Erreur précédente' : L.combo >= 5 ? `Combo ×${L.combo} · XP bonus` : ''}</div>
+    <div class="stage" id="stage"></div>
+    <div class="checkbar" id="checkbar"><div class="in"><div class="fb" id="fb" hidden></div><button class="btn ok wide" id="check" disabled>Vérifier</button></div></div>`;
+  $('#quit').onclick = () => { if (hasSpeech) speechSynthesis.cancel(); L = null; showHome(); };
+  RENDER[ex.t](ex);
+}
+let checkFn = null;
+function setCheck(fn, enabled) { checkFn = fn; $('#check').disabled = !enabled; }
+function enableCheck(on) { $('#check').disabled = !on; }
+document.addEventListener('click', e => {
+  if (e.target.id !== 'check' || !L) return;
+  if (e.target.dataset.mode === 'next') { L.pos++; next(); return; }
+  if (checkFn) checkFn();
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || !L || $('#lesson').hidden) return;
+  const b = $('#check'); if (b && !b.disabled && !b.hidden) { e.preventDefault(); b.click(); }
+});
+const PRAISE = ['¡Muy bien!', '¡Excelente!', '¡Eso es!', '¡Perfecto!', '¡Bravo!', '¡Qué bien!'];
+function feedback(ok, it, extra) {
+  const ex = L.queue[L.pos];
+  L.answered++;
+  if (ok) {
+    L.correct++; L.combo++; L.best = Math.max(L.best, L.combo);
+    L.xp += 2 + (L.combo >= 5 ? 1 : 0) + (L.combo >= 10 ? 1 : 0);
+    if (!ex.retry) L.firstOk++;
+    if (ex.t === 'type') L.typed++;
+    if (ex.t === 'listen' || ex.t === 'listenBuild') L.listen++;
+    SFX.ok();
+  } else {
+    L.combo = 0; SFX.bad();
+    if (L.exam) { L.lives--; const hs = $('#hearts'); if (hs) hs.innerHTML = [0,1,2].map(k => `<span class="${k < L.lives ? '' : 'gone'}">${ic('heart')}</span>`).join(''); }
+    else if (!ex.retry) { L.queue.push(Object.assign({}, ex, { retry: true })); L.total++; }
+  }
+  const cb = $('#combo'); cb.innerHTML = L.combo >= 2 ? ic('flame') + L.combo : ''; if (ok && L.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); }
+  $('#combo-banner').textContent = ok && [5, 10, 15, 20].includes(L.combo) ? `Combo ×${L.combo} !` : '';
+  $('.lbar i').style.width = Math.min(100, L.answered / L.total * 100) + '%';
+  if (it) { record(it, ok); setTimeout(() => say(it.es), ok ? 350 : 150); }
+  $('#checkbar').classList.add(ok ? 'ok' : 'bad');
+  const fb = $('#fb'); fb.hidden = false;
+  fb.innerHTML = `<div class="ico">${ic(ok ? 'check' : 'cross')}</div><div class="txt"><h3>${ok ? pick(PRAISE) : 'Pas tout à fait'}</h3>`
+    + (it && !ok ? `<p>Bonne réponse : ${esc(it.es)}</p><p style="opacity:.85">${esc(it.fr)}</p>` : '')
+    + (extra ? `<p class="note">${extra}</p>` : '')
+    + (it && it.note ? `<p class="note">${esc(it.note)}</p>` : '') + `</div>`;
+  const b = $('#check'); b.textContent = 'Continuer'; b.dataset.mode = 'next'; b.disabled = false; b.hidden = false;
+  b.className = 'btn wide ' + (ok ? 'ok' : 'bad'); b.focus();
+  $('#stage').querySelectorAll('.opt,.tile,.type-box,.accents button').forEach(el => el.disabled = true);
+}
+
+/* ===================== EXERCICES ===================== */
+function choice(promptHtml, it, options, field, sayOnPick) {
+  $('#stage').innerHTML = promptHtml + `<div class="options">${options.map((o, i) => `<button class="opt" data-i="${i}">${esc(o[field])}</button>`).join('')}</div>`;
+  let sel = null;
+  const btns = $('#stage').querySelectorAll('.opt');
+  btns.forEach(b => b.onclick = () => {
+    btns.forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); sel = options[+b.dataset.i]; enableCheck(true);
+    if (sayOnPick) say(sel.es); else SFX.tap();
+  });
+  setCheck(() => {
+    const ok = sel === it;
+    btns.forEach(b => { const o = options[+b.dataset.i]; if (o === it) b.classList.add('right'); else if (o === sel) b.classList.add('wrong'); });
+    feedback(ok, it);
+  }, false);
+}
+const scene = inner => `<div class="scene">${mascot('happy')}<div class="speech">${inner}</div></div>`;
+const RENDER = {
+  intro(ex) {
+    const it = ex.it;
+    choice(`<span class="tagnew">${ic('sun')}Nouveau mot</span><div class="prompt-label">Que veut dire…</div>
+      ${scene(`${speakBtn(it.es)}<span class="big">${esc(it.es)}</span>`)}`, it, shuffle([it, ...distractors(it, 'fr', 3)]), 'fr');
+    setTimeout(() => say(it.es), 300);
+  },
+  es2fr(ex) {
+    const it = ex.it;
+    choice(`<div class="prompt-label">Traduis en français</div>${scene(`${speakBtn(it.es)}<span class="big">${esc(it.es)}</span>`)}`,
+      it, shuffle([it, ...distractors(it, 'fr', 3)]), 'fr');
+    setTimeout(() => say(it.es), 300);
+  },
+  fr2es(ex) {
+    const it = ex.it;
+    choice(`<div class="prompt-label">Comment dit-on…</div>${scene(`<span class="fr">« ${esc(it.fr)} »</span>`)}`,
+      it, shuffle([it, ...distractors(it, 'es', 3)]), 'es', true);
+  },
+  listen(ex) {
+    const it = ex.it;
+    choice(`<div class="prompt-label">Qu'entends-tu ?</div><div class="listen-row">${speakBtn(it.es)}${speakBtn(it.es, true)}</div>`,
+      it, shuffle([it, ...distractors(it, 'es', 3)]), 'es');
+    setTimeout(() => say(it.es), 300);
+  },
+  build(ex) { tiles(ex, false); },
+  listenBuild(ex) { tiles(ex, true); },
+  type(ex) {
+    const it = ex.it;
+    $('#stage').innerHTML = `<div class="prompt-label">Écris en espagnol</div>${scene(`<span class="fr">« ${esc(it.fr)} »</span>`)}
+      <textarea class="type-box" id="answer" rows="2" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="es" placeholder="Écris en espagnol"></textarea>
+      <div class="accents">${['á','é','í','ó','ú','ñ','¿','¡'].map(c => `<button type="button" data-ch="${c}">${c}</button>`).join('')}</div>`;
+    const inp = $('#answer');
+    inp.oninput = () => enableCheck(inp.value.trim().length > 0);
+    $('#stage').querySelectorAll('[data-ch]').forEach(b => b.onclick = () => {
+      const s = inp.selectionStart ?? inp.value.length, e = inp.selectionEnd ?? s;
+      inp.value = inp.value.slice(0, s) + b.dataset.ch + inp.value.slice(e);
+      inp.focus(); inp.setSelectionRange(s + 1, s + 1); inp.oninput();
+    });
+    setTimeout(() => inp.focus({ preventScroll: true }), 50);
+    setCheck(() => {
+      const v = inp.value, ok = loose(v) === loose(it.es);
+      feedback(ok, it, ok && strict(v) !== strict(it.es) ? `Petit détail d'accent : on écrit « ${esc(it.es)} ».` : '');
+    }, false);
+  },
+  match(ex) {
+    const items = ex.items;
+    $('#stage').innerHTML = `<div class="prompt-label">Associe les paires</div>
+      <div class="match"><div class="col">${shuffle(items).map(it => `<button class="opt" data-side="es" data-k="${esc(it.es)}">${esc(it.es)}</button>`).join('')}</div>
+      <div class="col">${shuffle(items).map(it => `<button class="opt" data-side="fr" data-k="${esc(it.es)}">${esc(it.fr)}</button>`).join('')}</div></div>`;
+    let sel = null, left = items.length; const missed = new Set();
+    $('#check').hidden = true;
+    $('#stage').querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      if (b.classList.contains('done')) return;
+      if (b.dataset.side === 'es') say(b.dataset.k); else SFX.tap();
+      if (!sel || sel.dataset.side === b.dataset.side) { if (sel) sel.classList.remove('sel'); sel = b; b.classList.add('sel'); return; }
+      if (sel.dataset.k === b.dataset.k) {
+        const a = sel; sel = null;
+        [a, b].forEach(x => { x.classList.remove('sel'); x.classList.add('right'); x.disabled = true; });
+        setTimeout(() => [a, b].forEach(x => { x.classList.remove('right'); x.classList.add('done'); }), 350);
+        tone([[660 + (items.length - left) * 110, 0, .1, 'triangle', .12]]);
+        if (--left === 0) setTimeout(() => {
+          items.forEach(it => record(it, !missed.has(it.es)));
+          feedback(missed.size === 0, null, missed.size ? 'Les paires ratées reviendront plus tard.' : 'Toutes les paires du premier coup.');
+        }, 400);
+      } else {
+        missed.add(sel.dataset.k); missed.add(b.dataset.k);
+        const a = sel; sel = null; SFX.bad();
+        [a, b].forEach(x => { x.classList.remove('sel'); x.classList.add('wrong'); });
+        setTimeout(() => [a, b].forEach(x => x.classList.remove('wrong')), 450);
+      }
+    });
+  },
+};
+function tiles(ex, audioOnly) {
+  const it = ex.it, target = toks(it.es);
+  const tl = new Set(target.map(loose));
+  const extra = shuffle([...new Set(ALL.filter(o => o !== it && isSentence(o)).flatMap(o => toks(o.es)))].filter(w => !tl.has(loose(w)))).slice(0, 3);
+  const bank = shuffle(target.concat(extra));
+  $('#stage').innerHTML = (audioOnly
+      ? `<div class="prompt-label">Écris ce que tu entends</div><div class="listen-row">${speakBtn(it.es)}${speakBtn(it.es, true)}</div>`
+      : `<div class="prompt-label">Traduis cette phrase</div>${scene(`<span class="fr">« ${esc(it.fr)} »</span>`)}`)
+    + `<div class="answer-line" id="line"></div><div class="bank">${bank.map((w, i) => `<button class="tile" data-i="${i}">${esc(w)}</button>`).join('')}</div>`;
+  const picked = [], line = $('#line');
+  const draw = () => {
+    line.innerHTML = picked.map((i, n) => `<button class="tile" data-n="${n}">${esc(bank[i])}</button>`).join('');
+    line.querySelectorAll('.tile').forEach(t => t.onclick = () => {
+      const i = picked.splice(+t.dataset.n, 1)[0];
+      $('#stage').querySelector(`.bank .tile[data-i="${i}"]`).classList.remove('ghosted'); SFX.tap(); draw();
+    });
+    enableCheck(picked.length > 0);
+  };
+  $('#stage').querySelectorAll('.bank .tile').forEach(t => t.onclick = () => {
+    if (t.classList.contains('ghosted')) return;
+    t.classList.add('ghosted'); picked.push(+t.dataset.i); say(bank[+t.dataset.i]); draw();
+  });
+  if (audioOnly) setTimeout(() => say(it.es), 300);
+  setCheck(() => feedback(loose(picked.map(i => bank[i]).join(' ')) === loose(target.join(' ')), it), false);
+}
+
+/* ===================== FIN DE LEÇON ET RÉCOMPENSES ===================== */
+function finish() {
+  const t = T();
+  const lvBefore = levelInfo(S.xp).lv;
+  const floorBefore = L.unit ? floorOf(L.unit) : null;
+  const unlockedBefore = UNITS.map((u, i) => unlocked(i));
+  const questsBefore = todaysQuests().filter(questDone).map(q => q.id);
+
+  Object.entries(L.results).forEach(([es, ok]) => { const it = ALL.find(x => x.es === es); if (it) grade(it, ok); });
+  const firstTry = L.queue.filter(x => !x.retry).length;
+  const perfect = L.correct === L.answered;
+  const rewards = [];
+  if (perfect) L.xp += 5;
+  let xp = L.xp;
+  t.lessons++;
+  if (!t.goalHit && t.lessons >= S.goal) { t.goalHit = true; xp += 10; rewards.push(['target', 'sun', 'Objectif du jour atteint', '+10 XP de bonus']); }
+  if (boostOn()) xp *= 2;
+  addXp(xp);
+  t.bestCombo = Math.max(t.bestCombo, L.best); t.typed += L.typed; t.listen += L.listen; t.newWords += L.fresh.length;
+  if (perfect) t.perfect++;
+  S.stats.lessons++; if (perfect) S.stats.perfect++; S.stats.bestCombo = Math.max(S.stats.bestCombo, L.best);
+  if (new Date().getHours() < 7) S.stats.early++;
+  const gain = perfect ? 10 : 5; S.pesos += gain;
+  const today = dayKey();
+  let streakUp = false;
+  if (S.lastDay !== today) { S.streak = S.lastDay === yesterday() ? S.streak + 1 : 1; S.lastDay = today; streakUp = true; }
+  if (L.unit) S.done[L.unit.id] = L.exam ? Math.max(S.done[L.unit.id] || 0, FLOORS * LPF) : (S.done[L.unit.id] || 0) + 1;
+  if (L.exam) { S.stats.exams = (S.stats.exams || 0) + 1; rewards.push(['crown', 'sun', 'Examen réussi', `${L.unit.fr} : toit posé d'un coup`]); }
+  frozeNotice = 0;
+
+  if (streakUp) rewards.unshift(['flame', 'sun', `Série : ${S.streak} jour${S.streak > 1 ? 's' : ''}`, S.streak === 1 ? 'Reviens demain pour la faire grandir' : 'Continue demain pour ne pas la perdre']);
+  if (L.unit && floorOf(L.unit) > floorBefore) {
+    const f = floorOf(L.unit);
+    rewards.push(f >= FLOORS ? ['crown', 'pink', `Toit posé : ${L.unit.fr}`, 'Unité terminée au complet'] : ['path', 'teal', `Étage ${f} terminé`, `${L.unit.fr} · étage ${f + 1} débloqué`]);
+  }
+  UNITS.forEach((u, i) => { if (!unlockedBefore[i] && unlocked(i)) rewards.push(['lock', 'blue', `Nouvelle unité : ${u.fr}`, `« ${u.es} » est débloquée`]); });
+  todaysQuests().filter(q => questDone(q) && !questsBefore.includes(q.id)).forEach(q => rewards.push(['target', 'pink', `Défi réussi : ${q.txt}`, `Va chercher tes ${q.r} pesos dans Défis`]));
+  checkBadges().forEach(b => rewards.push([b[3], b[4], `Trophée : ${b[1]}`, b[2]]));
+  const lvAfter = levelInfo(S.xp).lv;
+  save();
+
+  const acc = Math.round(L.firstOk / firstTry * 100);
+  const lessonUnit = L.unit;
+  L = null;
+  $('#lesson').hidden = true; $('#done').hidden = false;
+  $('#done').innerHTML = `<div class="done">
+    ${mascot('wow')}
+    <h2>${perfect ? '¡Sin errores!' : '¡Lección terminada!'}</h2>
+    <div class="tiles3">
+      <div class="res" style="--rc:var(--sun-deep)"><div class="h">XP${boostOn() ? ' ×2' : ''}</div><div class="v">${ic('bolt')}<span data-count="${xp}">0</span></div></div>
+      <div class="res" style="--rc:var(--ok)"><div class="h">Précision</div><div class="v"><span data-count="${acc}">0</span>%</div></div>
+      <div class="res" style="--rc:var(--teal)"><div class="h">Pesos</div><div class="v">${ic('peso')}<span data-count="${gain}">0</span></div></div>
+    </div>
+    ${rewards.length ? `<div class="rewards">${rewards.map((r, i) => `<div class="reward-item" style="--bc:var(--${r[1]});--bd:var(--${r[1]}-deep);animation-delay:${.5 + i * .15}s"><div class="medal">${ic(r[0])}</div><div style="min-width:0"><b>${esc(r[2])}</b><small>${esc(r[3])}</small></div></div>`).join('')}</div>` : ''}
+    <button class="btn wide" id="back" style="max-width:360px">Continuer</button></div>`;
+  window.scrollTo(0, 0);
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const to = +el.dataset.count, t0 = performance.now();
+    (function f(t) { const k = Math.min(1, (t - t0) / 900); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+  });
+  SFX.win(); confetti(perfect ? 180 : 110);
+  $('#back').onclick = () => {
+    if (lvAfter > lvBefore) {
+      SFX.level(); confetti(200);
+      modal(`${mascot('wow')}<span class="eyebrow">Niveau supérieur</span><h2>Niveau ${lvAfter}</h2><p>${titleOf(lvAfter) !== titleOf(lvBefore) ? `Nouveau titre : <b style="color:var(--ink)">${titleOf(lvAfter)}</b>` : `Tu es toujours ${titleOf(lvAfter)}, mais tu montes !`}</p>`, showHome);
+    } else showHome();
+  };
+  $('#back').focus();
+}
+function examFail() {
+  Object.entries(L.results).forEach(([es, ok]) => { const it = ALL.find(x => x.es === es); if (it) grade(it, ok); });
+  save();
+  const u = L.unit; L = null;
+  $('#lesson').hidden = true; $('#done').hidden = false;
+  $('#done').innerHTML = `<div class="done">${mascot('sad')}<h2 style="color:var(--bad)">Examen raté</h2>
+    <p style="margin:0;font-weight:700;color:var(--muted);max-width:340px">Pas de souci : tes erreurs sont notées et reviendront en révision. Monte étage par étage, ou réessaie l'examen quand tu veux.</p>
+    <button class="btn wide" id="back" style="max-width:360px">Continuer</button></div>`;
+  SFX.bad(); $('#back').onclick = showHome; $('#back').focus();
+}
+
+/* ===================== DÉFI ÉCLAIR ===================== */
+let A = null;
+function arcadePool() {
+  const open = UNITS.filter((u, i) => unlocked(i)).flatMap(u => u.items).filter(it => !isSentence(it));
+  const seen = open.filter(it => S.progress[it.es]);
+  return seen.length >= 8 ? seen : open.length >= 8 ? open : ALL.filter(it => !isSentence(it)).slice(0, 24);
+}
+function openArcade() {
+  A = { pool: arcadePool(), score: 0, combo: 0, best: 0, ends: Date.now() + 60000, lock: false, timer: null, answered: 0, right: 0, last: null };
+  $('#home').hidden = true; $('#tabs').hidden = true; $('#arcade').hidden = false;
+  SFX.tap(); window.scrollTo(0, 0); arcadeQ();
+  A.timer = setInterval(arcadeTick, 100);
+}
+function arcadeTick() {
+  if (!A) return;
+  const left = Math.max(0, A.ends - Date.now());
+  const bar = $('#arc-bar'), tm = $('#arc-time');
+  if (bar) { bar.style.width = (left / 600) + '%'; bar.style.setProperty('--c', left < 10000 ? 'var(--bad)' : 'var(--sun)'); }
+  if (tm) { tm.textContent = Math.ceil(left / 1000); tm.classList.toggle('low', left < 10000); }
+  if (left <= 0) arcadeEnd();
+}
+function arcadeQ() {
+  let it; do { it = pick(A.pool); } while (A.pool.length > 1 && it === A.last);
+  A.last = it; A.lock = false;
+  const toFr = Math.random() < 0.5, field = toFr ? 'fr' : 'es';
+  const opts = shuffle([it, ...distractors(it, field, 3)]);
+  $('#arcade').innerHTML = `<div class="arc-top"><button class="x" id="arc-quit" aria-label="Quitter le Défi éclair">${ic('close')}</button>
+      <div class="pbar" style="flex:1"><i id="arc-bar" style="width:${Math.max(0, A.ends - Date.now()) / 600}%"></i></div><div class="arc-time" id="arc-time">${Math.ceil(Math.max(0, A.ends - Date.now()) / 1000)}</div></div>
+    <div class="arc-score"><b>${A.score}</b><span>${A.combo >= 3 ? `combo ×${A.combo}` : 'points'}</span></div>
+    <div class="arc-q"><span class="dir">${toFr ? 'En français ?' : 'En espagnol ?'}</span><span class="w">${esc(toFr ? it.es : it.fr)}</span></div>
+    <div class="arc-grid">${opts.map((o, i) => `<button class="opt" data-a="${i}">${esc(o[field])}</button>`).join('')}</div>`;
+  $('#arc-quit').onclick = () => { clearInterval(A.timer); A = null; $('#arcade').hidden = true; showHome(); };
+  $('#arcade').querySelectorAll('[data-a]').forEach(b => b.onclick = () => {
+    if (A.lock) return; A.lock = true; A.answered++;
+    const ok = opts[+b.dataset.a] === it;
+    if (ok) {
+      A.combo++; A.best = Math.max(A.best, A.combo); A.right++;
+      A.score += 1 + Math.floor(A.combo / 5);
+      b.classList.add('right'); tone([[700 + Math.min(A.combo, 12) * 40, 0, .08, 'triangle', .14]]);
+      setTimeout(() => A && arcadeQ(), 180);
+    } else {
+      A.combo = 0; A.ends -= 3000; SFX.bad();
+      b.classList.add('wrong');
+      $('#arcade').querySelectorAll('[data-a]').forEach(x => { if (opts[+x.dataset.a] === it) x.classList.add('right'); });
+      const pen = document.createElement('div'); pen.className = 'arc-penalty'; pen.textContent = '−3 s'; document.body.appendChild(pen); setTimeout(() => pen.remove(), 1000);
+      setTimeout(() => A && arcadeQ(), 750);
+    }
+  });
+}
+function arcadeEnd() {
+  clearInterval(A.timer);
+  const a = A; A = null;
+  const lvBefore = levelInfo(S.xp).lv;
+  const record = a.score > (S.arcadeBest || 0);
+  if (record) S.arcadeBest = a.score;
+  let xp = Math.min(40, a.score); if (boostOn()) xp *= 2;
+  const gain = Math.floor(a.score / 4);
+  addXp(xp); S.pesos += gain;
+  const t = T(); t.arcade = (t.arcade || 0) + 1; t.bestCombo = Math.max(t.bestCombo, a.best);
+  S.stats.bestCombo = Math.max(S.stats.bestCombo, a.best);
+  const today = dayKey();
+  if (S.lastDay !== today) { S.streak = S.lastDay === yesterday() ? S.streak + 1 : 1; S.lastDay = today; }
+  const nb = checkBadges(); save();
+  const acc = a.answered ? Math.round(a.right / a.answered * 100) : 0;
+  $('#arcade').innerHTML = `<div class="done">${mascot(record ? 'wow' : 'happy')}
+    <h2>${record ? '¡Nuevo récord!' : '¡Tiempo!'}</h2>
+    <div class="tiles3">
+      <div class="res" style="--rc:var(--sun-deep)"><div class="h">Points</div><div class="v">${a.score}</div></div>
+      <div class="res" style="--rc:var(--pink)"><div class="h">Record</div><div class="v">${S.arcadeBest}</div></div>
+      <div class="res" style="--rc:var(--ok)"><div class="h">Précision</div><div class="v">${acc}%</div></div>
+    </div>
+    <div class="rewards"><div class="reward-item" style="--bc:var(--sun);--bd:var(--sun-deep)"><div class="medal">${ic('bolt')}</div><div><b>+${xp} XP · +${gain} pesos</b><small>Meilleur combo : ${a.best}</small></div></div>
+    ${nb.map((b, i) => `<div class="reward-item" style="--bc:var(--${b[4]});--bd:var(--${b[4]}-deep);animation-delay:${.3 + i * .15}s"><div class="medal">${ic(b[3])}</div><div><b>Trophée : ${esc(b[1])}</b><small>${esc(b[2])}</small></div></div>`).join('')}</div>
+    <div style="display:grid;gap:12px;width:100%;max-width:360px"><button class="btn sun wide" id="arc-again">Rejouer</button><button class="btn line wide" id="arc-done">Terminer</button></div></div>`;
+  record ? (SFX.level(), confetti(180)) : SFX.win();
+  const lv = levelInfo(S.xp).lv;
+  const out = () => { $('#arcade').hidden = true; showHome(); };
+  $('#arc-again').onclick = openArcade;
+  $('#arc-done').onclick = () => lv > lvBefore ? (SFX.level(), modal(`${mascot('wow')}<span class="eyebrow">Niveau supérieur</span><h2>Niveau ${lv}</h2><p>${esc(titleOf(lv))}</p>`, out)) : out();
+}
+
+/* ===================== LEXIQUE ===================== */
+function lexicon(u) {
+  const rows = u.items.map(it => {
+    const box = S.progress[it.es]?.box || 0, seen = !!S.progress[it.es];
+    return `<div class="lex">${speakBtn(it.es)}<div style="min-width:0"><b>${esc(it.es)}</b><small>${esc(it.fr)}</small></div>
+      <div class="dots" aria-label="${seen ? 'Maîtrise ' + box + ' sur 5' : 'Pas encore vu'}">${[1,2,3,4,5].map(k => `<i class="${box >= k ? 'on' : ''}"></i>`).join('')}</div></div>`;
+  }).join('');
+  const tips = (TIPS[u.id] || []).map(t => `<div class="tip"><b>${esc(t[0])}</b><p>${esc(t[1])}</p></div>`).join('');
+  modal(`<span class="eyebrow" style="text-align:center">${esc(u.fr)}</span><h2>${esc(u.es)}</h2>${tips ? `<div>${tips}</div>` : ''}<span class="eyebrow" style="margin-top:8px">Vocabulaire</span><div>${rows}</div>`, null, 'Fermer', 'list');
+}
+
+/* ===================== TUTEUR IA (Paco) ===================== */
+const SCENES = [
+  {id:'premier', title:'Premier jour', sub:'Accueille Miguel, ton nouvel employé', icon:'helmet', color:'teal', who:'Miguel · nouvel employé',
+   prompt:"Tu es Miguel, un nouvel employé mexicain qui commence aujourd'hui sur le chantier de rénovation. L'apprenant est ton patron. Tu es poli et un peu timide. Tu demandes quoi faire, où sont les outils, à quelle heure on commence et on finit."},
+  {id:'gypse', title:'Les joints de gypse', sub:'Explique le travail à Carlos', icon:'path', color:'sun', who:'Carlos · tablaroquero',
+   prompt:"Tu es Carlos, poseur de tablaroca (gypse) expérimenté. L'apprenant est ton patron et doit t'expliquer le travail de la journée : poser la tablaroca, faire les joints, sabler. Pose des questions concrètes : quelle pièce, combien de couches, le plafond aussi, où est le compuesto."},
+  {id:'fuite', title:'Une fuite !', sub:'Règle un problème avec José, plombier', icon:'drop', color:'blue', who:'José · plomero',
+   prompt:"Tu es José, plombier. Il y a une fuite sous l'évier de la cuisine d'un client. L'apprenant est ton patron. Demande-lui où est la valve d'arrêt, s'il faut couper l'eau, quelles pièces acheter."},
+  {id:'securite', title:'La sécurité', sub:'Rappelle les règles à ton équipe', icon:'helmet', color:'pink', who:'Luis · ayudante',
+   prompt:"Tu es Luis, un jeune aide (ayudante) un peu distrait qui travaille sans casque ni lunettes. L'apprenant est ton patron et doit te rappeler les règles de sécurité. Réagis, pose des questions, promets de faire attention."},
+  {id:'resto', title:'Au restaurant', sub:'Commande ton souper à Cancún', icon:'cup', color:'pink', who:'Mesero · Cancún',
+   prompt:"Tu es serveur dans un petit restaurant de Cancún. L'apprenant est un touriste québécois. Vouvoie-le (usted). Accueille-le, propose les boissons et les plats du jour, puis apporte l'addition quand il la demande."},
+  {id:'taxi', title:'Le taxi', sub:"De l'aéroport à l'hôtel", icon:'plane', color:'teal', who:'Taxista · Ciudad de México',
+   prompt:"Tu es chauffeur de taxi à l'aéroport de Mexico. Vouvoie le client (usted). Demande la destination, parle du trafic et du temps qu'il fait, annonce le prix."},
+  {id:'libre', title:'Jase libre', sub:'Parle de ta journée avec Paco', icon:'chat', color:'blue', who:'Paco · ton ami mexicain',
+   prompt:"Tu es Paco, un ami mexicain jovial. Discute avec lui de sa journée, de son travail en rénovation, de sa famille, de ses prochaines vacances."},
+];
+let SAMPLE = null, sampleState = 'pending'; // pending | on | off
+async function connectSample() {
+  if (!window.claude || !window.claude.use) { sampleState = 'off'; if (!$('#home').hidden && tab === 'tutor') render(); return; }
+  try { SAMPLE = await claude.use('sample'); } catch (e) { SAMPLE = null; }
+  sampleState = SAMPLE ? 'on' : 'off';
+  if (!$('#home').hidden && (tab === 'tutor' || tab === 'quests')) render();
+}
+function tutorView() {
+  let h = `<div class="tutor-hero">${mascot('happy')}<div><h2>Jase avec Paco</h2><p>Une vraie conversation en espagnol. Paco joue le rôle, corrige tes erreurs en français et te suggère quoi répondre.</p></div></div>`;
+  if (sampleState === 'off') return h + `<div class="notice"><b>Paco vit dans la version Claude</b>Pour jaser avec lui, ouvre <a href="https://claude.ai/artifact/QaFHyNq7GL9gU8zHT5Z8EB" target="_blank" rel="noopener" style="color:var(--blue);font-weight:800">Paso a Paso dans Claude</a>. Le reste de l'app fonctionne ici normalement.</div>`;
+  if (sampleState === 'pending') h += `<p style="color:var(--muted);font-weight:700">Connexion au tuteur…</p>`;
+  h += `<h2 class="section-title">Sur le chantier</h2><div class="scenes">${SCENES.slice(0, 4).map(sceneCard).join('')}</div>
+    <h2 class="section-title">En voyage et ailleurs</h2><div class="scenes">${SCENES.slice(4).map(sceneCard).join('')}</div>
+    <p style="color:var(--muted);font-size:13px;font-weight:700;margin-top:16px">Chaque message rapporte 3 XP, 5 s'il est sans faute. Les réponses de Paco utilisent ton forfait Claude ; la première fois, Claude te demande ton accord.</p>`;
+  return h;
+}
+const sceneCard = sc => `<button class="scene-card" data-scene="${sc.id}" style="--sc:var(--${sc.color});--sd:var(--${sc.color}-deep)" ${sampleState === 'on' ? '' : 'disabled'}>
+  <div class="art"${sc.color === 'sun' ? ' style="color:var(--sun-ink)"' : ''}>${ic(sc.icon)}</div><div style="min-width:0"><b>${sc.title}</b><small>${sc.sub}</small></div><span class="go">${ic('arrow')}</span></button>`;
+
+let CH = null;
+function tutorRules(sc) {
+  const known = ALL.filter(it => S.progress[it.es]).map(it => it.es).slice(-120).join(', ');
+  return `Tu es Paco, tuteur d'espagnol pour un francophone du Québec, entrepreneur en rénovation résidentielle, débutant en espagnol (niveau A1). Il apprend l'espagnol d'Amérique latine (Mexique) pour parler avec ses employés hispanophones sur ses chantiers et pour voyager.
+
+SCÈNE : ${sc.prompt}
+
+RÈGLES :
+- Joue ton rôle en espagnol du Mexique, avec des phrases très courtes et simples (1 ou 2 phrases, 15 mots maximum en tout), surtout au présent. Tutoie (tú) sauf si la scène dit usted.
+- Réutilise en priorité le vocabulaire qu'il connaît déjà : ${known || 'quelques salutations'}.
+- Termine chaque réplique par une question simple pour faire avancer la scène.
+- Corrige son DERNIER message : s'il contient une vraie erreur d'espagnol (mot, accord, conjugaison, ordre), explique-la en une phrase EN FRANÇAIS et donne la phrase corrigée entre guillemets. Ignore les accents oubliés, les majuscules et les ¿ ¡ manquants. S'il écrit en français, donne-lui la façon de le dire en espagnol. Sinon, correction vide.
+- Propose 3 réponses courtes et naturelles qu'il pourrait te donner ensuite, en espagnol simple, avec leur traduction française.
+
+Réponds UNIQUEMENT avec un objet JSON, sans autre texte :
+{"es":"ta réplique","fr":"sa traduction française","ok":true,"correction":"","suggestions":[{"es":"...","fr":"..."},{"es":"...","fr":"..."},{"es":"...","fr":"..."}]}
+"ok" vaut false seulement si son dernier message contenait une vraie erreur ou était en français.`;
+}
+function openScene(sc) {
+  if (!SAMPLE) return;
+  CH = { sc, turns: [], view: [], busy: false, err: '', sugs: [], ctl: null };
+  $('#home').hidden = true; $('#tabs').hidden = true; $('#chat').hidden = false;
+  SFX.tap(); drawChat(); window.scrollTo(0, 0);
+  ask('(Début de la scène : dis ta première réplique.)', null);
+}
+function closeChat() { if (CH && CH.ctl) CH.ctl.abort(); CH = null; if (hasSpeech) speechSynthesis.cancel(); $('#chat').hidden = true; showHome(); }
+function drawChat() {
+  const sc = CH.sc;
+  let h = `<div class="chat-top"><button class="x" id="chat-close" aria-label="Quitter la conversation">${ic('close')}</button>
+    <div class="t"><b>${sc.title}</b><small>${sc.who}</small></div></div><div class="msgs" id="msgs">`;
+  CH.view.forEach((m, i) => {
+    if (m.role === 'me') {
+      h += `<div class="msg me"><div class="bub">${esc(m.text)}</div></div>`;
+      if (m.corr === 'good') h += `<div class="corr good">${ic('check')}<span>¡Perfecto! Rien à corriger.</span></div>`;
+      else if (m.corr) h += `<div class="corr fix">${ic('pencil')}<span>${esc(m.corr)}</span></div>`;
+    } else {
+      h += `<div class="msg tutor"><div class="av">${mascot('happy')}</div><div class="bub"><div class="es">${esc(m.es)}</div>
+        ${m.showFr ? `<div class="tr">${esc(m.fr)}</div>` : ''}
+        <div class="acts">${'' /* boutons */}<button class="mini" data-say="${esc(m.es)}">${ic('spk')}Écouter</button><button class="mini" data-say="${esc(m.es)}" data-slow="1">${ic('turtle')}Lent</button><button class="mini" data-tr="${i}">${m.showFr ? 'Cacher' : 'Traduire'}</button></div></div></div>`;
+    }
+  });
+  if (CH.busy) h += `<div class="msg tutor"><div class="av">${mascot('happy')}</div><div class="bub"><div class="typing"><i></i><i></i><i></i></div></div></div>`;
+  if (CH.err) h += `<div class="chat-err">${esc(CH.err)}</div>`;
+  h += `</div><div style="height:${CH.sugs.length ? 190 : 120}px"></div>
+    <div class="composer"><div class="in">
+      ${CH.sugs.length ? `<div class="sugs">${CH.sugs.map((s, i) => `<button class="sug" data-sug="${i}"><b>${esc(s.es)}</b><small>${esc(s.fr)}</small></button>`).join('')}</div>` : ''}
+      <div class="accents">${['á','é','í','ó','ú','ñ','¿','¡'].map(c => `<button type="button" data-ch="${c}">${c}</button>`).join('')}</div>
+      <div class="crow"><textarea id="chat-input" rows="1" lang="es" autocomplete="off" autocapitalize="sentences" spellcheck="false" placeholder="Écris en espagnol (ou en français si tu bloques)"></textarea>
+      <button class="btn blue" id="chat-send" aria-label="Envoyer" ${CH.busy ? 'disabled' : ''}>${ic('send').replace('<svg', '<svg style="width:22px;height:22px;display:block"')}</button></div>
+    </div></div>`;
+  const draft = $('#chat-input') ? $('#chat-input').value : '';
+  $('#chat').innerHTML = h;
+  const inp = $('#chat-input'); inp.value = draft;
+  $('#chat-close').onclick = closeChat;
+  $('#chat-send').onclick = sendChat;
+  inp.onkeydown = e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } };
+  $('#chat').querySelectorAll('[data-ch]').forEach(b => b.onclick = () => {
+    const s0 = inp.selectionStart ?? inp.value.length, e0 = inp.selectionEnd ?? s0;
+    inp.value = inp.value.slice(0, s0) + b.dataset.ch + inp.value.slice(e0); inp.focus(); inp.setSelectionRange(s0 + 1, s0 + 1);
+  });
+  $('#chat').querySelectorAll('[data-sug]').forEach(b => b.onclick = () => { const s = CH.sugs[+b.dataset.sug]; inp.value = s.es; say(s.es); inp.focus(); });
+  $('#chat').querySelectorAll('[data-tr]').forEach(b => b.onclick = () => { const m = CH.view[+b.dataset.tr]; m.showFr = !m.showFr; drawChat(); });
+  window.scrollTo(0, document.body.scrollHeight);
+}
+function sendChat() {
+  if (!CH || CH.busy) return;
+  const inp = $('#chat-input'); const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  const mine = { role: 'me', text, corr: '' };
+  CH.view.push(mine); SFX.tap();
+  ask(text, mine);
+}
+const SAMPLE_ERR = {
+  not_granted: "Paco n'a pas l'autorisation d'utiliser Claude. Recharge la page et accepte la demande pour jaser avec lui.",
+  sampling_disabled: "Claude n'est pas disponible pour ce compte.",
+  rate_limited: 'Paco a besoin d\'une pause : trop de messages d\'un coup ou limite d\'usage atteinte. Réessaie dans un moment.',
+  session_expired: 'Ta session Claude a expiré. Reconnecte-toi puis reviens ici.',
+  refused: 'Paco ne peut pas répondre à ce message. Essaie autrement.',
+  invalid_json: 'Paco s\'est mélangé dans sa réponse. Renvoie ton message.',
+};
+async function ask(text, mine) {
+  CH.turns.push({ role: 'user', content: text });
+  CH.busy = true; CH.err = ''; CH.sugs = []; drawChat();
+  const ch = CH; ch.ctl = new AbortController();
+  const recent = ch.turns.slice(-16);
+  if (recent[0].role !== 'user') recent.shift();
+  try {
+    const r = await SAMPLE.json([{ role: 'user', content: tutorRules(ch.sc) }, ...recent], { modelTier: 'quick', cache: false, signal: ch.ctl.signal });
+    if (CH !== ch) return;
+    const es = String(r && r.es || '').trim();
+    if (!es) throw { code: 'invalid_json' };
+    const reply = { es, fr: String(r.fr || ''), ok: r.ok !== false, correction: String(r.correction || '').trim(),
+      suggestions: Array.isArray(r.suggestions) ? r.suggestions.filter(x => x && x.es).slice(0, 3).map(x => ({ es: String(x.es), fr: String(x.fr || '') })) : [] };
+    ch.turns.push({ role: 'assistant', content: JSON.stringify(reply) });
+    ch.view.push({ role: 'tutor', es: reply.es, fr: reply.fr, showFr: false });
+    ch.sugs = reply.suggestions;
+    if (mine) {
+      mine.corr = reply.ok && !reply.correction ? 'good' : (reply.correction || '');
+      rewardTutor(reply.ok && !reply.correction);
+    }
+    ch.busy = false; drawChat();
+    setTimeout(() => say(reply.es), 200);
+  } catch (e) {
+    if (CH !== ch) return;
+    ch.turns.pop();
+    if (mine) { const i = ch.view.indexOf(mine); if (i >= 0) ch.view.splice(i, 1); }
+    ch.busy = false;
+    if (e && e.code === 'cancelled') return;
+    if (e && (e.code === 'not_granted' || e.code === 'sampling_disabled')) sampleState = 'off';
+    ch.err = SAMPLE_ERR[e && e.code] || 'La connexion avec Paco a été coupée. Renvoie ton message.';
+    drawChat();
+    if (mine) $('#chat-input').value = mine.text;
+  }
+}
+function rewardTutor(clean) {
+  const lvBefore = levelInfo(S.xp).lv, t = T();
+  let xp = clean ? 5 : 3; if (boostOn()) xp *= 2;
+  addXp(xp); t.tutor = (t.tutor || 0) + 1; S.stats.tutor++;
+  const today = dayKey();
+  if (S.lastDay !== today) { S.streak = S.lastDay === yesterday() ? S.streak + 1 : 1; S.lastDay = today; }
+  const nb = checkBadges(); save();
+  clean ? SFX.ok() : SFX.tap();
+  const f = document.createElement('div'); f.className = 'xpfloat'; f.textContent = '+' + xp + ' XP'; document.body.appendChild(f); setTimeout(() => f.remove(), 1300);
+  if (nb.length) toast('Trophée débloqué : ' + nb[0][1]);
+  const lv = levelInfo(S.xp).lv;
+  if (lv > lvBefore) { SFX.level(); confetti(160); modal(`${mascot('wow')}<span class="eyebrow">Niveau supérieur</span><h2>Niveau ${lv}</h2><p>${esc(titleOf(lv))}</p>`); }
+}
+
+function showHome() {
+  $('#lesson').hidden = true; $('#done').hidden = true; $('#home').hidden = false; $('#tabs').hidden = false;
+  render(); window.scrollTo(0, 0);
+}
+render();
+connectCloud();
+connectSample();
+setInterval(() => { if (!$('#home').hidden && boostOn()) render(); }, 60000);
+</script>
