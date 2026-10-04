@@ -16,7 +16,18 @@ const head = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
 <script src="config.js"></script>
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head><body>`;
-const tail = `<script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script></body></html>`;
+// Mise à jour : sur iPhone, l'app installée reprend souvent la page déjà ouverte sans la recharger,
+// si bien qu'une nouvelle version restait invisible des jours. On vérifie à chaque retour dans l'app
+// et on recharge dès que la nouvelle version a pris la main (pas au milieu d'une leçon).
+const tail = `<script>if ('serviceWorker' in navigator) addEventListener('load', () => {
+  const had = !!navigator.serviceWorker.controller; let pending = false;
+  const atHome = () => { const h = document.getElementById('home'); return !h || !h.hidden; };
+  const go = () => { if (atHome()) location.reload(); else pending = true; };
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (had) go(); });
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (pending && atHome()) location.reload(); else reg.update().catch(() => {}); } });
+  }).catch(() => {});
+});</script></body></html>`;
 fs.writeFileSync(__dirname + '/index.html', head + src + tail);
 // config.js : adresse et clé publique du projet Supabase (ligue entre amis). Jamais écrasé s'il existe.
 if (!fs.existsSync(__dirname + '/config.js')) fs.writeFileSync(__dirname + '/config.js', '// Ligue entre amis : remplir avec l\'adresse et la clé « anon » du projet Supabase.\nwindow.PASO_CONFIG = null;\n');
@@ -30,7 +41,7 @@ fs.writeFileSync(__dirname + '/manifest.webmanifest', JSON.stringify({
 fs.writeFileSync(__dirname + '/sw.js', `// Paso a Paso : fonctionne hors ligne. L'app se met à jour en arrière-plan à chaque ouverture avec réseau.
 const CACHE = 'paso-${VERSION}';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
-self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
+self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
@@ -38,6 +49,14 @@ self.addEventListener('fetch', e => {
   // sinon le classement et les défis resteraient figés sur leur première version.
   const u = new URL(e.request.url);
   if (u.origin !== self.location.origin && !/^fonts\\.(googleapis|gstatic)\\.com$/.test(u.hostname)) return;
+  // La page elle-même : réseau d'abord (3 s max), pour toujours ouvrir la dernière version ; cache hors ligne.
+  if (e.request.mode === 'navigate') {
+    e.respondWith(caches.open(CACHE).then(c => Promise.race([
+      fetch(e.request, { cache: 'no-store' }).then(r => { if (r && r.ok) c.put('./index.html', r.clone()); return r; }),
+      new Promise((_, no) => setTimeout(no, 3000)),
+    ]).catch(() => c.match('./index.html').then(h => h || c.match('./')).then(h => h || fetch(e.request)))));
+    return;
+  }
   e.respondWith(caches.open(CACHE).then(async c => {
     const hit = await c.match(e.request, { ignoreSearch: true });
     const net = fetch(e.request).then(r => { if (r && (r.ok || r.type === 'opaque')) c.put(e.request, r.clone()); return r; }).catch(() => hit);

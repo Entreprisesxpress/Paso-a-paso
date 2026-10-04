@@ -55,7 +55,8 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 #lesson{padding-bottom:280px}
-html,body{height:100%}
+html{min-height:100%}
+body{min-height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
@@ -5599,6 +5600,14 @@ function mascot(mood) {
 
 /* ===================== OUTILS ===================== */
 const $ = s => document.querySelector(s);
+/* iPhone : quand le clavier se ferme, Safari laisse parfois la barre du bas (position fixe) flotter
+   au milieu de l'écran jusqu'au prochain défilement. On force un recalcul dès que le clavier part. */
+(function fixIosFixed() {
+  const nudge = () => setTimeout(() => window.scrollTo(window.scrollX, window.scrollY), 80);
+  document.addEventListener('focusout', e => { if (/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) nudge(); });
+  const vv = window.visualViewport; let h = vv ? vv.height : 0;
+  if (vv) vv.addEventListener('resize', () => { if (vv.height > h + 100) nudge(); h = vv.height; });
+})();
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pick = a => a[Math.floor(Math.random() * a.length)];
@@ -7825,4 +7834,12 @@ connectSocial();
 let boostShown = boostOn();
 setInterval(() => { const on = boostOn(); if (!$('#home').hidden && (on || boostShown)) { boostShown = on; render(); } }, 60000);
 </script>
-<script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script></body></html>
+<script>if ('serviceWorker' in navigator) addEventListener('load', () => {
+  const had = !!navigator.serviceWorker.controller; let pending = false;
+  const atHome = () => { const h = document.getElementById('home'); return !h || !h.hidden; };
+  const go = () => { if (atHome()) location.reload(); else pending = true; };
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (had) go(); });
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (pending && atHome()) location.reload(); else reg.update().catch(() => {}); } });
+  }).catch(() => {});
+});</script></body></html>
