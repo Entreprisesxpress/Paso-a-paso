@@ -634,7 +634,7 @@ const UNITS = [
     {es:'Buen fin de semana', fr:'Bonne fin de semaine'},
     {es:'Que te vaya bien', fr:'Bonne journée (que ça aille bien)'},
   ]},
-  { id:'verbos', es:'Los verbos del día', fr:'Les verbes de tous les jours', tag:'Quotidien', color:'blue', items:[
+  { id:'verbos', es:'Los verbos del día', fr:'Les verbes de tous les jours', tag:'Grammaire', color:'blue', items:[
     {es:'quiero', fr:'je veux'},
     {es:'puedo', fr:'je peux'},
     {es:'necesito', fr:"j'ai besoin de"},
@@ -784,7 +784,7 @@ const UNITS = [
     {es:'¿Dónde estás?', fr:'Où es-tu ?'},
     {es:'Mándame la dirección', fr:"Envoie-moi l'adresse"},
   ]},
-  { id:'preguntas', es:'Las preguntas', fr:'Les questions', tag:'Quotidien', color:'teal', items:[
+  { id:'preguntas', es:'Las preguntas', fr:'Les questions', tag:'Grammaire', color:'teal', items:[
     {es:'¿Quién?', fr:'Qui ?'},
     {es:'¿Qué?', fr:'Quoi ?'},
     {es:'¿Dónde?', fr:'Où ?'},
@@ -840,6 +840,188 @@ const UNITS = [
     {es:'¿Ya comiste?', fr:'As-tu déjà mangé ?'},
     {es:'La comida está lista', fr:'Le repas est prêt'},
   ]},
+  { id:'exterior', es:'El exterior', fr:"L'extérieur et la toiture", tag:'Chantier', color:'teal', items:[
+    {es:'el andamio', fr:"l'échafaudage"},
+    {es:'las tejas', fr:'les bardeaux'},
+    {es:'la canaleta', fr:'la gouttière'},
+    {es:'el revestimiento', fr:'le revêtement extérieur'},
+    {es:'la terraza', fr:'la terrasse (le patio)'},
+    {es:'la cerca', fr:'la clôture'},
+    {es:'la lona', fr:'la bâche'},
+    {es:'el impermeabilizante', fr:"l'imperméabilisant", note:"Au Mexique, les toits plats sont « impermeabilizados » chaque année."},
+    {es:'Sube al andamio', fr:"Monte sur l'échafaudage"},
+    {es:'Cubre todo con la lona', fr:'Couvre tout avec la bâche'},
+    {es:'Va a llover', fr:'Il va pleuvoir'},
+    {es:'Hay que cambiar las tejas', fr:'Il faut changer les bardeaux'},
+  ]},
+  { id:'electricas', es:'Herramientas eléctricas', fr:'Les outils électriques', tag:'Chantier', color:'blue', items:[
+    {es:'la sierra circular', fr:'la scie ronde'},
+    {es:'la ingletadora', fr:'la scie à onglets'},
+    {es:'el esmeril', fr:'la meuleuse'},
+    {es:'la pistola de clavos', fr:'la cloueuse'},
+    {es:'el compresor', fr:'le compresseur'},
+    {es:'el atornillador', fr:'la visseuse'},
+    {es:'la broca', fr:'la mèche'},
+    {es:'la batería', fr:'la batterie'},
+    {es:'el cargador', fr:'le chargeur'},
+    {es:'la extensión', fr:'la rallonge électrique'},
+    {es:'Carga la batería', fr:'Charge la batterie'},
+    {es:'Cambia la broca', fr:'Change la mèche'},
+  ]},
+  { id:'planificar', es:'Organizar el día', fr:'Organiser la journée', tag:'Chantier', color:'pink', items:[
+    {es:'primero', fr:"d'abord"},
+    {es:'luego', fr:'ensuite'},
+    {es:'al final', fr:'à la fin'},
+    {es:'Empieza por la cocina', fr:'Commence par la cuisine'},
+    {es:'Termina el baño', fr:'Finis la salle de bain'},
+    {es:'¿Qué falta?', fr:"Qu'est-ce qui reste à faire ?"},
+    {es:'Falta pintar', fr:'Il reste à peindre'},
+    {es:'Todo listo', fr:'Tout est prêt'},
+    {es:'Ya casi terminamos', fr:'On a presque fini'},
+    {es:'Hoy vamos a poner la tablaroca', fr:'Aujourd\'hui, on pose le gypse'},
+    {es:'Mañana llega el material', fr:'Le matériel arrive demain'},
+    {es:'Regresamos el lunes', fr:'On revient lundi'},
+  ]},
+  { id:'salud', es:'Con el médico', fr:'Chez le médecin', tag:'Voyage', color:'teal', items:[
+    {es:'la cita', fr:'le rendez-vous'},
+    {es:'la receta', fr:"l'ordonnance", note:"« Receta » veut aussi dire recette de cuisine."},
+    {es:'la pastilla', fr:'la pilule'},
+    {es:'la fiebre', fr:'la fièvre'},
+    {es:'la tos', fr:'la toux'},
+    {es:'el dolor', fr:'la douleur'},
+    {es:'Me siento mal', fr:'Je ne me sens pas bien'},
+    {es:'Necesito una cita', fr:"J'ai besoin d'un rendez-vous"},
+    {es:'Tengo fiebre', fr:"J'ai de la fièvre"},
+    {es:'Me duele el estómago', fr:"J'ai mal au ventre"},
+    {es:'¿Dónde hay una farmacia?', fr:'Où y a-t-il une pharmacie ?'},
+    {es:'Tengo seguro de viaje', fr:"J'ai une assurance voyage"},
+  ]},
+  { id:'colores', es:'Los colores', fr:'Les couleurs', tag:'Quotidien', color:'sun', items:[
+    {es:'rojo', fr:'rouge'}, {es:'azul', fr:'bleu'}, {es:'verde', fr:'vert'}, {es:'amarillo', fr:'jaune'},
+    {es:'negro', fr:'noir'}, {es:'gris', fr:'gris'}, {es:'café', fr:'brun', note:"Au Mexique, « café » veut dire brun. On entend aussi « marrón »."},
+    {es:'naranja', fr:'orange'}, {es:'rosa', fr:'rose'},
+    {es:'azul claro', fr:'bleu pâle'}, {es:'oscuro', fr:'foncé'},
+    {es:'Pinta la puerta de negro', fr:'Peins la porte en noir'},
+  ]},
+  { id:'numeros2', es:'Números 11 a 100', fr:'Les nombres de 11 à 100', tag:'Quotidien', color:'blue', items:[
+    {es:'once', fr:'onze'}, {es:'doce', fr:'douze'}, {es:'quince', fr:'quinze'}, {es:'dieciséis', fr:'seize'},
+    {es:'veinticinco', fr:'vingt-cinq'}, {es:'treinta', fr:'trente'}, {es:'cuarenta', fr:'quarante'},
+    {es:'sesenta', fr:'soixante'}, {es:'setenta', fr:'soixante-dix'}, {es:'ochenta', fr:'quatre-vingts'},
+    {es:'noventa', fr:'quatre-vingt-dix'},
+    {es:'treinta y cinco', fr:'trente-cinq'},
+  ]},
+  { id:'meses', es:'Los meses', fr:'Les mois et les dates', tag:'Quotidien', color:'pink', items:[
+    {es:'enero', fr:'janvier'}, {es:'febrero', fr:'février'}, {es:'marzo', fr:'mars'}, {es:'abril', fr:'avril'},
+    {es:'mayo', fr:'mai'}, {es:'junio', fr:'juin'}, {es:'julio', fr:'juillet'}, {es:'agosto', fr:'août'},
+    {es:'septiembre', fr:'septembre'}, {es:'octubre', fr:'octobre'}, {es:'noviembre', fr:'novembre'}, {es:'diciembre', fr:'décembre'},
+    {es:'¿Qué fecha es hoy?', fr:'Quelle date sommes-nous ?'},
+    {es:'mi cumpleaños', fr:'ma fête (mon anniversaire)'},
+  ]},
+  { id:'ropa', es:'La ropa', fr:'Les vêtements', tag:'Quotidien', color:'teal', items:[
+    {es:'la camisa', fr:'la chemise'},
+    {es:'la camiseta', fr:'le t-shirt'},
+    {es:'el pantalón', fr:'le pantalon'},
+    {es:'la chamarra', fr:'le manteau', note:"« Chamarra » au Mexique ; « chaqueta » ou « abrigo » ailleurs."},
+    {es:'la gorra', fr:'la casquette'},
+    {es:'los zapatos', fr:'les souliers'},
+    {es:'los calcetines', fr:'les bas (chaussettes)'},
+    {es:'el impermeable', fr:"l'imperméable"},
+    {es:'el traje de baño', fr:'le maillot de bain'},
+    {es:'Hace frío, ponte la chamarra', fr:'Il fait froid, mets ton manteau'},
+    {es:'Necesito ropa de trabajo', fr:"J'ai besoin de vêtements de travail"},
+  ]},
+  { id:'cuerpo', es:'El cuerpo', fr:'Le corps', tag:'Quotidien', color:'sun', items:[
+    {es:'la cabeza', fr:'la tête'},
+    {es:'la mano', fr:'la main'},
+    {es:'el brazo', fr:'le bras'},
+    {es:'la pierna', fr:'la jambe'},
+    {es:'el dedo', fr:'le doigt'},
+    {es:'la rodilla', fr:'le genou'},
+    {es:'el hombro', fr:"l'épaule"},
+    {es:'la espalda', fr:'le dos'},
+    {es:'el ojo', fr:"l'œil"},
+    {es:'Me corté el dedo', fr:"Je me suis coupé le doigt"},
+    {es:'Cuida tu espalda', fr:'Fais attention à ton dos'},
+    {es:'Lávate las manos', fr:'Lave-toi les mains'},
+  ]},
+  { id:'frecuencia', es:'¿Cuándo?', fr:'Le temps : quand et combien de fois', tag:'Quotidien', color:'blue', items:[
+    {es:'ayer', fr:'hier'},
+    {es:'ahora', fr:'maintenant'},
+    {es:'ahorita', fr:'tout de suite (ou plus tard !)', note:"Au Mexique, « ahorita » peut vouloir dire « tout de suite »… ou « tantôt ». Demande « ¿Ahorita ahorita? » pour être sûr."},
+    {es:'después', fr:'après'},
+    {es:'antes', fr:'avant'},
+    {es:'temprano', fr:'tôt'},
+    {es:'tarde', fr:'tard'},
+    {es:'siempre', fr:'toujours'},
+    {es:'nunca', fr:'jamais'},
+    {es:'a veces', fr:'parfois'},
+    {es:'todavía no', fr:'pas encore'},
+    {es:'Llega temprano mañana', fr:'Arrive tôt demain'},
+  ]},
+  { id:'expresiones', es:'Expresiones mexicanas', fr:'Les expressions mexicaines', tag:'Quotidien', color:'pink', items:[
+    {es:'¿Mande?', fr:'Pardon ? (je n\'ai pas compris)', note:"Très poli au Mexique. Tes gars vont souvent répondre « ¿Mande? » quand tu les appelles."},
+    {es:'¡Órale!', fr:'OK, vas-y ! (wow !)'},
+    {es:'¡Ándale!', fr:'Allez, dépêche !'},
+    {es:'¡Qué padre!', fr:"C'est super !"},
+    {es:'¡Aguas!', fr:'Attention ! (fais gaffe)', note:"Sur un chantier mexicain, « ¡Aguas! » veut dire : attention, ça tombe !"},
+    {es:'¿Qué onda?', fr:'Salut, quoi de bon ?'},
+    {es:'la chamba', fr:"l'ouvrage (la job)"},
+    {es:'No hay problema', fr:'Pas de problème'},
+    {es:'¿Neta?', fr:'Pour vrai ?'},
+    {es:'Está padrísimo', fr:"C'est vraiment génial"},
+    {es:'Echarle ganas', fr:'Mettre du cœur à l\'ouvrage'},
+    {es:'¡Buen provecho!', fr:'Bon appétit !'},
+  ]},
+  { id:'ser_estar', es:'Ser y estar', fr:'Être : ser et estar', tag:'Grammaire', color:'blue', items:[
+    {es:'soy', fr:'je suis (ser)'}, {es:'eres', fr:'tu es (ser)'}, {es:'es', fr:'il/elle est (ser)'},
+    {es:'somos', fr:'nous sommes (ser)'}, {es:'son', fr:'ils/elles sont (ser)'},
+    {es:'estoy', fr:'je suis (estar)'}, {es:'estás', fr:'tu es (estar)'}, {es:'estamos', fr:'nous sommes (estar)'},
+    {es:'Soy contratista', fr:'Je suis entrepreneur'},
+    {es:'Somos de Canadá', fr:'Nous venons du Canada'},
+    {es:'Estamos en la obra', fr:'Nous sommes sur le chantier'},
+    {es:'La casa es grande', fr:'La maison est grande'},
+  ]},
+  { id:'presente', es:'El presente', fr:'Le présent des verbes en -ar', tag:'Grammaire', color:'teal', items:[
+    {es:'hablo', fr:'je parle'}, {es:'hablas', fr:'tu parles'}, {es:'habla', fr:'il/elle parle'},
+    {es:'hablamos', fr:'nous parlons'}, {es:'hablan', fr:'ils/elles parlent'},
+    {es:'trabajo', fr:'je travaille'}, {es:'trabajas', fr:'tu travailles'}, {es:'trabajamos', fr:'nous travaillons'},
+    {es:'¿Hablas francés?', fr:'Parles-tu français ?'},
+    {es:'Trabajamos juntos', fr:'Nous travaillons ensemble'},
+    {es:'Ellos trabajan mucho', fr:'Ils travaillent beaucoup'},
+    {es:'Necesitamos ayuda', fr:"Nous avons besoin d'aide"},
+  ]},
+  { id:'pasado', es:'El pasado', fr:'Le passé : ce qui est fait', tag:'Grammaire', color:'sun', items:[
+    {es:'trabajé', fr:"j'ai travaillé"},
+    {es:'terminé', fr:"j'ai fini"},
+    {es:'llegué', fr:'je suis arrivé'},
+    {es:'comí', fr:"j'ai mangé"},
+    {es:'fui', fr:'je suis allé'},
+    {es:'hice', fr:"j'ai fait"},
+    {es:'Ayer trabajé mucho', fr:"Hier, j'ai beaucoup travaillé"},
+    {es:'¿Terminaste?', fr:'As-tu fini ?'},
+    {es:'Ya terminé', fr:"J'ai déjà fini"},
+    {es:'¿Qué hiciste el fin de semana?', fr:"Qu'as-tu fait en fin de semaine ?"},
+    {es:'Fuimos a la playa', fr:'Nous sommes allés à la plage'},
+    {es:'Llegaste tarde', fr:'Tu es arrivé en retard'},
+  ]},
+  { id:'futuro', es:'Ir a + verbo', fr:'Le futur proche', tag:'Grammaire', color:'pink', items:[
+    {es:'voy a', fr:'je vais (+ verbe)'},
+    {es:'vas a', fr:'tu vas (+ verbe)'},
+    {es:'va a', fr:'il/elle va (+ verbe)'},
+    {es:'vamos a', fr:'nous allons (+ verbe)'},
+    {es:'Voy a comprar material', fr:'Je vais acheter du matériel'},
+    {es:'¿Qué vas a hacer?', fr:'Qu\'est-ce que tu vas faire ?'},
+    {es:'Mañana vamos a pintar', fr:'Demain, nous allons peindre'},
+    {es:'Va a hacer calor', fr:'Il va faire chaud'},
+    {es:'Vamos a empezar', fr:'Nous allons commencer'},
+    {es:'¿A qué hora vas a llegar?', fr:'À quelle heure vas-tu arriver ?'},
+  ]},
+  { id:'adjetivos', es:'Los adjetivos', fr:'Les adjectifs', tag:'Grammaire', color:'blue', items:[
+    {es:'grande', fr:'grand'}, {es:'pequeño', fr:'petit'}, {es:'nuevo', fr:'neuf (nouveau)'}, {es:'viejo', fr:'vieux'},
+    {es:'bueno', fr:'bon'}, {es:'malo', fr:'mauvais'}, {es:'fácil', fr:'facile'}, {es:'difícil', fr:'difficile'},
+    {es:'rápido', fr:'rapide'}, {es:'pesado', fr:'lourd'}, {es:'ligero', fr:'léger'},
+    {es:'Es muy pesado', fr:"C'est très lourd"},
+  ]},
 ];
 /* Guide : grammaire et prononciation, une unité à la fois */
 const TIPS = {
@@ -887,6 +1069,24 @@ const TIPS = {
   trabajo: [['Ojo : le dîner', "Si tu offres « el almuerzo » à ton équipe, c'est le repas du midi."]],
   casa: [['Quítate…', "« Quítate » = enlève (sur toi) : « Quítate las botas », « Quítate los guantes ». C'est le contraire de « Ponte »."]],
   comida: [['Ya', "« Ya » = déjà / maintenant : « ¿Ya comiste? » (as-tu déjà mangé ?), « Ya voy » (j'arrive)."]],
+  exterior: [['Va a llover', "« Va a » + verbe = futur proche : « Va a llover » (il va pleuvoir). Tu verras tout ça dans le parcours Grammaire."]],
+  electricas: [['Cambia, carga', "Encore des ordres : « Cambia » (change), « Carga » (charge), « Conecta » (branche), « Desconecta » (débranche)."]],
+  planificar: [['Falta…', "« Falta » + verbe = il reste à… : « Falta pintar », « Falta limpiar ». « ¿Qué falta? » = qu'est-ce qui reste ?"]],
+  salud: [['Me duele / Tengo', "Une partie du corps : « Me duele el estómago ». Un symptôme : « Tengo fiebre », « Tengo tos »."]],
+  colores: [["L'accord", "La couleur suit le nom et s'accorde : « la puerta negra », « el techo blanco », « las paredes blancas »."]],
+  numeros2: [['La logique', "De 16 à 29 en un mot : « dieciséis », « veinticinco ». Après 30, avec « y » : « treinta y cinco », « cuarenta y dos ». Pas de « soixante-dix » : « setenta »."]],
+  meses: [['Pas de majuscule', "Les mois s'écrivent en minuscules. La date : « el cinco de mayo »."]],
+  ropa: [['Ponte / Quítate', "« Ponte la chamarra » (mets ton manteau), « Quítate la gorra » (enlève ta casquette)."]],
+  cuerpo: [['Me corté', "Avec le corps, on dit « el » ou « la », pas « mon » : « Me corté el dedo » (je me suis coupé le doigt)."]],
+  frecuencia: [['Ahorita', "Le mot le plus mexicain qui soit. Il peut vouloir dire maintenant, dans 5 minutes… ou jamais."]],
+  expresiones: [['Le registre', "Ces expressions sont familières : parfaites avec ton équipe, à éviter avec un client que tu ne connais pas."]],
+  ser_estar: [['Ser : ce que tu es', "Identité, origine, métier, caractéristiques : « Soy contratista », « La casa es grande »."],
+              ['Estar : où et comment', "Lieu et état temporaire : « Estamos en la obra », « Estoy cansado », « Está seco »."]],
+  presente: [['Les terminaisons -ar', "habl-o, habl-as, habl-a, habl-amos, habl-an. Même chose pour trabajar, necesitar, terminar, empezar…"],
+             ['Pas besoin de « je »', "La terminaison dit déjà qui parle : « Trabajo » = je travaille. « Yo » sert seulement à insister."]],
+  pasado: [['Le passé simple', "Verbes en -ar : -é, -aste, -ó (trabajé, trabajaste, trabajó). En -er/-ir : -í, -iste, -ió (comí). Irréguliers à connaître : fui, hice."]],
+  futuro: [['Ir a + infinitif', "Exactement comme « aller + verbe » en français : « Voy a comprar » = je vais acheter. Le plus simple pour parler du futur."]],
+  adjetivos: [['-o devient -a', "« El carro nuevo », « la casa nueva ». Les adjectifs en -e ne changent pas : « grande », « fácil »."]],
   hotel: [['Ne marche pas', "« No funciona » = ça ne marche pas. Très utile : « No funciona la ducha », « No funciona el wifi »."]],
 };
 UNITS.forEach(u => u.items.forEach(it => it.unit = u.id));
@@ -1035,7 +1235,7 @@ const boostOn = () => S.boostUntil > Date.now();
 /* Étages et déblocage */
 const floorOf = u => Math.min(FLOORS, Math.floor((S.done[u.id] || 0) / LPF));
 /* Trois parcours en parallèle (Chantier, Voyage, Quotidien) qui partent tous de l'unité de base */
-const TRACKS = [['Chantier', 'helmet'], ['Voyage', 'plane'], ['Quotidien', 'chat']];
+const TRACKS = [['Chantier', 'helmet'], ['Voyage', 'plane'], ['Quotidien', 'chat'], ['Grammaire', 'book']];
 function prereqOf(u) { const tr = UNITS.filter(x => x.tag === u.tag), j = tr.indexOf(u); return j > 0 ? tr[j - 1] : UNITS[0]; }
 function unlocked(i) { const u = UNITS[i]; return i === 0 || (S.done[u.id] || 0) > 0 || (S.done[prereqOf(u).id] || 0) >= LPF; }
 
@@ -1245,9 +1445,9 @@ function pathView() {
   h += `<div class="arcade-card"><div class="art">${ic('bolt')}</div><div class="txt"><b>Défi éclair</b><small>60 secondes, un max de bonnes réponses${S.arcadeBest ? ` · record ${S.arcadeBest}` : ''}</small></div><button class="btn small" id="go-arcade">Jouer</button></div>`;
   if (frozeNotice) h += `<div class="notice"><b>Ta série est sauvée</b>${frozeNotice > 1 ? frozeNotice + ' gels de série ont été utilisés' : 'Un gel de série a été utilisé'} pour ton absence.</div>`;
   if (due.length >= 3) h += `<div class="review"><div class="txt"><b>Révision</b><small>${due.length} mots à revoir avant de les oublier</small></div><button class="btn small teal" id="go-review">Réviser</button></div>`;
-  h += `<div class="seg tracks" style="grid-template-columns:repeat(3,1fr);margin-top:24px">${TRACKS.map(([t, icn]) => {
+  h += `<div class="seg tracks" style="grid-template-columns:repeat(4,1fr);margin-top:24px">${TRACKS.map(([t, icn]) => {
     const tu = UNITS.filter(u => u.tag === t), dn = tu.filter(u => floorOf(u) >= FLOORS).length;
-    return `<button class="${S.track === t ? 'on' : ''}" data-track="${t}">${ic(icn).replace('<svg', '<svg style="width:22px;height:22px;display:block;margin:0 auto 2px"')}${t}<small>${dn} / ${tu.length} unités</small></button>`; }).join('')}</div>`;
+    return `<button class="${S.track === t ? 'on' : ''}" data-track="${t}">${ic(icn).replace('<svg', '<svg style="width:22px;height:22px;display:block;margin:0 auto 2px"')}${t}<small>${dn}/${tu.length}</small></button>`; }).join('')}</div>`;
   [UNITS[0], ...UNITS.filter(u => u.tag === S.track)].forEach((u, pos) => {
     const i = UNITS.indexOf(u);
     const open = unlocked(i), f = floorOf(u), n = S.done[u.id] || 0;
