@@ -3,7 +3,7 @@
 Application d'espagnol d'Amérique latine (Mexique) pour un francophone du Québec :
 le chantier de rénovation, le voyage et le quotidien. Sans pub, sans vies, sans limite.
 
-**Ouvrir l'app : https://entreprisesxpress.github.io/paso-a-paso/**
+**Ouvrir l'app : https://entreprisesxpress.github.io/Paso-a-paso/**
 
 Sur iPhone : ouvre le lien dans Safari › Partager › « Sur l'écran d'accueil ».
 Sur Android : Chrome › « Installer l'application ». L'app fonctionne ensuite hors ligne.
