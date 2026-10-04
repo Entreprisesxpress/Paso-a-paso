@@ -4804,7 +4804,7 @@ function remoteWins(remote, remoteUpdated) {
   return (+remoteUpdated || 0) > (S.updatedAt || 0);
 }
 function adoptRemote(o) {
-  const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow, track: S.track, order2: S.order2,
+  const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow, track: S.track, order2: S.order2, speakOn: S.speakOn, noSpeakUntil: S.noSpeakUntil,
     challenge: S.challenge || o.challenge || null, invitedBy: S.invitedBy || o.invitedBy || '' };
   S = Object.assign(adopt(o), keep); checkStreak(); saveLocal(); loadVoices();
 }
@@ -5319,7 +5319,10 @@ function speechScore(heard, target) {
   const want = loose(target).split(' ').filter(Boolean), got = new Set(loose(heard).split(' '));
   return want.length ? want.filter(w => got.has(w)).length / want.length : 0;
 }
+let curRec = null;
+function stopRec() { const r = curRec; curRec = null; if (r) { try { r.abort(); } catch (e) {} } }
 function skipSpeak() {
+  stopRec();
   const ex = L.queue[L.pos];
   L.queue[L.pos] = { t: 'type', it: ex.it, retry: ex.retry };
   next();
@@ -5364,6 +5367,7 @@ function startLesson(unit, exam, opts) {
 }
 function record(it, ok) { L.results[it.es] = (L.results[it.es] ?? true) && ok; }
 function next() {
+  stopRec();
   if (L.exam && L.lives <= 0) return examFail();
   if (L.pos >= L.queue.length) return finish();
   const ex = L.queue[L.pos];
@@ -5375,7 +5379,7 @@ function next() {
     <div class="combo-banner" id="combo-banner">${ex.retry ? 'Erreur précédente' : L.combo >= 5 ? `Combo ×${L.combo} · XP bonus` : ''}</div>
     <div class="stage" id="stage"></div>
     <div class="checkbar" id="checkbar"><div class="in"><div class="fb" id="fb" hidden></div><button class="btn ok wide" id="check" disabled>Vérifier</button></div></div>`;
-  $('#quit').onclick = () => { if (hasSpeech) speechSynthesis.cancel(); L = null; showHome(); };
+  $('#quit').onclick = () => { stopRec(); if (hasSpeech) speechSynthesis.cancel(); L = null; showHome(); };
   RENDER[ex.t](ex);
 }
 let checkFn = null;
@@ -5419,7 +5423,7 @@ function feedback(ok, it, extra) {
     + (it && it.note ? `<p class="note">${esc(it.note)}</p>` : '') + `</div>`;
   const b = $('#check'); b.textContent = 'Continuer'; b.dataset.mode = 'next'; b.disabled = false; b.hidden = false;
   b.className = 'btn wide ' + (ok ? 'ok' : 'bad'); b.focus();
-  $('#stage').querySelectorAll('.opt,.tile,.type-box,.accents button').forEach(el => el.disabled = true);
+  $('#stage').querySelectorAll('.opt,.tile,.type-box,.accents button,#mic,#no-mic').forEach(el => el.disabled = true);
 }
 
 /* ===================== EXERCICES ===================== */
@@ -5473,31 +5477,39 @@ const RENDER = {
       <p class="heard" id="heard"></p>
       <button class="btn line small" id="no-mic" style="justify-self:center">Je ne peux pas parler maintenant</button>`;
     $('#check').hidden = true;
-    const lesson = L; let rec = null, tries = 0;
-    const stop = () => { if (rec) { try { rec.abort(); } catch (e) {} rec = null; } };
+    const lesson = L; let tries = 0, graded = false;
+    // Une réponse n'est acceptée que pour CET exercice, une seule fois, et par l'écoute en cours.
+    const live = r => !graded && L === lesson && L.queue[L.pos] === ex && curRec === r;
+    const setTxt = (sel, t) => { const el = $(sel); if (el) el.textContent = t; };
     $('#mic').onclick = () => {
-      if (rec) return stop();
-      rec = new SR(); rec.lang = 'es-MX'; rec.interimResults = false; rec.maxAlternatives = 3;
-      $('#mic').classList.add('on'); $('#mic-txt').textContent = "J'écoute… parle maintenant"; $('#heard').textContent = '';
-      rec.onresult = e => {
-        if (L !== lesson) return;
+      if (graded) return;
+      if (curRec) return stopRec();
+      const r = new SR(); curRec = r;
+      r.lang = 'es-MX'; r.interimResults = false; r.maxAlternatives = 3;
+      $('#mic').classList.add('on'); setTxt('#mic-txt', "J'écoute… parle maintenant"); setTxt('#heard', '');
+      r.onresult = e => {
+        if (!live(r)) return;
         const alts = [...e.results[0]].map(a => a.transcript);
         const best = alts.map(t => [t, speechScore(t, it.es)]).sort((x, y) => y[1] - x[1])[0];
         tries++;
-        if (best[1] >= 0.75) { $('#check').hidden = false; feedback(true, it, `Entendu : « ${esc(best[0])} »`); }
-        else if (tries < 2) { $('#heard').textContent = `Entendu : « ${best[0]} ». Essaie encore !`; SFX.bad(); }
-        else { $('#check').hidden = false; feedback(false, it, `Entendu : « ${esc(best[0])} »`); }
+        if (best[1] >= 0.75) { graded = true; stopRec(); $('#check').hidden = false; feedback(true, it, `Entendu : « ${esc(best[0])} »`); }
+        else if (tries < 2) { setTxt('#heard', `Entendu : « ${best[0]} ». Essaie encore !`); SFX.bad(); }
+        else { graded = true; stopRec(); $('#check').hidden = false; feedback(false, it, `Entendu : « ${esc(best[0])} »`); }
       };
-      rec.onerror = e => {
-        if (L !== lesson) return;
+      r.onerror = e => {
+        if (!live(r)) return;
         if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
-          S.speakOn = false; saveLocal(); toast('Micro refusé : prononciation désactivée (Profil › Réglages pour la remettre).'); skipSpeak();
-        } else { const h = $('#heard'); if (h) h.textContent = "Je n'ai rien entendu. Touche le micro et réessaie."; }
+          graded = true; S.speakOn = false; saveLocal(); toast('Micro refusé : prononciation désactivée (Profil › Réglages pour la remettre).'); skipSpeak();
+        } else setTxt('#heard', "Je n'ai rien entendu. Touche le micro et réessaie.");
       };
-      rec.onend = () => { rec = null; const m = $('#mic'); if (m) { m.classList.remove('on'); $('#mic-txt').textContent = 'Touche pour parler'; } };
-      try { rec.start(); } catch (e) { rec = null; }
+      r.onend = () => {
+        if (curRec !== r) return; // une ancienne écoute qui se termine en retard ne touche pas à l'écran
+        curRec = null;
+        const m = $('#mic'); if (m) m.classList.remove('on'); setTxt('#mic-txt', 'Touche pour parler');
+      };
+      try { r.start(); } catch (e) { curRec = null; }
     };
-    $('#no-mic').onclick = () => { stop(); S.noSpeakUntil = Date.now() + 15 * 60000; saveLocal(); toast('Pas de prononciation pendant 15 minutes.'); skipSpeak(); };
+    $('#no-mic').onclick = () => { if (graded) return; graded = true; S.noSpeakUntil = Date.now() + 15 * 60000; saveLocal(); toast('Pas de prononciation pendant 15 minutes.'); skipSpeak(); };
   },
   type(ex) {
     const it = ex.it;
