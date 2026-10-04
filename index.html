@@ -390,7 +390,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .namefield{width:100%;font:inherit;font-weight:700;font-size:17px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--sunk);color:var(--ink)}
 .tab{font-size:clamp(9.5px,2.9vw,12px);letter-spacing:-.2px}
 .tab svg{width:26px;height:26px}
-.tracks{gap:5px!important;grid-template-columns:repeat(5,minmax(0,1fr))!important}
+.tracks{gap:5px!important;grid-template-columns:repeat(var(--n,5),minmax(0,1fr))!important}
 .tracks button{font-size:clamp(9px,2.7vw,13px);hyphens:manual;padding-inline:1px;min-width:0;overflow:hidden;letter-spacing:-.2px}
 .tracks button small{font-size:10px}
 .story-card{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;text-align:left;background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;padding:12px 14px;width:100%}
@@ -537,6 +537,19 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .comp.over{opacity:.92}
 .comp-win{display:flex;align-items:center;gap:8px;background:var(--sun-soft);color:var(--sun-ink);border-radius:12px;padding:8px 10px;margin:10px 0 4px;font-weight:700}
 .comp-win svg{width:24px;height:24px;color:var(--sun-deep);flex:none}
+.focus-card h2{font-family:var(--font-display);font-size:24px;margin:2px 0 4px}
+.focus-card p{margin:0 0 10px;color:var(--muted);font-weight:700}
+.focus-grid{display:grid;gap:8px}
+.focus-opt{display:grid;grid-template-columns:44px 1fr 28px;gap:12px;align-items:center;text-align:left;background:var(--surface);border:2px solid var(--line);border-bottom-width:4px;border-radius:16px;padding:10px 12px;font:inherit;color:var(--ink)}
+.focus-opt .art{width:44px;height:44px;border-radius:12px;background:var(--sunk);color:var(--muted);display:grid;place-items:center}
+.focus-opt .art svg{width:26px;height:26px}
+.focus-opt b{font-family:var(--font-display);font-size:17px;display:block;line-height:1.15}
+.focus-opt small{color:var(--muted);font-weight:700}
+.focus-opt .tick{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;color:var(--on)}
+.focus-opt .tick svg{width:18px;height:18px}
+.focus-opt.on{border-color:var(--teal);background:var(--teal-soft,var(--surface))}
+.focus-opt.on .art{background:var(--teal);color:var(--on)}
+.focus-opt.on .tick{background:var(--teal);border-color:var(--teal)}
 .fam-card{display:flex;align-items:center;gap:12px}
 .fam-card .art{width:48px;height:48px;border-radius:14px;background:var(--pink-soft,var(--blue-soft));color:var(--pink);display:grid;place-items:center;flex:none}
 .fam-card .art svg{width:28px;height:28px}
@@ -7578,6 +7591,7 @@ function T() {
 /* Série : un gel de série couvre chaque jour manqué */
 let frozeNotice = 0;
 if (!S.order2) { S.track = 'Base'; S.order2 = true; saveLocal(); }
+if (!S.focus && S.stats && S.stats.lessons > 0) { S.focus = { Chantier: true, Quotidien: true, Voyage: true }; saveLocal(); }
 checkStreak();
 function checkStreak() {
   if (!S.lastDay) return;
@@ -7828,11 +7842,12 @@ function goalCard() {
 }
 function pathView() {
   const due = dueItems();
-  let h = challengeBanner() + goalCard();
+  if (!focusOn(S.track)) S.track = 'Base';
+  let h = focusCard() + challengeBanner() + goalCard();
   h += fieldCard();
   if (frozeNotice) h += `<div class="notice"><b>Ta série est sauvée</b>${frozeNotice > 1 ? frozeNotice + ' gels de série ont été utilisés' : 'Un gel de série a été utilisé'} pour ton absence.</div>`;
   if (due.length >= 3) h += `<div class="review"><div class="txt"><b>Révision</b><small>${due.length} mots à revoir avant de les oublier</small></div><button class="btn small teal" id="go-review">Réviser</button></div>`;
-  h += `<div class="seg tracks" style="grid-template-columns:repeat(5,1fr);margin-top:24px">${TRACKS.map(([t, icn]) => {
+  h += `<div class="seg tracks" style="--n:${visibleTracks().length};margin-top:24px">${visibleTracks().map(([t, icn]) => {
     const tu = UNITS.filter(u => u.tag === t), dn = tu.filter(u => floorOf(u) >= FLOORS).length;
     return `<button class="${S.track === t ? 'on' : ''}" data-track="${t}">${ic(icn).replace('<svg', '<svg style="width:22px;height:22px;display:block;margin:0 auto 2px"')}${t === 'Grammaire' ? 'Gram&shy;maire' : t}<small>${dn}/${tu.length}</small></button>`; }).join('')}</div>`;
   (S.track === 'Base' ? UNITS.filter(u => u.tag === 'Base') : [UNITS[0], ...UNITS.filter(u => u.tag === S.track)]).forEach((u, pos) => {
@@ -7905,6 +7920,7 @@ function meView() {
     <h2 class="section-title">Cette semaine</h2>${weekChart()}
     <h2 class="section-title">Trophées <span style="color:var(--muted);font-size:18px">${Object.keys(S.badges).length} / ${BADGES.length}</span></h2>
     <div class="badges">${BADGES.map(b => `<div class="badge${S.badges[b[0]] ? '' : ' locked'}" style="--bc:var(--${b[4]});--bd:var(--${b[4]}-deep)"><div class="medal">${ic(b[3])}</div><b>${b[1]}</b><small>${b[2]}</small></div>`).join('')}</div>
+    <h2 class="section-title">Mes intérêts</h2><div class="card"><p style="margin:0 0 4px;color:var(--muted);font-weight:700">Ce que tu veux apprendre. Les bases et la grammaire sont toujours incluses.</p>${focusToggles()}</div>
     <h2 class="section-title">Voix espagnole</h2><div class="card">`;
   if (!hasSpeech) h += `<p style="margin:0">Ce navigateur ne lit pas l'audio.</p>`;
   else if (!voices.length) h += `<p style="margin:0;font-weight:700">Aucune voix espagnole trouvée sur cet appareil.</p>`;
@@ -7932,6 +7948,7 @@ function bindHome() {
   const H = $('#home');
   H.querySelectorAll('[data-lex]').forEach(b => b.onclick = () => lexicon(U(b.dataset.lex)));
   H.querySelectorAll('[data-track]').forEach(b => b.onclick = () => { S.track = b.dataset.track; saveLocal(); SFX.tap(); render(); });
+  bindFocus(H);
   H.querySelectorAll('[data-exam]').forEach(b => b.onclick = () => examPrompt(U(b.dataset.exam)));
   const ga = $('#go-arcade'); if (ga) ga.onclick = () => openArcade();
   H.querySelectorAll('[data-story]').forEach(b => b.onclick = () => openStory(STORIES.find(x => x.id === b.dataset.story)));
@@ -8090,10 +8107,48 @@ function startPractice(kind) {
   startLesson(null, false, { pool, noMatch: true, types: () => ['speak'] });
 }
 
+/* ===================== MES INTÉRÊTS =====================
+   Chacun choisit ce qu'il veut apprendre : le chantier, l'espagnol de tous les jours, le voyage.
+   Base et Grammaire restent toujours visibles. Un parcours décoché disparaît du parcours,
+   des histoires et de la phrase du jour ; la progression déjà faite est gardée. */
+const FOCI = [['Chantier', 'helmet', 'Le chantier', "Outils, matériaux, consignes à l'équipe"], ['Quotidien', 'chat', "L'espagnol de tous les jours", 'Famille, maison, sorties, amis'], ['Voyage', 'plane', 'Le voyage', 'Aéroport, hôtel, restos, plages du Mexique']];
+const focusOn = t => !FOCI.some(f => f[0] === t) || !S.focus || S.focus[t] !== false;
+const visibleTracks = () => TRACKS.filter(([t]) => focusOn(t));
+let FOCUS_DRAFT = null;
+function focusToggles(draft) {
+  const on = t => draft ? draft[t] !== false : focusOn(t);
+  return `<div class="focus-grid">${FOCI.map(([t, icn, title, sub]) => `<button class="focus-opt${on(t) ? ' on' : ''}" data-focus="${t}" aria-pressed="${on(t)}">
+    <span class="art">${ic(icn)}</span><span class="txt"><b>${title}</b><small>${sub}</small></span><span class="tick">${on(t) ? ic('check') : ''}</span></button>`).join('')}</div>`;
+}
+function focusCard() {
+  if (S.focus) return '';
+  FOCUS_DRAFT = FOCUS_DRAFT || { Chantier: true, Quotidien: true, Voyage: true };
+  return `<div class="card focus-card"><span class="eyebrow">Bienvenue !</span><h2>Qu'est-ce qui t'intéresse ?</h2>
+    <p>Choisis ce que tu veux apprendre. Les bases et la grammaire sont toujours incluses. Tu pourras changer d'idée dans ton Profil.</p>
+    ${focusToggles(FOCUS_DRAFT)}<button class="btn wide teal" id="focus-ok" style="margin-top:12px">C'est parti</button></div>`;
+}
+function setFocus(f) {
+  S.focus = f;
+  if (!focusOn(S.track)) S.track = 'Base';
+  save(); render();
+}
+function bindFocus(H) {
+  H.querySelectorAll('[data-focus]').forEach(b => b.onclick = () => {
+    const t = b.dataset.focus; SFX.tap();
+    if (!S.focus) { FOCUS_DRAFT[t] = FOCUS_DRAFT[t] === false; render(); return; }
+    setFocus({ ...{ Chantier: true, Quotidien: true, Voyage: true }, ...S.focus, [t]: !focusOn(t) });
+    toast(focusOn(t) ? 'Ajouté à ton parcours' : 'Retiré de ton parcours (ta progression est gardée)');
+  });
+  const ok = $('#focus-ok'); if (ok) ok.onclick = () => { setFocus({ ...FOCUS_DRAFT }); FOCUS_DRAFT = null; SFX.win(); toast('Ton parcours est prêt. ¡Vamos!'); };
+}
 /* ===================== PHRASE DU JOUR AU CHANTIER =====================
    Une phrase utile à dire VRAIMENT à l'équipe aujourd'hui. Le bouton « Je l'ai dite »
    récompense l'usage réel, ce qu'aucun exercice ne remplace. */
-function fieldPool() { return UNITS.filter(u => u.tag === 'Chantier').flatMap(u => u.items).filter(isSentence); }
+const fieldIsSite = () => focusOn('Chantier');
+function fieldPool() {
+  const tags = fieldIsSite() ? ['Chantier'] : ['Quotidien', 'Voyage'].filter(focusOn);
+  return UNITS.filter(u => (tags.length ? tags : ['Quotidien']).includes(u.tag)).flatMap(u => u.items).filter(isSentence);
+}
 function fieldPhrase() {
   const pool = fieldPool(), t = T();
   const base = Math.floor(seeded('f' + dayKey())() * pool.length);
@@ -8101,12 +8156,12 @@ function fieldPhrase() {
 }
 function fieldCard() {
   const it = fieldPhrase(), t = T(), done = !!t.fieldDone;
-  return `<div class="field${done ? ' done' : ''}"><span class="eyebrow">${done ? 'Phrase du jour au chantier : dite !' : 'Phrase du jour au chantier'}</span>
+  return `<div class="field${done ? ' done' : ''}"><span class="eyebrow">${(fieldIsSite() ? 'Phrase du jour au chantier' : 'Phrase du jour à utiliser') + (done ? (fieldIsSite() ? ' : dite !' : ' : utilisée !') : '')}</span>
     <div class="row1">${speakBtn(it.es)}${speakBtn(it.es, true)}<span class="es">${esc(it.es)}</span></div>
     <p class="fr">${esc(it.fr)}</p>
     <div class="acts">${done ? `<span style="font-weight:800;color:var(--ok-deep)">${ic('check').replace('<svg', '<svg style="width:18px;height:18px;vertical-align:-3px"')} Bravo, tu l'as utilisée pour vrai. À demain !</span>`
-      : `<button class="btn small ok" id="field-done">Je l'ai dite à mon équipe</button><button class="btn small line" id="field-other">Une autre phrase</button>`}</div>
-    <button class="lbl-link" data-golabels>${ic('tag')} Étiquettes à coller sur tes outils</button></div>`;
+      : `<button class="btn small ok" id="field-done">${fieldIsSite() ? "Je l'ai dite à mon équipe" : "Je l'ai utilisée"}</button><button class="btn small line" id="field-other">Une autre phrase</button>`}</div>
+    ${fieldIsSite() ? `<button class="lbl-link" data-golabels>${ic('tag')} Étiquettes à coller sur tes outils</button>` : ''}</div>`;
 }
 function fieldDone() {
   const t = T(); if (t.fieldDone) return;
@@ -9700,8 +9755,8 @@ const storyOpen = st => unlocked(UNITS.findIndex(u => u.id === st.unit));
 function storiesView() {
   const done = Object.keys(S.stories || {}).length;
   let h = `<div class="tutor-hero">${mascot('happy')}<div><h2>Les histoires</h2><p>De petites scènes à lire et à écouter, avec des questions en chemin. Touche une phrase pour voir la traduction.</p></div></div>
-    <p style="font-weight:800;margin:12px 0 0">${done} / ${STORIES.length} histoires lues</p><div class="scenes">`;
-  STORIES.slice().sort((x, y) => rankOf(U(x.unit)) - rankOf(U(y.unit))).forEach(st => {
+    <p style="font-weight:800;margin:12px 0 0">${STORIES.filter(st => (S.stories || {})[st.id] && focusOn(U(st.unit).tag)).length} / ${STORIES.filter(st => focusOn(U(st.unit).tag)).length} histoires lues</p><div class="scenes">`;
+  STORIES.filter(st => focusOn(U(st.unit).tag)).sort((x, y) => rankOf(U(x.unit)) - rankOf(U(y.unit))).forEach(st => {
     const open = storyOpen(st), read = (S.stories || {})[st.id], u = U(st.unit);
     h += `<button class="story-card${open ? '' : ' locked'}" data-story="${st.id}" style="--sc:var(--${st.color});--sd:var(--${st.color}-deep)" ${open ? '' : 'disabled'}>
       <div class="cover"${st.color === 'sun' ? ' style="color:var(--sun-ink)"' : ''}>${ic(open ? 'book' : 'lock')}</div>
