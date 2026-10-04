@@ -49,5 +49,5 @@ const tokens = src.match(/:root\{\n[\s\S]*?\n\}/)[0];
     await (await p.$('#i')).screenshot({ path: __dirname + '/' + name });
   }
   await b.close();
-  console.log('built', VERSION, fs.readdirSync('dist'));
+  console.log('built', VERSION, fs.readdirSync(__dirname));
 })();
