@@ -73,7 +73,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 
 /* Onglets */
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:2px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center}
-.tabs .in{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%;max-width:560px}
+.tabs .in{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:100%;max-width:560px}
 .tab{border:2px solid transparent;background:none;border-radius:14px;padding:6px;display:grid;justify-items:center;gap:0;font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--muted);position:relative}
 .tab svg{width:28px;height:28px}
 .tab.on{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
@@ -373,6 +373,31 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .qrbox svg{display:block;width:100%;height:auto}
 .linkbox{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:var(--sunk);border-radius:10px;padding:8px 10px;overflow-wrap:anywhere;user-select:all;text-align:left}
 .namefield{width:100%;font:inherit;font-weight:700;font-size:17px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--sunk);color:var(--ink)}
+.tab{font-size:12px}
+.story-card{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;text-align:left;background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;padding:12px 14px;width:100%}
+.story-card .cover{width:56px;height:56px;border-radius:14px;background:var(--sc);box-shadow:0 3px 0 var(--sd);display:grid;place-items:center;color:var(--on)}
+.story-card .cover svg{width:30px;height:30px}
+.story-card b{font-family:var(--font-display);font-size:19px;display:block;line-height:1.15}
+.story-card small{color:var(--muted);font-weight:700}
+.story-card.locked{opacity:.55}
+.story-card.locked .cover{--sc:var(--lock);--sd:var(--lock-deep);color:var(--muted)}
+.story-card .state{color:var(--ok)} .story-card .state svg{width:24px;height:24px}
+.st-lines{display:grid;gap:14px;padding-block:16px 8px}
+.st-line{display:flex;gap:10px;align-items:flex-start}
+.st-new{animation:slidein .35s both}
+.st-line .who{flex:none;min-width:64px;max-width:90px;font-family:var(--font-display);font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--wc);padding-top:12px;overflow-wrap:anywhere}
+.st-line .bub{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:10px 12px;min-width:0;flex:1}
+.st-line .es{font-size:18px;font-weight:700;line-height:1.35;cursor:pointer}
+.st-line .tr{color:var(--muted);font-weight:700;font-size:14px;margin-top:4px}
+.st-line.narr{justify-content:center}
+.st-line.narr .bub{background:none;border:0;text-align:center;font-style:italic;padding:4px 8px}
+.st-line.narr .es{color:var(--muted)}
+.st-line .spk{border:0;background:none;color:var(--blue);padding:2px;float:right;margin-left:6px}
+.st-line .spk svg{width:22px;height:22px}
+.st-q{background:var(--blue-soft);border-radius:18px;padding:14px;display:grid;gap:10px}
+.st-q b{font-family:var(--font-display);font-size:19px;color:var(--blue)}
+.st-q .opt{font-size:16px;padding:12px 14px}
+.st-q.answered .opt:not(.right){display:none}
 .xpfloat{position:fixed;right:20px;bottom:150px;z-index:30;font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--sun-deep);animation:floatup 1.2s ease-out forwards;pointer-events:none}
 @keyframes floatup{to{transform:translateY(-60px);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -385,6 +410,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 <canvas id="confetti" hidden></canvas>
 <div class="wrap" id="chat" hidden></div>
 <div class="wrap" id="arcade" hidden></div>
+<div class="wrap" id="story" hidden></div>
 <div id="layer"></div>
 
 <script>
@@ -3867,6 +3893,118 @@ const UNITS = [
     {es:'No te olvides', fr:"N'oublie pas"},
     {es:'No te muevas', fr:'Ne bouge pas'},
   ]},
+  { id:'verbos_obra', es:'Verbos de la obra', fr:'Les verbes du chantier', tag:'Chantier', color:'teal', items:[
+    {es:'medir', fr:'mesurer'},
+    {es:'cortar', fr:'couper'},
+    {es:'clavar', fr:'clouer'},
+    {es:'atornillar', fr:'visser'},
+    {es:'lijar', fr:'sabler'},
+    {es:'pintar', fr:'peindre'},
+    {es:'instalar', fr:'installer'},
+    {es:'quitar', fr:'enlever'},
+    {es:'mover', fr:'déplacer'},
+    {es:'limpiar', fr:'nettoyer'},
+    {es:'levantar', fr:'soulever'},
+    {es:'arreglar', fr:'réparer'},
+  ]},
+  { id:'oficios', es:'Los oficios', fr:'Les métiers', tag:'Chantier', color:'sun', items:[
+    {es:'el soldador', fr:'le soudeur'},
+    {es:'el techador', fr:'le couvreur'},
+    {es:'el arquitecto', fr:"l'architecte"},
+    {es:'el ingeniero', fr:"l'ingénieur"},
+    {es:'el inspector', fr:"l'inspecteur"},
+    {es:'el vecino', fr:'le voisin'},
+    {es:'el dueño', fr:'le propriétaire'},
+    {es:'el ayudante', fr:"l'aide (l'apprenti)"},
+    {es:'el maestro de obra', fr:'le contremaître', note:"Au Mexique, le « maestro » est le chef d'équipe expérimenté."},
+    {es:'el subcontratista', fr:'le sous-traitant'},
+    {es:'el diseñador', fr:'le designer'},
+    {es:'¿A qué te dedicas?', fr:"Qu'est-ce que tu fais dans la vie ?"},
+  ]},
+  { id:'inspeccion', es:'Permisos e inspección', fr:"Les permis et l'inspection", tag:'Chantier', color:'blue', items:[
+    {es:'el permiso', fr:'le permis'},
+    {es:'la inspección', fr:"l'inspection"},
+    {es:'el código', fr:'le code du bâtiment'},
+    {es:'el plano', fr:'le plan'},
+    {es:'la medida', fr:'la mesure'},
+    {es:'aprobar', fr:'approuver'},
+    {es:'Viene el inspector mañana', fr:"L'inspecteur vient demain"},
+    {es:'Todo tiene que estar limpio', fr:'Tout doit être propre'},
+    {es:'Necesitamos el permiso', fr:'On a besoin du permis'},
+    {es:'Sigue el plano', fr:'Suis le plan'},
+    {es:'Pasamos la inspección', fr:"On a passé l'inspection"},
+    {es:'Hay que cambiar esto', fr:'Il faut changer ça'},
+  ]},
+  { id:'tradiciones', es:'Fiestas y tradiciones', fr:'Les fêtes et les traditions', tag:'Quotidien', color:'pink', items:[
+    {es:'la Navidad', fr:'Noël'},
+    {es:'el Año Nuevo', fr:"le jour de l'An"},
+    {es:'el Día de Muertos', fr:'le jour des Morts', note:'Le 1er et le 2 novembre, les familles mexicaines honorent leurs défunts avec des autels et des fleurs orange.'},
+    {es:'la posada', fr:'la posada', note:'Fêtes de quartier du 16 au 24 décembre, avec piñatas et chants.'},
+    {es:'los regalos', fr:'les cadeaux'},
+    {es:'las vacaciones', fr:'les vacances'},
+    {es:'¡Feliz Navidad!', fr:'Joyeux Noël !'},
+    {es:'¡Feliz Año Nuevo!', fr:'Bonne année !'},
+    {es:'¿Qué haces en Navidad?', fr:'Que fais-tu à Noël ?'},
+    {es:'la Semana Santa', fr:'la semaine de Pâques'},
+    {es:'el Día de la Independencia', fr:"la fête de l'Indépendance", note:'Le 16 septembre au Mexique.'},
+    {es:'Te deseo lo mejor', fr:'Je te souhaite le meilleur'},
+  ]},
+  { id:'conectores', es:'Unir las ideas', fr:'Relier les idées', tag:'Grammaire', color:'teal', items:[
+    {es:'y', fr:'et'},
+    {es:'pero', fr:'mais'},
+    {es:'o', fr:'ou'},
+    {es:'también', fr:'aussi'},
+    {es:'entonces', fr:'alors'},
+    {es:'si', fr:'si'},
+    {es:'aunque', fr:'même si'},
+    {es:'además', fr:'en plus'},
+    {es:'Quiero ir, pero no puedo', fr:'Je veux y aller, mais je ne peux pas'},
+    {es:'Si llueve, no trabajamos', fr:"S'il pleut, on ne travaille pas"},
+    {es:'Está cansado, entonces se va', fr:"Il est fatigué, alors il s'en va"},
+    {es:'Yo también', fr:'Moi aussi'},
+  ]},
+  { id:'futuro_simple', es:'El futuro', fr:'Le futur simple', tag:'Grammaire', color:'sun', items:[
+    {es:'trabajaré', fr:'je travaillerai'},
+    {es:'iré', fr:"j'irai"},
+    {es:'será', fr:'ce sera'},
+    {es:'habrá', fr:'il y aura'},
+    {es:'terminaremos', fr:'nous finirons'},
+    {es:'vendrá', fr:'il viendra'},
+    {es:'Mañana lloverá', fr:'Demain, il pleuvra'},
+    {es:'¿Qué harás?', fr:'Que feras-tu ?'},
+    {es:'El próximo año iré a México', fr:"L'an prochain, j'irai au Mexique"},
+    {es:'Será un buen día', fr:'Ce sera une bonne journée'},
+    {es:'Te llamaré', fr:"Je t'appellerai"},
+    {es:'Habrá mucho trabajo', fr:"Il y aura beaucoup d'ouvrage"},
+  ]},
+  { id:'preterito_el', es:'El pasado: él y ellos', fr:'Le passé : il et ils', tag:'Grammaire', color:'pink', items:[
+    {es:'trabajó', fr:'il a travaillé'},
+    {es:'terminaron', fr:'ils ont fini'},
+    {es:'vino', fr:'il est venu'},
+    {es:'dijo', fr:'il a dit'},
+    {es:'llamó', fr:'il a appelé'},
+    {es:'salió', fr:'il est sorti'},
+    {es:'¿Quién llamó?', fr:'Qui a appelé ?'},
+    {es:'El cliente dijo que sí', fr:'Le client a dit oui'},
+    {es:'Ellos terminaron temprano', fr:'Ils ont fini tôt'},
+    {es:'Miguel no vino hoy', fr:"Miguel n'est pas venu aujourd'hui"},
+    {es:'¿Qué dijo el jefe?', fr:"Qu'a dit le patron ?"},
+    {es:'Compraron el material', fr:'Ils ont acheté le matériel'},
+  ]},
+  { id:'subjuntivo', es:'Ojalá y espero que', fr:'Souhaiter et demander', tag:'Grammaire', color:'blue', items:[
+    {es:'Ojalá', fr:"Pourvu que (j'espère bien)"},
+    {es:'Ojalá no llueva', fr:"Pourvu qu'il ne pleuve pas"},
+    {es:'Espero que estés bien', fr:"J'espère que tu vas bien"},
+    {es:'Quiero que vengas mañana', fr:'Je veux que tu viennes demain'},
+    {es:'Es importante que uses el casco', fr:"C'est important que tu portes ton casque"},
+    {es:'Cuando termines, avísame', fr:'Quand tu as fini, avertis-moi'},
+    {es:'Que te mejores', fr:'Prompt rétablissement'},
+    {es:'Que descanses', fr:'Repose-toi bien'},
+    {es:'Necesito que me ayudes', fr:"J'ai besoin que tu m'aides"},
+    {es:'Antes de que llegue el cliente', fr:'Avant que le client arrive'},
+    {es:'Para que sepas', fr:'Pour que tu le saches'},
+    {es:'Que te diviertas', fr:'Amuse-toi bien'},
+  ]},
 ];
 /* Guide : grammaire et prononciation, une unité à la fois */
 const TIPS = {
@@ -3970,6 +4108,14 @@ const TIPS = {
   por_para: [['Le truc', "« Para » = le but, la destination, l'échéance. « Por » = le moyen, le passage, la durée, l'échange (« por hora »)."]],
   ordinales: [['Primer, tercer', 'Devant un nom masculin, « primero » et « tercero » perdent le -o : « el primer piso », « el tercer día ».']],
   prohibido: [['La forme des interdictions', 'Verbes en -ar → -es (« No uses »), en -er/-ir → -as (« No corras »). Les irréguliers : « No hagas », « No digas », « No vengas ».']],
+  verbos_obra: [["De l'infinitif à l'ordre", 'Retire le -r : cortar → « Corta », limpiar → « Limpia », medir → « Mide » (irrégulier), mover → « Mueve ».']],
+  oficios: [['Au féminin', '« el ingeniero / la ingeniera », « el arquitecto / la arquitecta ». Les mots en -ista ne changent pas : « la electricista ».']],
+  inspeccion: [['Tener que', '« Todo tiene que estar limpio » = tout doit être propre. « Tener que » + infinitif = devoir.']],
+  tradiciones: [['Feliz', '« ¡Feliz! » sert pour toutes les fêtes : « ¡Feliz Navidad! », « ¡Feliz cumpleaños! », « ¡Feliz día! ».']],
+  conectores: [['Y devient e, o devient u', 'Devant un mot qui commence par le son « i » : « padre e hijo ». Devant « o » : « siete u ocho ».']],
+  futuro_simple: [['Les terminaisons', "On ajoute à l'infinitif : -é, -ás, -á, -emos, -án (trabajaré, trabajarás…). Au quotidien, « voy a » + verbe est plus fréquent."]],
+  preterito_el: [['Il et ils', 'Verbes en -ar : -ó, -aron (trabajó, trabajaron). En -er/-ir : -ió, -ieron (salió, salieron). Irréguliers : vino, dijo, hizo.']],
+  subjuntivo: [['À apprendre par cœur', 'Après « Ojalá », « Espero que », « Quiero que », le verbe change de forme. Retiens ces phrases telles quelles, elles servent tous les jours.']],
   hotel: [['Ne marche pas', "« No funciona » = ça ne marche pas. Très utile : « No funciona la ducha », « No funciona el wifi »."]],
 };
 UNITS.forEach(u => u.items.forEach(it => it.unit = u.id));
@@ -4047,7 +4193,7 @@ const U = id => UNITS.find(u => u.id === id);
 /* ===================== SAUVEGARDE (dans ce navigateur) ===================== */
 const KEY = 'pasoapaso.v1';
 const fresh = () => ({ xp:0, streak:0, lastDay:null, progress:{}, done:{}, pesos:0, freezes:0, boostUntil:0, goal:3, track:'Chantier',
-  sound:true, voiceURI:null, slow:false, stats:{lessons:0, perfect:0, bestCombo:0, quests:0, early:0, tutor:0, exams:0, bestDay:0}, badges:{}, today:null, updatedAt:0, arcadeBest:0, hist:{}, name:'', challenge:null, invitedBy:'' });
+  sound:true, voiceURI:null, slow:false, stats:{lessons:0, perfect:0, bestCombo:0, quests:0, early:0, tutor:0, exams:0, bestDay:0}, badges:{}, today:null, updatedAt:0, arcadeBest:0, hist:{}, name:'', challenge:null, invitedBy:'', stories:{} });
 let S = fresh();
 const adopt = o => { const n = Object.assign(fresh(), o); n.stats = Object.assign(fresh().stats, o.stats || {}); return n; };
 try { const raw = localStorage.getItem(KEY); if (raw) S = adopt(JSON.parse(raw)); } catch (e) {}
@@ -4146,6 +4292,7 @@ const QUESTS = [
   {id:'t5', txt:'Réussis 5 réponses écrites', k:'typed', n:5, r:15, icon:'pencil'},
   {id:'e5', txt:"Réussis 5 exercices d'écoute", k:'listen', n:5, r:15, icon:'ear'},
   {id:'n6', txt:'Découvre 6 nouveaux mots', k:'newWords', n:6, r:10, icon:'sun'},
+  {id:'h1', txt:'Lis une histoire', k:'stories', n:1, r:15, icon:'book'},
   {id:'a1', txt:'Joue un Défi éclair', k:'arcade', n:1, r:10, icon:'bolt'},
   {id:'m5', txt:'Échange 5 messages avec Paco', k:'tutor', n:5, r:20, icon:'chat'},
 ];
@@ -4186,6 +4333,9 @@ const BADGES = [
   ['ar20','Éclair','20 points au Défi éclair','bolt','sun', s => (s.arcadeBest || 0) >= 20],
   ['ar40','Foudre','40 points au Défi éclair','bolt','pink', s => (s.arcadeBest || 0) >= 40],
   ['exam','Saut d\'étages','Réussis un examen d\'unité','crown','teal', s => (s.stats.exams || 0) >= 1],
+  ['lect1','Lecteur','Lis ta première histoire','book','teal', s => Object.keys(s.stories || {}).length >= 1],
+  ['lect5','Rat de bibliothèque','Lis 5 histoires','book','pink', s => Object.keys(s.stories || {}).length >= 5],
+  ['lectall','Toutes les histoires','Lis toutes les histoires','book','sun', () => STORIES.every(st => (S.stories || {})[st.id])],
   ['ami1','Ambassadeur','Invite un ami','user','teal', s => (s.stats.invites || 0) >= 1],
   ['ami5','Rassembleur','Invite 5 amis','user','pink', s => (s.stats.invites || 0) >= 5],
   ['defi1','Défi relevé','Bats le score d\'un ami au Défi éclair','bolt','blue', s => (s.stats.challengesWon || 0) >= 1],
@@ -4219,7 +4369,7 @@ function loadVoices() {
   voice = voices.find(v => v.voiceURI === S.voiceURI) || voices[0] || null;
 }
 if (hasSpeech) { loadVoices(); speechSynthesis.onvoiceschanged = () => { loadVoices(); if (!$('#home').hidden) render(); }; }
-function say(text, slow) {
+function say(text, slow, pitch) {
   if (!hasSpeech) return;
   try {
     speechSynthesis.cancel();
@@ -4227,6 +4377,7 @@ function say(text, slow) {
     u.lang = voice ? voice.lang : 'es-MX';
     if (voice) u.voice = voice;
     u.rate = (slow ? 0.6 : 0.92) * (S.slow ? 0.85 : 1);
+    if (pitch) u.pitch = pitch;
     speechSynthesis.speak(u);
   } catch (e) {}
 }
@@ -4299,13 +4450,14 @@ function tabsBar() {
   $('#tabs').innerHTML = `<div class="in">
     <button class="tab${tab === 'path' ? ' on' : ''}" data-tab="path">${ic('path')}Parcours</button>
     <button class="tab${tab === 'tutor' ? ' on' : ''}" data-tab="tutor">${ic('chat')}Tuteur</button>
+    <button class="tab${tab === 'stories' ? ' on' : ''}" data-tab="stories">${ic('book')}Histoires</button>
     <button class="tab${tab === 'quests' ? ' on' : ''}" data-tab="quests">${ic('target')}Défis${n ? '<span class="dot"></span>' : ''}</button>
     <button class="tab${tab === 'me' ? ' on' : ''}" data-tab="me">${ic('crown')}Profil</button></div>`;
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { tab = b.dataset.tab; SFX.tap(); render(); window.scrollTo(0, 0); } });
 function render() {
   tabsBar();
-  const body = tab === 'path' ? pathView() : tab === 'tutor' ? tutorView() : tab === 'quests' ? questsView() : meView();
+  const body = tab === 'path' ? pathView() : tab === 'tutor' ? tutorView() : tab === 'stories' ? storiesView() : tab === 'quests' ? questsView() : meView();
   $('#home').innerHTML = statusBar() + body;
   bindHome();
 }
@@ -4431,6 +4583,7 @@ function bindHome() {
   H.querySelectorAll('[data-track]').forEach(b => b.onclick = () => { S.track = b.dataset.track; saveLocal(); SFX.tap(); render(); });
   H.querySelectorAll('[data-exam]').forEach(b => b.onclick = () => examPrompt(U(b.dataset.exam)));
   const ga = $('#go-arcade'); if (ga) ga.onclick = () => openArcade();
+  H.querySelectorAll('[data-story]').forEach(b => b.onclick = () => openStory(STORIES.find(x => x.id === b.dataset.story)));
   H.querySelectorAll('[data-invite]').forEach(b => b.onclick = inviteModal);
   H.querySelectorAll('[data-challenge-friend]').forEach(b => b.onclick = () => challengeModal(S.arcadeBest || 0));
   const cg = $('#challenge-go'); if (cg) cg.onclick = () => openArcade(S.challenge);
@@ -4885,6 +5038,251 @@ function arcadeEnd() {
   $('#arc-again').onclick = () => openArcade(a.target && a.score <= a.target.score ? a.target : null);
   const dare = $('#arc-dare'); if (dare) dare.onclick = () => challengeModal(a.score);
   $('#arc-done').onclick = () => lv > lvBefore ? (SFX.level(), modal(`${mascot('wow')}<span class="eyebrow">Niveau supérieur</span><h2>Niveau ${lv}</h2><p>${esc(titleOf(lv))}</p>`, out)) : out();
+}
+
+const STORIES = [
+  {id:'primer_dia', es:'El primer día', fr:'Le premier jour', unit:'saludos', color:'teal', lines:[
+    {w:'', es:'Es lunes. Son las siete de la mañana.', fr:"C'est lundi. Il est sept heures du matin."},
+    {w:'Marc', es:'¡Buenos días! ¿Tú eres Miguel?', fr:"Bonjour ! C'est toi, Miguel ?"},
+    {w:'Miguel', es:'Sí, mucho gusto. Soy el nuevo ayudante.', fr:'Oui, enchanté. Je suis le nouvel aide.'},
+    {w:'Marc', es:'Mucho gusto, Miguel. Yo soy Marc, el jefe.', fr:"Enchanté, Miguel. Moi, c'est Marc, le patron."},
+    {q:'Qui est Miguel ?', o:['Le nouvel aide', 'Le patron', 'Un client']},
+    {w:'Miguel', es:'¿Qué hago hoy?', fr:"Je fais quoi aujourd'hui ?"},
+    {w:'Marc', es:'Primero, ponte el casco y los guantes.', fr:"D'abord, mets ton casque et tes gants."},
+    {w:'Marc', es:'Luego, ayúdame a cargar la madera.', fr:'Ensuite, aide-moi à charger le bois.'},
+    {q:'Que doit faire Miguel en premier ?', o:['Mettre son casque et ses gants', 'Charger le bois', 'Aller dîner']},
+    {w:'Miguel', es:'Claro. ¿A qué hora terminamos?', fr:'Bien sûr. À quelle heure on finit ?'},
+    {w:'Marc', es:'Terminamos a las cuatro. ¡Vamos!', fr:'On finit à quatre heures. Allons-y !'},
+    {q:'À quelle heure finissent-ils ?', o:['À quatre heures', 'À sept heures', 'À midi']}]},
+  {id:'taladro', es:'¿Dónde está el taladro?', fr:'Où est la perceuse ?', unit:'herramientas', color:'blue', lines:[
+    {w:'', es:'Carlos busca el taladro por toda la casa.', fr:'Carlos cherche la perceuse partout dans la maison.'},
+    {w:'Carlos', es:'Jefe, ¿dónde está el taladro?', fr:'Patron, où est la perceuse ?'},
+    {w:'Marc', es:'No sé. ¿Está en la cocina?', fr:'Je ne sais pas. Est-elle dans la cuisine ?'},
+    {w:'Carlos', es:'No, en la cocina solo hay clavos y un martillo.', fr:'Non, dans la cuisine il y a seulement des clous et un marteau.'},
+    {q:'Que trouve Carlos dans la cuisine ?', o:['Des clous et un marteau', 'La perceuse', 'Une scie']},
+    {w:'Marc', es:'Ah, ya sé. ¡Está en la camioneta!', fr:'Ah, je sais. Elle est dans le pick-up !'},
+    {w:'', es:'Carlos va a la camioneta.', fr:'Carlos va au pick-up.'},
+    {w:'Carlos', es:'¡Aquí está! Pero no tiene batería.', fr:"La voici ! Mais elle n'a pas de batterie."},
+    {q:'Où était la perceuse ?', o:['Dans le pick-up', 'Dans la cuisine', 'Au sous-sol']},
+    {w:'Marc', es:'El cargador está debajo del asiento.', fr:'Le chargeur est sous le siège.'},
+    {w:'Carlos', es:'Gracias. Cargo la batería y empezamos.', fr:'Merci. Je charge la batterie et on commence.'},
+    {q:'Quel est le problème avec la perceuse ?', o:["Elle n'a pas de batterie", 'Elle est brisée', 'Elle est trop lourde']}]},
+  {id:'fuga', es:'Una fuga en la cocina', fr:'Une fuite dans la cuisine', unit:'plomeria', color:'teal', lines:[
+    {w:'', es:'Una clienta llama a Marc. Hay agua en el piso de su cocina.', fr:"Une cliente appelle Marc. Il y a de l'eau sur le plancher de sa cuisine."},
+    {w:'José', es:'Hola, señora. Soy José, el plomero. ¿Dónde está la fuga?', fr:'Bonjour madame. Je suis José, le plombier. Où est la fuite ?'},
+    {w:'Clienta', es:'Debajo del fregadero. ¡Hay mucha agua!', fr:"Sous l'évier. Il y a beaucoup d'eau !"},
+    {q:'Où est la fuite ?', o:["Sous l'évier", 'Dans la douche', 'Au plafond']},
+    {w:'José', es:'Primero voy a cerrar la llave de paso.', fr:"D'abord, je vais fermer la valve d'arrêt."},
+    {w:'', es:'José cierra el agua y revisa el tubo.', fr:"José ferme l'eau et vérifie le tuyau."},
+    {w:'José', es:'El tubo está roto. Necesito una pieza nueva.', fr:"Le tuyau est brisé. J'ai besoin d'une pièce neuve."},
+    {q:'Que fait José en premier ?', o:["Il ferme la valve d'arrêt", 'Il va à la quincaillerie', "Il change l'évier"]},
+    {w:'Clienta', es:'¿Puede arreglarlo hoy?', fr:"Pouvez-vous le réparer aujourd'hui ?"},
+    {w:'José', es:'Sí, voy a la ferretería y regreso en una hora.', fr:'Oui, je vais à la quincaillerie et je reviens dans une heure.'},
+    {w:'Clienta', es:'Muchas gracias, es usted muy amable.', fr:'Merci beaucoup, vous êtes très gentil.'},
+    {q:'Quand José revient-il ?', o:['Dans une heure', 'Demain', 'Lundi']}]},
+  {id:'sotano', es:'El sótano de la señora Tremblay', fr:'Le sous-sol de madame Tremblay', unit:'tablaroca', color:'sun', lines:[
+    {w:'', es:'Marc y Carlos terminan el sótano de la señora Tremblay.', fr:'Marc et Carlos finissent le sous-sol de madame Tremblay.'},
+    {w:'Marc', es:'Carlos, ¿ya pusiste la tablaroca en el techo?', fr:'Carlos, as-tu déjà posé le gypse au plafond ?'},
+    {w:'Carlos', es:'Sí, ayer. Hoy pongo la cinta y el compuesto.', fr:"Oui, hier. Aujourd'hui, je pose le ruban et le composé."},
+    {w:'Marc', es:'Muy bien. ¿Cuántas capas vas a poner?', fr:'Très bien. Combien de couches vas-tu mettre ?'},
+    {w:'Carlos', es:'Tres capas. Hay que esperar un día entre cada capa.', fr:'Trois couches. Il faut attendre un jour entre chaque couche.'},
+    {q:'Combien de couches Carlos va-t-il mettre ?', o:['Trois', 'Une', 'Deux']},
+    {w:'Marc', es:'¿Y cuándo lijas?', fr:'Et quand est-ce que tu sables ?'},
+    {w:'Carlos', es:'El jueves, cuando todo está seco. Me pongo la mascarilla por el polvo.', fr:'Jeudi, quand tout est sec. Je mets le masque à cause de la poussière.'},
+    {q:'Pourquoi Carlos met-il un masque ?', o:['À cause de la poussière', 'À cause du froid', 'À cause de la peinture']},
+    {w:'Marc', es:'Perfecto. El viernes viene el pintor.', fr:'Parfait. Vendredi, le peintre vient.'},
+    {q:'Qui vient vendredi ?', o:['Le peintre', 'Le plombier', 'La cliente']}]},
+  {id:'almuerzo', es:'La hora del almuerzo', fr:"L'heure du dîner", unit:'sentir', color:'pink', lines:[
+    {w:'', es:'Son las doce. El equipo toma un descanso.', fr:"Il est midi. L'équipe prend une pause."},
+    {w:'Luis', es:'¡Tengo mucha hambre! ¿Vamos a almorzar?', fr:"J'ai très faim ! On va dîner ?"},
+    {w:'Miguel', es:'Sí. Traje tacos de pollo. ¿Quieres uno?', fr:"Oui. J'ai apporté des tacos au poulet. En veux-tu un ?"},
+    {w:'Luis', es:'¡Claro! Gracias. ¡Qué rico!', fr:"Bien sûr ! Merci. C'est délicieux !"},
+    {q:"Qu'a apporté Miguel ?", o:['Des tacos au poulet', 'Du pain', 'Du riz']},
+    {w:'Marc', es:'¿Qué tal, chicos? ¿Están cansados?', fr:'Ça va, les gars ? Êtes-vous fatigués ?'},
+    {w:'Miguel', es:'Un poco. Me duele la espalda.', fr:"Un peu. J'ai mal au dos."},
+    {q:"Qu'est-ce qui fait mal à Miguel ?", o:['Le dos', 'La tête', 'Le genou']},
+    {w:'Marc', es:'Tranquilo. Esta tarde trabajas en la cocina, es más fácil.', fr:"Relaxe. Cet après-midi, tu travailles dans la cuisine, c'est plus facile."},
+    {w:'Luis', es:'Jefe, ¿quiere un café?', fr:'Patron, voulez-vous un café ?'},
+    {w:'Marc', es:'Sí, gracias. ¡Buen provecho!', fr:'Oui, merci. Bon appétit !'},
+    {q:'Pourquoi Miguel travaille-t-il dans la cuisine cet après-midi ?', o:["C'est plus facile pour son dos", 'Le client le demande', 'Il fait froid dehors']}]},
+  {id:'cancun', es:'Llegada a Cancún', fr:'Arrivée à Cancún', unit:'aeropuerto', color:'blue', lines:[
+    {w:'', es:'Marc y su esposa llegan al aeropuerto de Cancún.', fr:"Marc et sa femme arrivent à l'aéroport de Cancún."},
+    {w:'Agente', es:'Buenas tardes. Su pasaporte, por favor.', fr:"Bon après-midi. Votre passeport, s'il vous plaît."},
+    {w:'Marc', es:'Aquí está.', fr:'Le voici.'},
+    {w:'Agente', es:'¿Viene de vacaciones o de trabajo?', fr:'Venez-vous en vacances ou pour le travail ?'},
+    {w:'Marc', es:'De vacaciones. Una semana.', fr:'En vacances. Une semaine.'},
+    {q:'Pourquoi Marc vient-il au Mexique ?', o:['En vacances', 'Pour le travail', 'Pour voir sa famille']},
+    {w:'', es:'Después, esperan las maletas. Pero una maleta no llega.', fr:"Ensuite, ils attendent les valises. Mais une valise n'arrive pas."},
+    {w:'Marc', es:'Disculpe, perdí mi maleta. Es azul y grande.', fr:"Excusez-moi, j'ai perdu ma valise. Elle est bleue et grande."},
+    {q:'Comment est la valise perdue ?', o:['Bleue et grande', 'Rouge et petite', 'Noire']},
+    {w:'Empleado', es:'No se preocupe. Llega en el próximo vuelo, a las ocho.', fr:'Ne vous inquiétez pas. Elle arrive par le prochain vol, à huit heures.'},
+    {w:'Marc', es:'¿La pueden llevar al hotel?', fr:"Pouvez-vous l'apporter à l'hôtel ?"},
+    {w:'Empleado', es:'Sí, claro.', fr:'Oui, bien sûr.'},
+    {q:'Quand arrive la valise ?', o:['Par le prochain vol, à huit heures', 'Demain matin', 'Jamais']}]},
+  {id:'taxi', es:'El taxi al hotel', fr:"Le taxi pour l'hôtel", unit:'ciudad', color:'pink', lines:[
+    {w:'', es:'Marc sale del aeropuerto y toma un taxi.', fr:"Marc sort de l'aéroport et prend un taxi."},
+    {w:'Taxista', es:'Buenas tardes. ¿A dónde va?', fr:'Bon après-midi. Où allez-vous ?'},
+    {w:'Marc', es:'Al hotel Playa Azul, en el centro, por favor.', fr:"À l'hôtel Playa Azul, au centre-ville, s'il vous plaît."},
+    {q:'Où va Marc ?', o:["À l'hôtel, au centre-ville", 'À la plage', 'Au restaurant']},
+    {w:'Marc', es:'¿Está lejos?', fr:"C'est loin ?"},
+    {w:'Taxista', es:'No, veinte minutos. Pero hay mucho tráfico hoy.', fr:"Non, vingt minutes. Mais il y a beaucoup de trafic aujourd'hui."},
+    {q:'Pourquoi le trajet peut-il être long ?', o:['Il y a beaucoup de trafic', 'Il pleut', "L'hôtel est loin"]},
+    {w:'Marc', es:'¿Cuánto cuesta?', fr:'Combien ça coûte ?'},
+    {w:'Taxista', es:'Son trescientos pesos.', fr:'Ça fait trois cents pesos.'},
+    {w:'Marc', es:'Está bien. ¿Acepta dólares?', fr:"C'est correct. Acceptez-vous les dollars ?"},
+    {w:'Taxista', es:'Mejor en pesos, señor. Hay un cajero en el hotel.', fr:"Mieux en pesos, monsieur. Il y a un guichet à l'hôtel."},
+    {q:'Combien coûte le taxi ?', o:['Trois cents pesos', 'Vingt pesos', 'Cent dollars']}]},
+  {id:'cena_playa', es:'Cena en la playa', fr:'Souper sur la plage', unit:'restaurante', color:'sun', lines:[
+    {w:'', es:'Es de noche. Marc y su esposa cenan en un restaurante en la playa.', fr:"C'est le soir. Marc et sa femme soupent dans un restaurant sur la plage."},
+    {w:'Mesera', es:'Buenas noches. ¿Una mesa para dos?', fr:'Bonsoir. Une table pour deux ?'},
+    {w:'Marc', es:'Sí, por favor. Cerca del mar.', fr:"Oui, s'il vous plaît. Près de la mer."},
+    {q:"Où Marc veut-il s'asseoir ?", o:['Près de la mer', "À l'intérieur", 'Près de la cuisine']},
+    {w:'Mesera', es:'¿Qué quieren tomar?', fr:"Qu'est-ce que vous voulez boire ?"},
+    {w:'Marc', es:'Una cerveza y un agua de jamaica.', fr:"Une bière et une eau d'hibiscus."},
+    {w:'Marc', es:'¿Qué me recomienda?', fr:"Qu'est-ce que vous me recommandez ?"},
+    {w:'Mesera', es:'El pescado. Es la especialidad de la casa.', fr:"Le poisson. C'est la spécialité de la maison."},
+    {q:'Que recommande la serveuse ?', o:['Le poisson', 'Les tacos au poulet', 'La soupe']},
+    {w:'Marc', es:'Perfecto, pero sin picante, por favor.', fr:"Parfait, mais pas épicé, s'il vous plaît."},
+    {w:'Marc', es:'La cuenta, por favor. ¿Aceptan tarjeta?', fr:"L'addition, s'il vous plaît. Prenez-vous la carte ?"},
+    {w:'Mesera', es:'Sí. ¡Que tengan buena noche!', fr:'Oui. Passez une belle soirée !'},
+    {q:'Comment Marc veut-il son plat ?', o:['Pas épicé', 'Très épicé', 'Sans sel']}]},
+  {id:'llamada', es:'Una llamada temprano', fr:'Un appel tôt le matin', unit:'telefono', color:'teal', lines:[
+    {w:'', es:'Son las seis y media. Suena el celular de Marc.', fr:'Il est six heures et demie. Le cellulaire de Marc sonne.'},
+    {w:'Marc', es:'¿Bueno?', fr:'Allô ?'},
+    {w:'Miguel', es:'Hola, jefe. Soy Miguel. Perdón, llego tarde.', fr:"Salut patron. C'est Miguel. Désolé, je vais être en retard."},
+    {w:'Marc', es:'¿Qué pasó?', fr:"Qu'est-ce qui s'est passé ?"},
+    {w:'Miguel', es:'Mi carro no arranca. Voy a tomar el camión.', fr:"Mon auto ne démarre pas. Je vais prendre l'autobus."},
+    {q:'Pourquoi Miguel est-il en retard ?', o:['Son auto ne démarre pas', 'Il est malade', 'Il dort']},
+    {w:'Marc', es:'No hay problema. ¿A qué hora llegas?', fr:'Pas de problème. À quelle heure arrives-tu ?'},
+    {w:'Miguel', es:'En una hora, más o menos.', fr:'Dans une heure, plus ou moins.'},
+    {q:'Comment Miguel va-t-il venir ?', o:['En autobus', 'En taxi', 'À pied']},
+    {w:'Marc', es:'Está bien. Mándame un mensaje cuando salgas.', fr:"C'est correct. Envoie-moi un texto quand tu pars."},
+    {w:'Miguel', es:'Gracias, jefe. ¡Nos vemos!', fr:'Merci, patron. À tantôt !'},
+    {q:'Que demande Marc ?', o:['Un texto quand il part', "Qu'il reste chez lui", "Qu'il appelle un taxi"]}]},
+  {id:'lunes', es:'El lunes por la mañana', fr:'Le lundi matin', unit:'pasado', color:'pink', lines:[
+    {w:'', es:'Es lunes. Marc y Luis hablan del fin de semana.', fr:"C'est lundi. Marc et Luis parlent de la fin de semaine."},
+    {w:'Marc', es:'¿Qué hiciste el fin de semana, Luis?', fr:"Qu'as-tu fait en fin de semaine, Luis ?"},
+    {w:'Luis', es:'El sábado fui al parque con mis hijos. Hacía mucho frío.', fr:'Samedi, je suis allé au parc avec mes enfants. Il faisait très froid.'},
+    {q:"Qu'a fait Luis samedi ?", o:['Il est allé au parc avec ses enfants', 'Il a travaillé', 'Il a regardé le hockey']},
+    {w:'Marc', es:'¿Y el domingo?', fr:'Et dimanche ?'},
+    {w:'Luis', es:'El domingo vi el partido de hockey. ¡Ganó Montreal!', fr:"Dimanche, j'ai regardé la partie de hockey. Montréal a gagné !"},
+    {w:'Luis', es:'¿Y usted, jefe?', fr:'Et vous, patron ?'},
+    {w:'Marc', es:'Yo fui a pescar con mi hermano, pero no pescamos nada.', fr:"Moi, je suis allé pêcher avec mon frère, mais on n'a rien pris."},
+    {q:'Avec qui Marc est-il allé pêcher ?', o:['Avec son frère', 'Avec sa femme', 'Seul']},
+    {w:'Luis', es:'¡Qué lástima!', fr:"C'est dommage !"},
+    {w:'Marc', es:'Sí. Bueno, ¡a trabajar! Hoy terminamos el baño.', fr:"Oui. Bon, au travail ! Aujourd'hui, on finit la salle de bain."},
+    {q:"Qu'ont-ils pris à la pêche ?", o:['Rien', 'Trois poissons', 'Un gros poisson']}]},
+  {id:'cambio_idea', es:'El cliente cambió de idea', fr:"Le client a changé d'idée", unit:'cliente', color:'blue', lines:[
+    {w:'', es:'El señor Gagnon visita la obra. Mira la cocina nueva.', fr:'Monsieur Gagnon visite le chantier. Il regarde la nouvelle cuisine.'},
+    {w:'Cliente', es:'Marc, no me gusta el color de los gabinetes.', fr:"Marc, je n'aime pas la couleur des armoires."},
+    {w:'Marc', es:'¿No? ¿Qué color prefiere?', fr:'Non ? Quelle couleur préférez-vous ?'},
+    {w:'Cliente', es:'Prefiero el gris oscuro. El blanco es muy blanco.', fr:'Je préfère le gris foncé. Le blanc est trop blanc.'},
+    {q:'Quelle couleur le client préfère-t-il ?', o:['Gris foncé', 'Blanc', 'Bleu pâle']},
+    {w:'Marc', es:'Está bien, pero cambiar el color cuesta más. Y necesitamos una semana más.', fr:"C'est correct, mais changer la couleur coûte plus cher. Et on a besoin d'une semaine de plus."},
+    {q:'Combien de temps de plus faut-il ?', o:['Une semaine', 'Un jour', 'Un mois']},
+    {w:'Cliente', es:'No hay problema. ¿Me manda un nuevo presupuesto?', fr:"Pas de problème. Vous m'envoyez une nouvelle soumission ?"},
+    {w:'Marc', es:'Claro, se lo mando hoy por correo.', fr:"Bien sûr, je vous l'envoie aujourd'hui par courriel."},
+    {q:'Que va envoyer Marc ?', o:['Une nouvelle soumission', 'Une facture', 'Des photos']},
+    {w:'', es:'Después, Marc habla con Carlos.', fr:'Ensuite, Marc parle à Carlos.'},
+    {w:'Marc', es:'Carlos, no pintes los gabinetes todavía. El cliente cambió de idea.', fr:"Carlos, ne peins pas les armoires tout de suite. Le client a changé d'idée."}]},
+  {id:'aguas', es:'¡Aguas!', fr:'Attention !', unit:'seguridad', color:'sun', lines:[
+    {w:'', es:'Luis trabaja en el andamio. Abajo, Miguel corta madera.', fr:"Luis travaille sur l'échafaudage. En bas, Miguel coupe du bois."},
+    {w:'', es:'De repente, un martillo se cae.', fr:'Tout à coup, un marteau tombe.'},
+    {w:'Luis', es:'¡Aguas! ¡Aguas, Miguel!', fr:'Attention ! Attention, Miguel !'},
+    {w:'', es:'Miguel se mueve rápido. El martillo cae a su lado.', fr:'Miguel bouge vite. Le marteau tombe à côté de lui.'},
+    {q:"Qu'est-ce qui tombe ?", o:['Un marteau', 'Une planche', 'Un seau']},
+    {w:'Marc', es:'¿Estás bien, Miguel?', fr:'Es-tu correct, Miguel ?'},
+    {w:'Miguel', es:'Sí, estoy bien. ¡Qué susto!', fr:'Oui, je suis correct. Quelle peur !'},
+    {w:'Marc', es:'Luis, ten cuidado con las herramientas arriba.', fr:'Luis, fais attention aux outils en haut.'},
+    {w:'Luis', es:'Lo siento, jefe. No va a pasar otra vez.', fr:"Désolé, patron. Ça n'arrivera plus."},
+    {w:'Marc', es:'Y tú, Miguel, ¿dónde está tu casco?', fr:'Et toi, Miguel, où est ton casque ?'},
+    {w:'Miguel', es:'Está en la camioneta. Ahorita me lo pongo.', fr:'Il est dans le pick-up. Je le mets tout de suite.'},
+    {q:"Qu'est-ce que Miguel ne porte pas ?", o:['Son casque', 'Ses gants', 'Ses bottes']},
+    {q:'Que veut dire « ¡Aguas! » sur un chantier ?', o:['Attention !', "De l'eau !", 'Vite !']}]},
+];
+/* ===================== HISTOIRES ===================== */
+const storyOpen = st => unlocked(UNITS.findIndex(u => u.id === st.unit));
+function storiesView() {
+  const done = Object.keys(S.stories || {}).length;
+  let h = `<div class="tutor-hero">${mascot('happy')}<div><h2>Les histoires</h2><p>De petites scènes à lire et à écouter, avec des questions en chemin. Touche une phrase pour voir la traduction.</p></div></div>
+    <p style="font-weight:800;margin:12px 0 0">${done} / ${STORIES.length} histoires lues</p><div class="scenes">`;
+  STORIES.forEach(st => {
+    const open = storyOpen(st), read = (S.stories || {})[st.id], u = U(st.unit);
+    h += `<button class="story-card${open ? '' : ' locked'}" data-story="${st.id}" style="--sc:var(--${st.color});--sd:var(--${st.color}-deep)" ${open ? '' : 'disabled'}>
+      <div class="cover"${st.color === 'sun' ? ' style="color:var(--sun-ink)"' : ''}>${ic(open ? 'book' : 'lock')}</div>
+      <div style="min-width:0"><b>${esc(st.es)}</b><small>${esc(st.fr)}${open ? '' : ` · débloque « ${esc(u.fr)} »`}</small></div>
+      <span class="state">${read ? ic('check') : ''}</span></button>`;
+  });
+  return h + `</div>`;
+}
+let ST = null;
+const PITCHES = [1.15, 0.85, 1.3, 0.95, 1.05];
+const WHO_COLORS = ['pink', 'teal', 'blue', 'sun-deep'];
+function whoStyle(st, who) {
+  const names = [...new Set(st.lines.filter(l => l.w).map(l => l.w))], k = names.indexOf(who);
+  return { pitch: PITCHES[k % PITCHES.length], color: WHO_COLORS[k % WHO_COLORS.length] };
+}
+function openStory(st) {
+  ST = { st, i: 1, answered: {}, mistakes: 0, showFr: {}, order: {}, fresh: 0 };
+  $('#home').hidden = true; $('#tabs').hidden = true; $('#story').hidden = false;
+  SFX.tap(); drawStory(); window.scrollTo(0, 0); speakLine(st.lines[0]);
+}
+function speakLine(l) { if (l && !l.q) say(l.es, false, l.w ? whoStyle(ST.st, l.w).pitch : 1); }
+function drawStory() {
+  const st = ST.st, shown = st.lines.slice(0, ST.i);
+  const pending = shown.length && shown[shown.length - 1].q && !ST.answered[ST.i - 1];
+  const pct = Math.round(ST.i / st.lines.length * 100);
+  let h = `<div class="lesson-top"><button class="x" id="st-quit" aria-label="Quitter l'histoire">${ic('close')}</button><div class="lbar pbar"><i style="width:${pct}%;--c:var(--${st.color === 'sun' ? 'sun' : st.color})"></i></div></div>
+    <h2 style="font-size:26px;margin-top:16px">${esc(st.es)}</h2><div class="st-lines">`;
+  shown.forEach((l, i) => {
+    if (l.q) {
+      const order = ST.order[i] || (ST.order[i] = shuffle([0, 1, 2]));
+      const ans = ST.answered[i];
+      h += `<div class="st-q${ans ? ' answered' : ''}${i === ST.fresh ? ' st-new' : ''}"><b>${esc(l.q)}</b>${order.map(k => `<button class="opt${ans && k === 0 ? ' right' : ''}" data-q="${i}" data-k="${k}" ${ans ? 'disabled' : ''}>${esc(l.o[k])}</button>`).join('')}</div>`;
+    } else {
+      const ws = l.w ? whoStyle(st, l.w) : null;
+      h += `<div class="st-line${l.w ? '' : ' narr'}${i === ST.fresh ? ' st-new' : ''}" style="${ws ? `--wc:var(--${ws.color})` : ''}">${l.w ? `<span class="who">${esc(l.w)}</span>` : ''}
+        <div class="bub"><button class="spk" data-line="${i}" aria-label="Écouter">${ic('spk')}</button><div class="es" data-trl="${i}">${esc(l.es)}</div>${ST.showFr[i] ? `<div class="tr">${esc(l.fr)}</div>` : ''}</div></div>`;
+    }
+  });
+  const end = ST.i >= st.lines.length && !pending;
+  h += `</div><div style="height:110px"></div><div class="checkbar"><div class="in"><button class="btn ${end ? 'ok' : 'blue'} wide" id="st-next" ${pending ? 'disabled' : ''}>${pending ? 'Réponds à la question' : end ? 'Terminer' : 'Continuer'}</button></div></div>`;
+  $('#story').innerHTML = h;
+  ST.fresh = -1;
+  $('#st-quit').onclick = () => { ST = null; if (hasSpeech) speechSynthesis.cancel(); $('#story').hidden = true; showHome(); };
+  $('#story').querySelectorAll('[data-line]').forEach(b => b.onclick = () => speakLine(st.lines[+b.dataset.line]));
+  $('#story').querySelectorAll('[data-trl]').forEach(b => b.onclick = () => { const i = +b.dataset.trl; ST.showFr[i] = !ST.showFr[i]; drawStory(); });
+  $('#story').querySelectorAll('[data-q]').forEach(b => b.onclick = () => {
+    const i = +b.dataset.q;
+    if (+b.dataset.k === 0) { ST.answered[i] = true; SFX.ok(); drawStory(); }
+    else { ST.mistakes++; SFX.bad(); b.classList.add('wrong'); b.disabled = true; }
+  });
+  $('#st-next').onclick = () => {
+    if (end) return finishStory();
+    ST.i++; ST.fresh = ST.i - 1; SFX.tap(); drawStory(); speakLine(st.lines[ST.i - 1]);
+  };
+  window.scrollTo(0, document.body.scrollHeight);
+}
+function finishStory() {
+  const st = ST.st, first = !(S.stories || {})[st.id], mistakes = ST.mistakes;
+  ST = null;
+  const lvBefore = levelInfo(S.xp).lv;
+  let xp = (first ? 15 : 5) + (mistakes ? 0 : 5); if (boostOn()) xp *= 2;
+  const gain = first ? 5 : 0;
+  S.stories = S.stories || {}; S.stories[st.id] = true;
+  addXp(xp); S.pesos += gain;
+  const t = T(); t.stories = (t.stories || 0) + 1;
+  const today = dayKey();
+  if (S.lastDay !== today) { S.streak = S.lastDay === yesterday() ? S.streak + 1 : 1; S.lastDay = today; }
+  const nb = checkBadges(); save();
+  $('#story').innerHTML = `<div class="done">${mascot('wow')}<h2>¡Fin!</h2>
+    <p style="margin:0;font-weight:800;color:var(--muted)">${esc(st.es)} · ${mistakes ? mistakes + ' erreur' + (mistakes > 1 ? 's' : '') : 'aucune erreur'}</p>
+    <div class="rewards"><div class="reward-item" style="--bc:var(--sun);--bd:var(--sun-deep)"><div class="medal">${ic('bolt')}</div><div><b>+${xp} XP${gain ? ` · +${gain} pesos` : ''}</b><small>${first ? 'Nouvelle histoire lue' : 'Histoire relue'}</small></div></div>
+    ${nb.map((b, i) => `<div class="reward-item" style="--bc:var(--${b[4]});--bd:var(--${b[4]}-deep);animation-delay:${.3 + i * .15}s"><div class="medal">${ic(b[3])}</div><div><b>Trophée : ${esc(b[1])}</b><small>${esc(b[2])}</small></div></div>`).join('')}</div>
+    <button class="btn wide" id="st-done" style="max-width:360px">Continuer</button></div>`;
+  SFX.win(); confetti(120); window.scrollTo(0, 0);
+  const lv = levelInfo(S.xp).lv, out = () => { $('#story').hidden = true; showHome(); };
+  $('#st-done').onclick = () => lv > lvBefore ? (SFX.level(), modal(`${mascot('wow')}<span class="eyebrow">Niveau supérieur</span><h2>Niveau ${lv}</h2><p>${esc(titleOf(lv))}</p>`, out)) : out();
 }
 
 /* ===================== AMIS : invitations et défis ===================== */
