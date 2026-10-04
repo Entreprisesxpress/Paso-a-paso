@@ -67,7 +67,10 @@ create policy "Voir ses défis" on public.challenges for select to authenticated
 drop policy if exists "Envoyer un défi" on public.challenges;
 create policy "Envoyer un défi" on public.challenges for insert to authenticated with check (from_id = auth.uid() and to_id <> auth.uid());
 drop policy if exists "Répondre à un défi reçu" on public.challenges;
-create policy "Répondre à un défi reçu" on public.challenges for update to authenticated using (to_id = auth.uid()) with check (to_id = auth.uid());
+create policy "Répondre à un défi reçu" on public.challenges for update to authenticated using (to_id = auth.uid() and status = 'pending') with check (to_id = auth.uid());
+-- On ne peut modifier QUE le statut et le résultat d'un défi reçu (pas le score à battre ni l'expéditeur)
+revoke update on public.challenges from authenticated;
+grant update (status, result) on public.challenges to authenticated;
 
 -- Compétitions entre membres (le plus de leçons, d'XP ou de mots en X jours)
 create table if not exists public.competitions (
@@ -100,6 +103,16 @@ alter table public.comp_entries enable row level security;
 drop policy if exists "Voir les participants" on public.comp_entries;
 create policy "Voir les participants" on public.comp_entries for select to authenticated using (true);
 drop policy if exists "Rejoindre une compétition" on public.comp_entries;
-create policy "Rejoindre une compétition" on public.comp_entries for insert to authenticated with check (user_id = auth.uid());
+create policy "Rejoindre une compétition" on public.comp_entries for insert to authenticated
+  with check (user_id = auth.uid() and (select c.ends_at from public.competitions c where c.id = comp_id) > now());
+-- Score courant de chaque participant : mis à jour par l'app tant que la compétition dure,
+-- puis figé (la règle refuse toute mise à jour après la fin) : le gagnant ne change plus.
+alter table public.comp_entries add column if not exists cur_value int;
+drop policy if exists "Mettre à jour son score" on public.comp_entries;
+create policy "Mettre à jour son score" on public.comp_entries for update to authenticated
+  using (user_id = auth.uid() and (select c.ends_at from public.competitions c where c.id = comp_id) > now())
+  with check (user_id = auth.uid());
+revoke update on public.comp_entries from authenticated;
+grant update (cur_value) on public.comp_entries to authenticated;
 drop policy if exists "Quitter une compétition" on public.comp_entries;
 create policy "Quitter une compétition" on public.comp_entries for delete to authenticated using (user_id = auth.uid());

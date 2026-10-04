@@ -25,7 +25,7 @@ const tail = `<script>if ('serviceWorker' in navigator) addEventListener('load',
   const go = () => { if (atHome()) location.reload(); else pending = true; };
   navigator.serviceWorker.addEventListener('controllerchange', () => { if (had) go(); });
   navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (pending && atHome()) location.reload(); else reg.update().catch(() => {}); } });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (pending && atHome()) location.reload(); else if (reg && reg.update) reg.update().catch(() => {}); } });
   }).catch(() => {});
 });</script></body></html>`;
 fs.writeFileSync(__dirname + '/index.html', head + src + tail);
@@ -50,11 +50,12 @@ self.addEventListener('fetch', e => {
   const u = new URL(e.request.url);
   if (u.origin !== self.location.origin && !/^fonts\\.(googleapis|gstatic)\\.com$/.test(u.hostname)) return;
   // La page elle-même : réseau d'abord (3 s max), pour toujours ouvrir la dernière version ; cache hors ligne.
-  if (e.request.mode === 'navigate') {
+  // config.js aussi : un changement de configuration (ex. activation de la ligue) doit servir dès le premier lancement.
+  if (e.request.mode === 'navigate' || u.pathname.endsWith('/config.js')) {
     e.respondWith(caches.open(CACHE).then(c => Promise.race([
-      fetch(e.request, { cache: 'no-store' }).then(r => { if (r && r.ok) c.put('./index.html', r.clone()); return r; }),
+      fetch(e.request, { cache: 'no-store' }).then(r => { if (r && r.ok) c.put(e.request.mode === 'navigate' ? './index.html' : e.request, r.clone()); return r; }),
       new Promise((_, no) => setTimeout(no, 3000)),
-    ]).catch(() => c.match('./index.html').then(h => h || c.match('./')).then(h => h || fetch(e.request)))));
+    ]).catch(() => (e.request.mode === 'navigate' ? c.match('./index.html').then(h => h || c.match('./')) : c.match(e.request, { ignoreSearch: true })).then(h => h || fetch(e.request)))));
     return;
   }
   e.respondWith(caches.open(CACHE).then(async c => {

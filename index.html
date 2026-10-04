@@ -7546,9 +7546,33 @@ function remoteWins(remote, remoteUpdated) {
   if (rl !== ll) return rl > ll;
   return (+remoteUpdated || 0) > (S.updatedAt || 0);
 }
+/* Même compte sur deux appareils : on FUSIONNE au lieu d'écraser. Chaque mot garde sa
+   meilleure fiche, les totaux gardent le plus grand, les trophées et histoires s'additionnent. */
+function mergeRemote(o) {
+  const r = adopt(o), l = S, newer = (+r.updatedAt || 0) > (+l.updatedAt || 0) ? r : l;
+  const m = Object.assign({}, newer);
+  const max = k => Math.max(+l[k] || 0, +r[k] || 0);
+  m.xp = max('xp'); m.arcadeBest = max('arcadeBest');
+  m.stats = {}; new Set([...Object.keys(l.stats || {}), ...Object.keys(r.stats || {})]).forEach(k => m.stats[k] = Math.max(+(l.stats || {})[k] || 0, +(r.stats || {})[k] || 0));
+  m.progress = Object.assign({}, r.progress);
+  Object.entries(l.progress || {}).forEach(([es, lp]) => { const rp = m.progress[es]; if (!rp || (lp.seen || 0) > (rp.seen || 0) || ((lp.seen || 0) === (rp.seen || 0) && (lp.due || 0) > (rp.due || 0))) m.progress[es] = lp; });
+  const maxMap = (a, b) => { const o2 = Object.assign({}, a || {}); Object.entries(b || {}).forEach(([k, v]) => o2[k] = Math.max(+o2[k] || 0, +v || 0)); return o2; };
+  m.done = maxMap(r.done, l.done); m.hist = maxMap(r.hist, l.hist);
+  m.badges = Object.assign({}, r.badges, l.badges); m.stories = Object.assign({}, r.stories, l.stories); m.cahier = Object.assign({}, r.cahier, l.cahier);
+  const ld = l.lastDay ? parseDay(l.lastDay) : 0, rd = r.lastDay ? parseDay(r.lastDay) : 0;
+  const lead = ld > rd ? l : rd > ld ? r : (l.streak >= r.streak ? l : r); m.lastDay = lead.lastDay; m.streak = lead.streak;
+  if (l.today && r.today && l.today.day === r.today.day) {
+    m.today = Object.assign({}, newer.today); ['lessons', 'xp', 'bestCombo', 'perfect', 'typed', 'listen', 'newWords'].forEach(k => m.today[k] = Math.max(+l.today[k] || 0, +r.today[k] || 0));
+    m.today.claimed = [...new Set([...(l.today.claimed || []), ...(r.today.claimed || [])])]; m.today.chest = l.today.chest || r.today.chest; m.today.goalHit = l.today.goalHit || r.today.goalHit;
+  } else m.today = [l.today, r.today].find(t => t && t.day === dayKey()) || null;
+  ['voiceURI', 'sound', 'slow', 'speakOn', 'noSpeakUntil', 'track', 'order2', 'owner'].forEach(k => m[k] = l[k]);
+  m.focus = newer.focus || l.focus || r.focus;
+  m.updatedAt = Math.max(+l.updatedAt || 0, +r.updatedAt || 0);
+  S = m; checkStreak(); saveLocal();
+}
 function adoptRemote(o) {
   const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow, track: S.track, order2: S.order2, speakOn: S.speakOn, noSpeakUntil: S.noSpeakUntil,
-    challenge: S.challenge || o.challenge || null, invitedBy: S.invitedBy || o.invitedBy || '' };
+    challenge: S.challenge || o.challenge || null, invitedBy: S.invitedBy || o.invitedBy || '', focus: o.focus || S.focus };
   S = Object.assign(adopt(o), keep); checkStreak(); saveLocal(); loadVoices();
 }
 try { const raw = localStorage.getItem(KEY); if (raw) S = adopt(JSON.parse(raw)); } catch (e) {}
@@ -7657,7 +7681,7 @@ function todaysQuests() {
   const t = T();
   if (t.quests) return t.quests.map(id => QUESTS.find(q => q.id === id)).filter(Boolean);
   const rnd = seeded('q' + dayKey()); const out = []; const used = new Set();
-  const pool = QUESTS.filter(q => (hasSpeech || q.k !== 'listen') && (sampleState !== 'off' || q.k !== 'tutor'));
+  const pool = QUESTS.filter(q => (hasSpeech || q.k !== 'listen') && (sampleState === 'on' || q.k !== 'tutor'));
   while (out.length < 3) { const q = pool[Math.floor(rnd() * pool.length)]; if (!used.has(q.k)) { used.add(q.k); out.push(q); } }
   t.quests = out.map(q => q.id); saveLocal();
   return out;
@@ -7920,7 +7944,7 @@ function meView() {
     <h2 class="section-title">Cette semaine</h2>${weekChart()}
     <h2 class="section-title">Trophées <span style="color:var(--muted);font-size:18px">${Object.keys(S.badges).length} / ${BADGES.length}</span></h2>
     <div class="badges">${BADGES.map(b => `<div class="badge${S.badges[b[0]] ? '' : ' locked'}" style="--bc:var(--${b[4]});--bd:var(--${b[4]}-deep)"><div class="medal">${ic(b[3])}</div><b>${b[1]}</b><small>${b[2]}</small></div>`).join('')}</div>
-    <h2 class="section-title">Mes intérêts</h2><div class="card"><p style="margin:0 0 4px;color:var(--muted);font-weight:700">Ce que tu veux apprendre. Les bases et la grammaire sont toujours incluses.</p>${focusToggles()}</div>
+    <h2 class="section-title">Mes intérêts</h2><div class="card"><p style="margin:0 0 4px;color:var(--muted);font-weight:700">Ce que tu veux apprendre. Les bases et la grammaire sont toujours incluses.</p>${focusToggles(S.focus ? null : (FOCUS_DRAFT = FOCUS_DRAFT || { Chantier: true, Quotidien: true, Voyage: true }))}</div>
     <h2 class="section-title">Voix espagnole</h2><div class="card">`;
   if (!hasSpeech) h += `<p style="margin:0">Ce navigateur ne lit pas l'audio.</p>`;
   else if (!voices.length) h += `<p style="margin:0;font-weight:700">Aucune voix espagnole trouvée sur cet appareil.</p>`;
@@ -8057,7 +8081,8 @@ function buildLesson(unit, opts) {
   const ex = fresh.map(it => ({ t:'intro', it }));
   const words = shuffle(pool.filter(it => !isSentence(it)));
   const rest = [];
-  if (words.length >= 4 && !(opts && opts.noMatch)) rest.push({ t:'match', items: words.slice(0, 4) });
+  const uniq = words.filter((w, i) => words.findIndex(o => loose(o.fr) === loose(w.fr) || loose(o.es) === loose(w.es)) === i);
+  if (uniq.length >= 4 && !(opts && opts.noMatch)) rest.push({ t:'match', items: uniq.slice(0, 4) });
   pool.forEach(it => {
     const types = opts && opts.types ? opts.types(it) : typesFor(it, floor).concat(speakOK() && floor >= 1 ? ['speak'] : []);
     rest.push({ t: pick(types), it });
@@ -8121,6 +8146,7 @@ function focusToggles(draft) {
     <span class="art">${ic(icn)}</span><span class="txt"><b>${title}</b><small>${sub}</small></span><span class="tick">${on(t) ? ic('check') : ''}</span></button>`).join('')}</div>`;
 }
 function focusCard() {
+  if (!S.focus && S.stats.lessons > 0) { S.focus = { Chantier: true, Quotidien: true, Voyage: true }; saveLocal(); }
   if (S.focus) return '';
   FOCUS_DRAFT = FOCUS_DRAFT || { Chantier: true, Quotidien: true, Voyage: true };
   return `<div class="card focus-card"><span class="eyebrow">Bienvenue !</span><h2>Qu'est-ce qui t'intéresse ?</h2>
@@ -8135,7 +8161,7 @@ function setFocus(f) {
 function bindFocus(H) {
   H.querySelectorAll('[data-focus]').forEach(b => b.onclick = () => {
     const t = b.dataset.focus; SFX.tap();
-    if (!S.focus) { FOCUS_DRAFT[t] = FOCUS_DRAFT[t] === false; render(); return; }
+    if (!S.focus) { FOCUS_DRAFT = FOCUS_DRAFT || { Chantier: true, Quotidien: true, Voyage: true }; FOCUS_DRAFT[t] = FOCUS_DRAFT[t] === false; render(); return; }
     setFocus({ ...{ Chantier: true, Quotidien: true, Voyage: true }, ...S.focus, [t]: !focusOn(t) });
     toast(focusOn(t) ? 'Ajouté à ton parcours' : 'Retiré de ton parcours (ta progression est gardée)');
   });
@@ -8155,7 +8181,7 @@ function fieldPhrase() {
   return pool[(base + (t.fieldPick || 0)) % pool.length];
 }
 function fieldCard() {
-  const it = fieldPhrase(), t = T(), done = !!t.fieldDone;
+  const t = T(), done = !!t.fieldDone, it = (done && ALL.find(x => x.es === t.fieldDone)) || fieldPhrase();
   return `<div class="field${done ? ' done' : ''}"><span class="eyebrow">${(fieldIsSite() ? 'Phrase du jour au chantier' : 'Phrase du jour à utiliser') + (done ? (fieldIsSite() ? ' : dite !' : ' : utilisée !') : '')}</span>
     <div class="row1">${speakBtn(it.es)}${speakBtn(it.es, true)}<span class="es">${esc(it.es)}</span></div>
     <p class="fr">${esc(it.fr)}</p>
@@ -8222,7 +8248,7 @@ function reinforceCard() {
   const all = seenItems().length;
   let tr = rfTrack(); if (tr !== 'all' && learnedIn(tr).length < 4) tr = 'all';
   const n = learnedIn(tr).length;
-  const chips = [['all', 'Tout']].concat(TRACKS.map(([t]) => [t, t])).filter(([k]) => k === 'all' || learnedIn(k).length >= 4);
+  const chips = [['all', 'Tout']].concat(visibleTracks().map(([t]) => [t, t])).filter(([k]) => k === 'all' || learnedIn(k).length >= 4);
   return `<div class="rf-card"><div class="rf-top"><div class="art">${ic('target')}</div><div class="txt"><b>Renforcer mes mots</b>
       <small>${all >= 4 ? `${n} mots appris · les plus fragiles d'abord` : 'Fais ta première leçon pour débloquer'}</small></div>
       <button class="btn small" id="go-rf" ${n >= 4 ? '' : 'disabled'}>Pratiquer</button></div>
@@ -8527,7 +8553,7 @@ function speakP(text, lang, rate, pitch) {
 function hfQueue(src) {
   const openUnits = UNITS.filter((u, i) => unlocked(i));
   if (src === 'stories') {
-    const sts = STORIES.filter(storyOpen).sort((x, y) => rankOf(U(x.unit)) - rankOf(U(y.unit)));
+    const sts = STORIES.filter(st => storyOpen(st) && focusOn(U(st.unit).tag)).sort((x, y) => rankOf(U(x.unit)) - rankOf(U(y.unit)));
     return sts.flatMap(st => [{ title: st.es, fr: st.fr }].concat(st.lines.filter(l => !l.q).map(l => ({ es: l.es, fr: l.fr, w: l.w, st }))));
   }
   let pool;
@@ -8544,10 +8570,11 @@ function openHandsFree() {
   SFX.tap(); drawHF(); window.scrollTo(0, 0);
 }
 function drawHF() {
+  if (['Voyage', 'Chantier'].includes(HF.prefs.src) && !focusOn(HF.prefs.src)) HF.prefs.src = 'seen';
   const p = HF.prefs, seg = (key, opts) => `<div class="seg" style="grid-template-columns:repeat(${opts.length},1fr)">${opts.map(([v, l, sub]) => `<button class="${p[key] === v ? 'on' : ''}" data-hfset="${key}" data-v="${v}">${l}${sub ? `<small>${sub}</small>` : ''}</button>`).join('')}</div>`;
   let h = `<div class="lesson-top"><button class="x" id="hf-close" aria-label="Fermer l'écoute">${ic('close')}</button><b style="font-family:var(--font-display);font-size:20px;flex:1">Écoute mains libres</b></div>`;
   if (!HF.running) {
-    h += `<div class="hf-set"><b>Quoi écouter</b>${seg('src', [['seen', 'Mes mots', 'déjà vus'], ['Voyage', 'Voyage'], ['Chantier', 'Chantier'], ['stories', 'Histoires']])}</div>
+    h += `<div class="hf-set"><b>Quoi écouter</b>${seg('src', [['seen', 'Mes mots', 'déjà vus'], ...['Voyage', 'Chantier'].filter(focusOn).map(t => [t, t]), ['stories', 'Histoires']])}</div>
       ${p.src === 'stories' ? '' : `<div class="hf-set"><b>Comment</b>${seg('style', [['translate', 'Traduis', 'fr → es'], ['repeat', 'Répète', 'es seulement']])}</div>`}
       <div class="hf-set"><b>Rythme</b>${seg('rhythm', [['auto', 'Normal', 'auto'], ['slow', 'Lent', 'pauses longues'], ['work', 'Travail', '1 phrase/min']])}</div>
       <p style="color:var(--muted);font-weight:700;font-size:14px;margin:16px 0 0">${p.src === 'stories' ? 'Les histoires débloquées sont lues en continu : chaque réplique en espagnol, puis en français.' : p.style === 'translate' ? "Tu entends la phrase en français. Dis-la en espagnol dans ta tête (ou à voix haute), puis écoute la bonne réponse." : "Tu entends la phrase en espagnol, puis plus lentement. Répète à voix haute pendant les pauses."}
@@ -9853,7 +9880,7 @@ function challengeBanner() {
 function nameField() {
   return `<label style="text-align:left;font-weight:800;font-size:14px;display:grid;gap:4px">Ton prénom (tes amis le verront)<input class="namefield" id="my-name" maxlength="24" autocomplete="given-name" value="${esc(S.name || '')}" placeholder="Ex. Francis"></label>`;
 }
-function bindNameField() { const n = $('#my-name'); if (n) n.oninput = () => { S.name = n.value.trim().slice(0, 24); saveLocal(); }; }
+function bindNameField() { const n = $('#my-name'); if (n) n.oninput = () => { S.name = n.value.trim().slice(0, 24); if (SOC.session && S.name) { SOC.name = S.name; save(); } else saveLocal(); }; }
 function qrSvg(text) {
   try { const q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 4, margin: 2, scalable: true }); } catch (e) { return ''; }
 }
@@ -9926,13 +9953,35 @@ async function supaAuth(path, body) {
 function setSession(j) {
   SOC.session = { access_token: j.access_token, refresh_token: j.refresh_token, uid: j.user && j.user.id, exp: Date.now() + (j.expires_in || 3600) * 1000 };
   SOC.email = (j.user && j.user.email) || SOC.email;
+  SOC.metaName = (j.user && j.user.user_metadata && j.user.user_metadata.name) || SOC.metaName || '';
   try { localStorage.setItem(SESS_KEY, JSON.stringify({ ...SOC.session, email: SOC.email })); } catch (e) {}
+}
+/* Supabase fait tourner le jeton de rafraîchissement : deux rafraîchissements en même temps
+   (fréquent au réveil du téléphone) peuvent faire révoquer la session. Donc un seul à la fois. */
+let refreshing = null;
+function refreshSession() {
+  if (!refreshing) refreshing = (async () => {
+    try { setSession(await supaAuth('token?grant_type=refresh_token', { refresh_token: SOC.session.refresh_token })); }
+    catch (e) {
+      const m = String((e && (e.error_code || e.error || e.msg || e.error_description || e.message)) || '');
+      if (/invalid|grant|not.?found|already.?used|revoked|expired/i.test(m)) expireSession();
+      throw e;
+    } finally { refreshing = null; }
+  })();
+  return refreshing;
+}
+function expireSession() {
+  SOC.session = null; SOC.board = []; SOC.incoming = []; SOC.sent = []; CLOUD = null; cloudState = 'local';
+  try { localStorage.removeItem(SESS_KEY); } catch (e) {}
+  toast("Ta session a expiré : reconnecte-toi dans l'onglet Défis. Ta progression est gardée.");
+  if (!$('#home').hidden) render();
 }
 async function api(path, opts, retried) {
   opts = opts || {};
-  if (SOC.session.exp - Date.now() < 60000) setSession(await supaAuth('token?grant_type=refresh_token', { refresh_token: SOC.session.refresh_token }));
+  if (!SOC.session) throw new Error('no session');
+  if (SOC.session.exp - Date.now() < 60000) await refreshSession();
   const r = await fetch(SUPA.url + '/rest/v1/' + path, { ...opts, headers: { apikey: SUPA.key, Authorization: 'Bearer ' + SOC.session.access_token, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
-  if (r.status === 401 && !retried) { setSession(await supaAuth('token?grant_type=refresh_token', { refresh_token: SOC.session.refresh_token })); return api(path, opts, true); }
+  if (r.status === 401 && !retried) { await refreshSession(); return api(path, opts, true); }
   if (!r.ok) throw new Error(r.status + ' ' + (await r.text()));
   const t = await r.text(); return t ? JSON.parse(t) : null;
 }
@@ -9940,20 +9989,50 @@ const upsert = (table, row) => api(table, { method: 'POST', headers: { Prefer: '
 function profileRow() {
   return { id: SOC.session.uid, name: (SOC.name || S.name || 'Joueur').slice(0, 24), xp: S.xp, level: levelInfo(S.xp).lv, streak: liveStreak(),
     lessons: S.stats.lessons, arcade_best: S.arcadeBest || 0, week_xp: weekXp(), week_key: weekStart(), units_done: UNITS.filter(u => floorOf(u) >= FLOORS).length,
-    lessons_today: T().lessons || 0, today_key: dayKey(), last_day: S.lastDay || null, week_days: weekDaysStr(),
+    lessons_today: T().lessons || 0, today_key: dayKey(), last_day: Object.keys(S.hist || {}).filter(k => S.hist[k] > 0).sort((a, b) => parseDay(b) - parseDay(a))[0] || S.lastDay || null, week_days: weekDaysStr(),
     words: Object.keys(S.progress || {}).length, current_unit: currentUnitTitle(), updated_at: new Date().toISOString() };
 }
 /* Même interface que la sauvegarde Claude : pushCloud() appelle CLOUD.set({updatedAt, json}) */
-const supaCloud = { async set(o) { await upsert('saves', { id: SOC.session.uid, data: { json: o.json }, updated_at: o.updatedAt }); await upsert('profiles', profileRow()); } };
-async function afterLogin() {
+async function pullRemoteIfChanged() {
+  const uid = SOC.session.uid, head = await api(`saves?id=eq.${uid}&select=updated_at`);
+  const ru = head && head[0] ? +head[0].updated_at || 0 : 0;
+  if (!ru || ru === SOC.syncedAt) return false;
+  const rows = await api(`saves?id=eq.${uid}&select=data,updated_at`), r = rows && rows[0];
+  if (!r || !r.data || !r.data.json) return false;
+  mergeRemote(JSON.parse(r.data.json)); SOC.syncedAt = +r.updated_at || 0; S.updatedAt = Date.now(); saveLocal();
+  return true;
+}
+const supaCloud = { async set(o) {
+  if (await pullRemoteIfChanged()) { o = { updatedAt: S.updatedAt, json: JSON.stringify(S) }; if (!$('#home').hidden) render(); }
+  await upsert('saves', { id: SOC.session.uid, data: { json: o.json }, updated_at: o.updatedAt });
+  SOC.syncedAt = o.updatedAt;
+  await upsert('profiles', profileRow());
+  const me = SOC.session.uid;
+  for (const c of COMP.list.filter(c => new Date(c.ends_at).getTime() > Date.now() && COMP.entries.some(e => e.comp_id === c.id && e.user_id === me)))
+    try { await api(`comp_entries?comp_id=eq.${c.id}&user_id=eq.${me}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ cur_value: myMetric(c.metric) }) }); } catch (e) { /* colonne absente (schéma pas relancé) */ }
+} };
+/* Retour dans l'app : récupérer ce que l'autre appareil a fait. Reconnexion au retour du réseau. */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible' || !SOC.session || !CLOUD) return;
+  pullRemoteIfChanged().then(ch => { if (ch) { save(); if (!$('#home').hidden) render(); } }).catch(() => {});
+});
+addEventListener('online', () => { if (SUPA && !CLOUD && !SOC.session) connectSocial(); });
+/* Appareil partagé : S.owner dit à quel compte appartient la progression locale.
+   Si elle appartient à quelqu'un d'autre (ou à personne) et que le compte a déjà une
+   sauvegarde, c'est la sauvegarde du compte qui gagne, toujours : la progression d'une
+   personne ne doit jamais se retrouver dans le compte d'une autre. */
+async function afterLogin(resumed) {
   const uid = SOC.session.uid;
+  if (resumed && !S.owner) S.owner = uid; // session déjà ouverte avant cette version : c'est bien sa progression
   const prof = await api(`profiles?id=eq.${uid}&select=name`);
-  SOC.name = (prof && prof[0] && prof[0].name) || SOC.name || S.name || SOC.email.split('@')[0];
-  if (!S.name) S.name = SOC.name;
+  SOC.name = (prof && prof[0] && prof[0].name) || SOC.metaName || SOC.name || SOC.email.split('@')[0];
   const rows = await api(`saves?id=eq.${uid}&select=data,updated_at`);
   const r = rows && rows[0];
   const remote = r && r.data && r.data.json ? JSON.parse(r.data.json) : null;
-  if (remoteWins(remote, r && r.updated_at)) adoptRemote(remote);
+  if (remote && S.owner !== uid) adoptRemote(remote);
+  else if (remote) mergeRemote(remote);
+  SOC.syncedAt = r ? +r.updated_at || 0 : 0;
+  S.owner = uid; S.name = SOC.name; S.updatedAt = Date.now(); saveLocal();
   CLOUD = supaCloud; cloudState = 'cloud';
   if (!S.updatedAt) S.updatedAt = Date.now();
   await pushCloud();
@@ -9963,8 +10042,8 @@ async function connectSocial() {
   let saved = null; try { saved = JSON.parse(localStorage.getItem(SESS_KEY)); } catch (e) {}
   if (!saved || !saved.refresh_token) return;
   SOC.session = saved; SOC.email = saved.email || '';
-  try { await afterLogin(); await loadSocial(true); }
-  catch (e) { SOC.err = "Connexion à la ligue impossible pour l'instant (réseau ?)."; }
+  try { await afterLogin(true); await loadSocial(true); }
+  catch (e) { if (SOC.session) SOC.err = "Connexion à la ligue impossible pour l'instant (réseau ?)."; }
   if (!$('#home').hidden) render();
 }
 async function loadSocial(force) {
@@ -9973,7 +10052,7 @@ async function loadSocial(force) {
   try {
     const uid = SOC.session.uid;
     const [board, inc, sent] = await Promise.all([
-      api('profiles?select=id,name,xp,level,streak,week_xp,week_key,arcade_best,lessons,words&order=xp.desc&limit=100'),
+      api('profiles?select=id,name,xp,level,streak,week_xp,week_key,arcade_best,lessons,words,last_day&order=xp.desc&limit=100'),
       api(`challenges?to_id=eq.${uid}&status=eq.pending&select=id,from_name,score,created_at&order=created_at.desc&limit=10`),
       api(`challenges?from_id=eq.${uid}&select=id,to_name,score,result,status,created_at&order=created_at.desc&limit=8`),
     ]);
@@ -9997,7 +10076,7 @@ function leagueView() {
   if (!rows.length) h += `<p style="color:var(--muted);font-weight:700">Personne encore. Invite tes amis avec le bouton ci-dessous !</p>`;
   rows.forEach((p, i) => {
     h += `<div class="lg-row${p.id === me ? ' me' : ''}"><span class="rk${i < 3 ? ' top' : ''}">${i + 1}</span>
-      <div style="min-width:0"><b>${esc(p.name)}${p.id === me ? ' (toi)' : ''}</b><small>Niveau ${p.level} · ${p.streak} j de suite · éclair ${p.arcade_best}</small></div>
+      <div style="min-width:0"><b>${esc(p.name)}${p.id === me ? ' (toi)' : ''}</b><small>Niveau ${p.level} · ${p.last_day && daysSince(p.last_day) > 1 ? 0 : p.streak} j de suite · éclair ${p.arcade_best}</small></div>
       <span class="val">${val(p)} XP</span>
       ${p.id === me ? '<span></span>' : `<button class="btn blue" data-dare="${p.id}" data-dname="${esc(p.name)}" ${S.arcadeBest ? '' : 'disabled title="Joue un Défi éclair d\'abord"'}>Défier</button>`}</div>`;
   });
@@ -10030,7 +10109,7 @@ function famStatus(p) {
   const d = daysSince(p.last_day);
   if (d <= 0) return ['ok', 'Actif aujourd\'hui'];
   if (d === 1) return ['sun', 'Actif hier'];
-  if (d === Infinity) return ['muted', 'Pas encore de leçon'];
+  if (d === Infinity) return p.lessons ? ['muted', 'Actif (date inconnue)'] : ['muted', 'Pas encore de leçon'];
   return [d > 3 ? 'bad' : 'sun', `Inactif depuis ${d} jours`];
 }
 const fmtDate = iso => { try { return new Date(iso).toLocaleDateString('fr-CA', { day: 'numeric', month: 'long' }); } catch (e) { return ''; } };
@@ -10073,7 +10152,7 @@ function drawFamily() {
         <div><b>${p.today_key === today ? p.lessons_today || 0 : 0}</b><small>leçons aujourd'hui</small></div>
         <div><b>${p.week_key === wk ? p.week_xp : 0}</b><small>XP cette semaine</small></div>
         <div><b>${p.lessons || 0}</b><small>leçons en tout</small></div>
-        <div><b>${p.streak || 0}</b><small>jours de suite</small></div>
+        <div><b>${daysSince(p.last_day) <= 1 ? p.streak || 0 : 0}</b><small>jours de suite</small></div>
         <div><b>${p.words || 0}</b><small>mots appris</small></div>
         <div><b>${p.units_done || 0}</b><small>unités finies</small></div>
       </div>
@@ -10100,8 +10179,10 @@ function compValue(m, uid) {
   const p = SOC.board.find(x => x.id === uid); return p ? (p[m] || 0) : 0;
 }
 function compRanking(c) {
+  const over = new Date(c.ends_at).getTime() <= Date.now();
+  const val = e => over && e.cur_value != null ? e.cur_value : !over && e.cur_value != null && (!SOC.session || e.user_id !== SOC.session.uid) ? Math.max(e.cur_value, compValue(c.metric, e.user_id)) : compValue(c.metric, e.user_id);
   return COMP.entries.filter(e => e.comp_id === c.id)
-    .map(e => ({ ...e, score: Math.max(0, compValue(c.metric, e.user_id) - (e.start_value || 0)) }))
+    .map(e => ({ ...e, score: Math.max(0, val(e) - (e.start_value || 0)) }))
     .sort((a, b) => b.score - a.score || String(a.joined_at).localeCompare(String(b.joined_at)));
 }
 function timeLeft(iso) {
@@ -10110,13 +10191,10 @@ function timeLeft(iso) {
   return 'Se termine dans ' + (d ? `${d} j ${h} h` : h ? `${h} h ${m} min` : `${m} min`);
 }
 async function loadComps() {
-  const [list, entries] = await Promise.all([
-    api('competitions?select=*&order=created_at.desc&limit=30'),
-    api('comp_entries?select=*&order=joined_at.asc&limit=1000'),
-  ]);
+  const list = await api('competitions?select=*&order=created_at.desc&limit=30');
   const cutoff = Date.now() - 7 * 864e5; // les compétitions finies restent affichées une semaine
   COMP.list = (list || []).filter(c => new Date(c.ends_at).getTime() > cutoff);
-  COMP.entries = entries || [];
+  COMP.entries = COMP.list.length ? (await api(`comp_entries?comp_id=in.(${COMP.list.map(c => c.id).join(',')})&select=*&order=joined_at.asc`)) || [] : [];
 }
 function compsView() {
   if (!SUPA || !SOC.session) return '';
@@ -10224,10 +10302,21 @@ function authModal(mode) {
     }
   };
 }
-function logout() {
-  SOC.session = null; SOC.board = []; SOC.incoming = []; SOC.sent = []; CLOUD = null; cloudState = 'local';
+/* Se déconnecter = rendre l'appareil à la prochaine personne : on envoie d'abord la dernière
+   progression dans le compte, puis on repart d'une progression vierge (les réglages de l'appareil,
+   comme la voix et le son, restent). Sans réseau, on ne déconnecte pas : rien ne doit se perdre. */
+async function logout() {
+  if (SOC.session && CLOUD) {
+    clearTimeout(cloudTimer);
+    try { await CLOUD.set({ updatedAt: S.updatedAt, json: JSON.stringify(S) }); }
+    catch (e) { toast("Pas de réseau : ta progression n'est pas encore sauvegardée. Réessaie quand tu seras connecté."); return; }
+  }
+  const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow, speakOn: S.speakOn, order2: true };
+  SOC.session = null; SOC.name = ''; SOC.email = ''; SOC.board = []; SOC.incoming = []; SOC.sent = []; CLOUD = null; cloudState = 'local';
+  COMP.list = []; COMP.entries = []; FAM.rows = [];
   try { localStorage.removeItem(SESS_KEY); } catch (e) {}
-  render(); toast('Déconnecté. Ta progression reste sur cet appareil.');
+  S = Object.assign(fresh(), keep); saveLocal(); tab = 'path';
+  render(); toast('Déconnecté. Ta progression est sauvegardée dans ton compte.');
 }
 async function sendChallenge(toId, toName) {
   try {
@@ -10437,6 +10526,6 @@ setInterval(() => { const on = boostOn(); if (!$('#home').hidden && (on || boost
   const go = () => { if (atHome()) location.reload(); else pending = true; };
   navigator.serviceWorker.addEventListener('controllerchange', () => { if (had) go(); });
   navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (pending && atHome()) location.reload(); else reg.update().catch(() => {}); } });
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { if (pending && atHome()) location.reload(); else if (reg && reg.update) reg.update().catch(() => {}); } });
   }).catch(() => {});
 });</script></body></html>
