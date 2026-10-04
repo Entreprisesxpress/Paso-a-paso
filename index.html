@@ -54,6 +54,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
+#lesson{padding-bottom:280px}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -387,6 +388,8 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .linkbox{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:var(--sunk);border-radius:10px;padding:8px 10px;overflow-wrap:anywhere;user-select:all;text-align:left}
 .namefield{width:100%;font:inherit;font-weight:700;font-size:17px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--sunk);color:var(--ink)}
 .tab{font-size:12px}
+.tracks button{font-size:13px;padding-inline:2px}
+.tracks button small{font-size:10px}
 .story-card{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;text-align:left;background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;border-radius:18px;padding:12px 14px;width:100%}
 .story-card .cover{width:56px;height:56px;border-radius:14px;background:var(--sc);box-shadow:0 3px 0 var(--sd);display:grid;place-items:center;color:var(--on)}
 .story-card .cover svg{width:30px;height:30px}
@@ -426,6 +429,16 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .incoming b{font-weight:800}
 .authform{display:grid;gap:10px;text-align:left}
 .authform label{display:grid;gap:4px;font-weight:800;font-size:14px}
+.mic{justify-self:center;display:grid;justify-items:center;gap:8px;border:0;background:none;font-weight:800;color:var(--muted)}
+.mic svg{width:44px;height:44px;padding:26px;box-sizing:content-box;border-radius:50%;background:var(--pink);color:var(--on);box-shadow:0 6px 0 var(--pink-deep)}
+.mic.on svg{animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.08);box-shadow:0 0 0 14px color-mix(in srgb,var(--pink) 25%,transparent)}}
+.heard{text-align:center;color:var(--muted);font-weight:700;margin:0;min-height:22px}
+.practice{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-top:10px}
+.practice button{display:grid;justify-items:center;gap:4px;border:2px solid var(--line);border-bottom-width:5px;background:var(--surface);border-radius:16px;padding:12px 6px;font-weight:800;font-size:14px}
+.practice button svg{width:28px;height:28px}
+.practice button small{font-weight:700;color:var(--muted);font-size:11px}
+.practice button:disabled{opacity:.5}
 .xpfloat{position:fixed;right:20px;bottom:150px;z-index:30;font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--sun-deep);animation:floatup 1.2s ease-out forwards;pointer-events:none}
 @keyframes floatup{to{transform:translateY(-60px);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -2875,7 +2888,7 @@ const UNITS = [
     {es:'Me lastimé', fr:'Je me suis blessé'},
     {es:'Llama al 911', fr:'Appelle le 911'},
   ]},
-  { id:'tiempo', es:'Números y horas', fr:'Les nombres et les heures', tag:'Chantier', color:'blue', items:[
+  { id:'tiempo', es:'Números y horas', fr:'Les nombres et les heures', tag:'Base', color:'blue', items:[
     {es:'uno', fr:'un'}, {es:'dos', fr:'deux'}, {es:'tres', fr:'trois'}, {es:'cuatro', fr:'quatre'},
     {es:'cinco', fr:'cinq'}, {es:'seis', fr:'six'}, {es:'siete', fr:'sept'}, {es:'ocho', fr:'huit'},
     {es:'hoy', fr:"aujourd'hui"}, {es:'mañana', fr:'demain'},
@@ -2989,7 +3002,7 @@ const UNITS = [
     {es:'Perdí mi pasaporte', fr:"J'ai perdu mon passeport"},
     {es:'¿Dónde está el hospital?', fr:"Où est l'hôpital ?"},
   ]},
-  { id:'conversacion', es:'Conversación', fr:'La petite jasette', tag:'Quotidien', color:'pink', items:[
+  { id:'conversacion', es:'Conversación', fr:'La petite jasette', tag:'Base', color:'pink', items:[
     {es:'¿Qué tal?', fr:'Quoi de neuf ?'},
     {es:'¿De dónde eres?', fr:"D'où viens-tu ?"},
     {es:'Soy de Quebec', fr:'Je viens du Québec'},
@@ -3003,7 +3016,7 @@ const UNITS = [
     {es:'Buen fin de semana', fr:'Bonne fin de semaine'},
     {es:'Que te vaya bien', fr:'Bonne journée (que ça aille bien)'},
   ]},
-  { id:'verbos', es:'Los verbos del día', fr:'Les verbes de tous les jours', tag:'Grammaire', color:'blue', items:[
+  { id:'verbos', es:'Los verbos del día', fr:'Les verbes de tous les jours', tag:'Base', color:'blue', items:[
     {es:'quiero', fr:'je veux'},
     {es:'puedo', fr:'je peux'},
     {es:'necesito', fr:"j'ai besoin de"},
@@ -3017,7 +3030,7 @@ const UNITS = [
     {es:'Quiero hablar contigo', fr:'Je veux te parler'},
     {es:'¿Qué haces?', fr:"Qu'est-ce que tu fais ?"},
   ]},
-  { id:'familia', es:'La familia', fr:'La famille', tag:'Quotidien', color:'teal', items:[
+  { id:'familia', es:'La familia', fr:'La famille', tag:'Base', color:'teal', items:[
     {es:'la familia', fr:'la famille'},
     {es:'mi esposa', fr:'ma femme'},
     {es:'mi esposo', fr:'mon mari'},
@@ -3031,7 +3044,7 @@ const UNITS = [
     {es:'Tengo dos hijos', fr:"J'ai deux enfants"},
     {es:'¿Cómo está tu familia?', fr:'Comment va ta famille ?'},
   ]},
-  { id:'semana', es:'Los días y el clima', fr:'Les jours et la météo', tag:'Quotidien', color:'sun', items:[
+  { id:'semana', es:'Los días y el clima', fr:'Les jours et la météo', tag:'Base', color:'sun', items:[
     {es:'lunes', fr:'lundi'}, {es:'martes', fr:'mardi'}, {es:'miércoles', fr:'mercredi'}, {es:'jueves', fr:'jeudi'},
     {es:'viernes', fr:'vendredi'}, {es:'sábado', fr:'samedi'}, {es:'domingo', fr:'dimanche'},
     {es:'Hace calor', fr:'Il fait chaud'},
@@ -3153,7 +3166,7 @@ const UNITS = [
     {es:'¿Dónde estás?', fr:'Où es-tu ?'},
     {es:'Mándame la dirección', fr:"Envoie-moi l'adresse"},
   ]},
-  { id:'preguntas', es:'Las preguntas', fr:'Les questions', tag:'Grammaire', color:'teal', items:[
+  { id:'preguntas', es:'Las preguntas', fr:'Les questions', tag:'Base', color:'teal', items:[
     {es:'¿Quién?', fr:'Qui ?'},
     {es:'¿Qué?', fr:'Quoi ?'},
     {es:'¿Dónde?', fr:'Où ?'},
@@ -3203,7 +3216,7 @@ const UNITS = [
     {es:'los frijoles', fr:'les fèves (haricots)'},
     {es:'el huevo', fr:"l'œuf"},
     {es:'la fruta', fr:'les fruits'},
-    {es:'la tortilla', fr:'la tortilla', note:"Au Mexique, la tortilla est une galette de maïs. En Espagne, c'est une omelette !"},
+    {es:'la tortilla', fr:'la galette de maïs', note:"Au Mexique, la tortilla est une galette de maïs. En Espagne, c'est une omelette !"},
     {es:'el jugo', fr:'le jus'},
     {es:'la leche', fr:'le lait'},
     {es:'¿Ya comiste?', fr:'As-tu déjà mangé ?'},
@@ -3265,21 +3278,21 @@ const UNITS = [
     {es:'¿Dónde hay una farmacia?', fr:'Où y a-t-il une pharmacie ?'},
     {es:'Tengo seguro de viaje', fr:"J'ai une assurance voyage"},
   ]},
-  { id:'colores', es:'Los colores', fr:'Les couleurs', tag:'Quotidien', color:'sun', items:[
+  { id:'colores', es:'Los colores', fr:'Les couleurs', tag:'Base', color:'sun', items:[
     {es:'rojo', fr:'rouge'}, {es:'azul', fr:'bleu'}, {es:'verde', fr:'vert'}, {es:'amarillo', fr:'jaune'},
-    {es:'negro', fr:'noir'}, {es:'gris', fr:'gris'}, {es:'café', fr:'brun', note:"Au Mexique, « café » veut dire brun. On entend aussi « marrón »."},
+    {es:'negro', fr:'noir'}, {es:'morado', fr:'violet'}, {es:'café', fr:'brun', note:"Au Mexique, « café » veut dire brun. On entend aussi « marrón »."},
     {es:'naranja', fr:'orange'}, {es:'rosa', fr:'rose'},
     {es:'azul claro', fr:'bleu pâle'}, {es:'oscuro', fr:'foncé'},
     {es:'Pinta la puerta de negro', fr:'Peins la porte en noir'},
   ]},
-  { id:'numeros2', es:'Números 11 a 100', fr:'Les nombres de 11 à 100', tag:'Quotidien', color:'blue', items:[
+  { id:'numeros2', es:'Números 11 a 100', fr:'Les nombres de 11 à 100', tag:'Base', color:'blue', items:[
     {es:'once', fr:'onze'}, {es:'doce', fr:'douze'}, {es:'quince', fr:'quinze'}, {es:'dieciséis', fr:'seize'},
     {es:'veinticinco', fr:'vingt-cinq'}, {es:'treinta', fr:'trente'}, {es:'cuarenta', fr:'quarante'},
     {es:'sesenta', fr:'soixante'}, {es:'setenta', fr:'soixante-dix'}, {es:'ochenta', fr:'quatre-vingts'},
     {es:'noventa', fr:'quatre-vingt-dix'},
     {es:'treinta y cinco', fr:'trente-cinq'},
   ]},
-  { id:'meses', es:'Los meses', fr:'Les mois et les dates', tag:'Quotidien', color:'pink', items:[
+  { id:'meses', es:'Los meses', fr:'Les mois et les dates', tag:'Base', color:'pink', items:[
     {es:'enero', fr:'janvier'}, {es:'febrero', fr:'février'}, {es:'marzo', fr:'mars'}, {es:'abril', fr:'avril'},
     {es:'mayo', fr:'mai'}, {es:'junio', fr:'juin'}, {es:'julio', fr:'juillet'}, {es:'agosto', fr:'août'},
     {es:'septiembre', fr:'septembre'}, {es:'octubre', fr:'octobre'}, {es:'noviembre', fr:'novembre'}, {es:'diciembre', fr:'décembre'},
@@ -3475,7 +3488,7 @@ const UNITS = [
     {es:'¡Feliz cumpleaños!', fr:'Bonne fête !'},
     {es:'Gusto en conocerte', fr:'Content de te connaître'},
   ]},
-  { id:'cortesia', es:'La cortesía', fr:'La politesse', tag:'Quotidien', color:'teal', items:[
+  { id:'cortesia', es:'La cortesía', fr:'La politesse', tag:'Base', color:'teal', items:[
     {es:'Disculpe', fr:'Excusez-moi'},
     {es:'Con permiso', fr:'Pardon, je peux passer ?'},
     {es:'Perdón', fr:'Pardon (désolé)'},
@@ -3608,7 +3621,7 @@ const UNITS = [
     {es:'al lado de', fr:'à côté de'},
     {es:'detrás de', fr:'derrière'},
     {es:'enfrente de', fr:'en face de'},
-    {es:'entre', fr:'entre'},
+    {es:'cerca de', fr:'près de'},
     {es:'con', fr:'avec'},
     {es:'sin', fr:'sans'},
     {es:'para', fr:'pour'},
@@ -3771,7 +3784,7 @@ const UNITS = [
   ]},
   { id:'emociones', es:'Las emociones', fr:'Les émotions', tag:'Quotidien', color:'pink', items:[
     {es:'feliz', fr:'heureux'},
-    {es:'triste', fr:'triste'},
+    {es:'asustado', fr:'effrayé'},
     {es:'enojado', fr:'fâché'},
     {es:'preocupado', fr:'inquiet'},
     {es:'nervioso', fr:'nerveux'},
@@ -3967,7 +3980,7 @@ const UNITS = [
     {es:'la Navidad', fr:'Noël'},
     {es:'el Año Nuevo', fr:"le jour de l'An"},
     {es:'el Día de Muertos', fr:'le jour des Morts', note:'Le 1er et le 2 novembre, les familles mexicaines honorent leurs défunts avec des autels et des fleurs orange.'},
-    {es:'la posada', fr:'la posada', note:'Fêtes de quartier du 16 au 24 décembre, avec piñatas et chants.'},
+    {es:'la posada', fr:'la fête de quartier de Noël', note:'Fêtes de quartier du 16 au 24 décembre, avec piñatas et chants.'},
     {es:'los regalos', fr:'les cadeaux'},
     {es:'las vacaciones', fr:'les vacances'},
     {es:'¡Feliz Navidad!', fr:'Joyeux Noël !'},
@@ -3983,7 +3996,7 @@ const UNITS = [
     {es:'o', fr:'ou'},
     {es:'también', fr:'aussi'},
     {es:'entonces', fr:'alors'},
-    {es:'si', fr:'si'},
+    {es:'sino', fr:'mais plutôt'},
     {es:'aunque', fr:'même si'},
     {es:'además', fr:'en plus'},
     {es:'Quiero ir, pero no puedo', fr:'Je veux y aller, mais je ne peux pas'},
@@ -4032,6 +4045,300 @@ const UNITS = [
     {es:'Antes de que llegue el cliente', fr:'Avant que le client arrive'},
     {es:'Para que sepas', fr:'Pour que tu le saches'},
     {es:'Que te diviertas', fr:'Amuse-toi bien'},
+  ]},
+  { id:'hora', es:'La hora', fr:"L'heure exacte", tag:'Base', color:'blue', items:[
+    {es:'la una', fr:'une heure'},
+    {es:'las dos y media', fr:'deux heures et demie'},
+    {es:'las tres y cuarto', fr:'trois heures et quart'},
+    {es:'un cuarto para las cuatro', fr:'quatre heures moins quart', note:'Au Mexique : « un cuarto para las cuatro ». Ailleurs : « las cuatro menos cuarto ».'},
+    {es:'de la mañana', fr:'du matin'},
+    {es:'de la tarde', fr:"de l'après-midi"},
+    {es:'de la noche', fr:'du soir'},
+    {es:'mediodía', fr:'midi'},
+    {es:'medianoche', fr:'minuit'},
+    {es:'en punto', fr:'pile'},
+    {es:'Son las ocho en punto', fr:'Il est huit heures pile'},
+    {es:'¿A qué hora sale?', fr:'À quelle heure ça part ?'},
+  ]},
+  { id:'presentarse', es:'Presentarse', fr:'Se présenter', tag:'Base', color:'teal', items:[
+    {es:'Mi nombre es Marc', fr:'Mon nom est Marc'},
+    {es:'Soy canadiense', fr:'Je suis Canadien'},
+    {es:'Vivo en Quebec', fr:"J'habite au Québec"},
+    {es:'Trabajo en construcción', fr:'Je travaille en construction'},
+    {es:'Estoy casado', fr:'Je suis marié'},
+    {es:'Tengo tres hijos', fr:"J'ai trois enfants"},
+    {es:'Hablo francés e inglés', fr:'Je parle français et anglais'},
+    {es:'Estoy aprendiendo español', fr:"J'apprends l'espagnol"},
+    {es:'Es mi primera vez en México', fr:"C'est ma première fois au Mexique"},
+    {es:'Me gusta mucho tu país', fr:"J'aime beaucoup ton pays"},
+    {es:'¿Y tú?', fr:'Et toi ?'},
+    {es:'Encantado', fr:'Ravi de te rencontrer', note:'Une femme dit « Encantada ».'},
+  ]},
+  { id:'numeros3', es:'Cientos y miles', fr:'Les centaines et les milliers', tag:'Base', color:'sun', items:[
+    {es:'doscientos', fr:'deux cents'},
+    {es:'trescientos', fr:'trois cents'},
+    {es:'cuatrocientos', fr:'quatre cents'},
+    {es:'quinientos', fr:'cinq cents', note:'Irrégulier : pas « cincocientos ».'},
+    {es:'seiscientos', fr:'six cents'},
+    {es:'setecientos', fr:'sept cents'},
+    {es:'ochocientos', fr:'huit cents'},
+    {es:'novecientos', fr:'neuf cents'},
+    {es:'ciento veinte', fr:'cent vingt'},
+    {es:'mil quinientos', fr:'mille cinq cents'},
+    {es:'dos mil', fr:'deux mille'},
+    {es:'un millón', fr:'un million'},
+  ]},
+  { id:'objetos', es:'Cosas de todos los días', fr:'Les objets du quotidien', tag:'Base', color:'pink', items:[
+    {es:'las llaves', fr:'les clés'},
+    {es:'la mochila', fr:'le sac à dos'},
+    {es:'el paraguas', fr:'le parapluie'},
+    {es:'el reloj', fr:'la montre'},
+    {es:'los lentes', fr:'les lunettes'},
+    {es:'la cartera', fr:'le portefeuille'},
+    {es:'la botella', fr:'la bouteille'},
+    {es:'el vaso', fr:'le verre'},
+    {es:'la silla', fr:'la chaise'},
+    {es:'¿Dónde están mis llaves?', fr:'Où sont mes clés ?'},
+    {es:'Olvidé mi cartera', fr:"J'ai oublié mon portefeuille"},
+    {es:'¿Me prestas tu pluma?', fr:'Tu me prêtes ton stylo ?', note:"Au Mexique, un stylo, c'est « una pluma »."},
+  ]},
+  { id:'hospedaje', es:'El hospedaje', fr:"L'hébergement", tag:'Voyage', color:'blue', items:[
+    {es:'el departamento', fr:"l'appartement"},
+    {es:'el anfitrión', fr:"l'hôte"},
+    {es:'la dirección', fr:"l'adresse"},
+    {es:'las sábanas', fr:'les draps'},
+    {es:'el ventilador', fr:'le ventilateur'},
+    {es:'la contraseña del wifi', fr:'le mot de passe du wifi'},
+    {es:'¿A qué hora es la salida?', fr:'À quelle heure faut-il partir ?'},
+    {es:'¿Dónde dejo la basura?', fr:'Où est-ce que je mets les déchets ?'},
+    {es:'No hay agua caliente', fr:"Il n'y a pas d'eau chaude"},
+    {es:'¿Puedo dejar mi maleta aquí?', fr:'Puis-je laisser ma valise ici ?'},
+    {es:'La llave no funciona', fr:'La clé ne fonctionne pas'},
+    {es:'Todo está muy limpio', fr:'Tout est très propre'},
+  ]},
+  { id:'transporte', es:'Autobús, metro y ferry', fr:'Autobus, métro et traversier', tag:'Voyage', color:'teal', items:[
+    {es:'el metro', fr:'le métro'},
+    {es:'el ferry', fr:'le traversier'},
+    {es:'de ida y vuelta', fr:'aller-retour'},
+    {es:'la estación', fr:'la station'},
+    {es:'la terminal de autobuses', fr:"le terminus d'autobus"},
+    {es:'el horario', fr:"l'horaire"},
+    {es:'¿Cuánto cuesta el boleto?', fr:'Combien coûte le billet ?'},
+    {es:'¿Este camión va al centro?', fr:'Cet autobus va-t-il au centre-ville ?'},
+    {es:'¿Dónde me bajo?', fr:'Où est-ce que je descends ?'},
+    {es:'Bájese en la próxima parada', fr:'Descendez au prochain arrêt'},
+    {es:'¿A qué hora sale el ferry?', fr:'À quelle heure part le traversier ?'},
+    {es:'Un boleto para Cozumel', fr:'Un billet pour Cozumel'},
+  ]},
+  { id:'comida_calle', es:'Comida callejera', fr:'La bouffe de rue', tag:'Voyage', color:'sun', items:[
+    {es:'los tacos al pastor', fr:'les tacos al pastor', note:'Porc mariné cuit à la broche, avec ananas : le classique de la rue.'},
+    {es:'el elote', fr:"l'épi de maïs"},
+    {es:'la salsa', fr:'la sauce'},
+    {es:'el limón', fr:'la lime', note:'Au Mexique, « limón » est la lime verte. Le citron jaune est rare.'},
+    {es:'el aguacate', fr:"l'avocat"},
+    {es:'el chile', fr:'le piment'},
+    {es:'¿Pica?', fr:"C'est épicé ?"},
+    {es:'Poquito', fr:'Un tout petit peu'},
+    {es:'Con todo', fr:'Avec tout'},
+    {es:'Para llevar', fr:'Pour emporter'},
+    {es:'Para comer aquí', fr:'Pour manger ici'},
+    {es:'Dos de pastor, por favor', fr:"Deux al pastor, s'il vous plaît"},
+  ]},
+  { id:'noche', es:'La noche', fr:'Sortir le soir', tag:'Voyage', color:'pink', items:[
+    {es:'el bar', fr:'le bar'},
+    {es:'la discoteca', fr:'la discothèque'},
+    {es:'la bebida', fr:'la boisson'},
+    {es:'sin alcohol', fr:'sans alcool'},
+    {es:'sin hielo', fr:'sans glace'},
+    {es:'Una más, por favor', fr:"Une autre, s'il vous plaît"},
+    {es:'¿A qué hora cierran?', fr:'À quelle heure fermez-vous ?'},
+    {es:'¿Hay música en vivo?', fr:'Y a-t-il de la musique live ?'},
+    {es:'¿Pedimos un taxi?', fr:'On appelle un taxi ?'},
+    {es:'¿Bailamos?', fr:'On danse ?'},
+    {es:'Me la pasé muy bien', fr:"J'ai passé une super soirée"},
+    {es:'la cruda', fr:'le lendemain de veille', note:'« Cruda » au Mexique ; « resaca » ailleurs.'},
+  ]},
+  { id:'problemas_viaje', es:'Problemas en el viaje', fr:'Les pépins de voyage', tag:'Voyage', color:'blue', items:[
+    {es:'Estoy perdido', fr:'Je suis perdu'},
+    {es:'Perdí el vuelo', fr:"J'ai manqué mon vol"},
+    {es:'Se canceló el vuelo', fr:'Le vol a été annulé'},
+    {es:'Necesito ayuda', fr:"J'ai besoin d'aide"},
+    {es:'No encuentro mi hotel', fr:'Je ne trouve pas mon hôtel'},
+    {es:'Hay un error en la cuenta', fr:"Il y a une erreur dans l'addition"},
+    {es:'Me cobraron de más', fr:"On m'a chargé trop cher"},
+    {es:'Mi teléfono no tiene batería', fr:"Mon téléphone n'a plus de batterie"},
+    {es:'¿Puede llamar a un taxi?', fr:'Pouvez-vous appeler un taxi ?'},
+    {es:'Me siento mareado', fr:"J'ai mal au cœur"},
+    {es:'Me picó un mosquito', fr:"Un moustique m'a piqué"},
+    {es:'Quiero hacer una queja', fr:'Je veux faire une plainte'},
+  ]},
+  { id:'experiencias', es:'Contar tu viaje', fr:'Raconter son voyage', tag:'Voyage', color:'teal', items:[
+    {es:'he estado', fr:"j'ai été (je suis déjà allé)"},
+    {es:'has estado', fr:'tu as été'},
+    {es:'he visitado', fr:"j'ai visité"},
+    {es:'hemos comido', fr:'nous avons mangé'},
+    {es:'¿Has estado en México?', fr:'Es-tu déjà allé au Mexique ?'},
+    {es:'Nunca he estado en Cuba', fr:'Je ne suis jamais allé à Cuba'},
+    {es:'He visitado Tulum dos veces', fr:"J'ai visité Tulum deux fois"},
+    {es:'¿Qué has visto?', fr:"Qu'as-tu vu ?"},
+    {es:'Hemos comido muy bien', fr:'Nous avons très bien mangé'},
+    {es:'Ha sido un viaje increíble', fr:'Ça a été un voyage incroyable'},
+    {es:'Quiero regresar', fr:'Je veux revenir'},
+    {es:'Te voy a extrañar', fr:'Tu vas me manquer'},
+  ]},
+  { id:'playa2', es:'Deportes acuáticos', fr:'Les sports nautiques', tag:'Voyage', color:'sun', items:[
+    {es:'bucear', fr:'faire de la plongée'},
+    {es:'el esnórquel', fr:'le snorkel (le tuba)'},
+    {es:'la lancha', fr:'le bateau à moteur'},
+    {es:'el chaleco salvavidas', fr:'la veste de sauvetage'},
+    {es:'las olas', fr:'les vagues'},
+    {es:'el arrecife', fr:'le récif'},
+    {es:'los peces de colores', fr:'les poissons colorés'},
+    {es:'la tabla de surf', fr:'la planche de surf'},
+    {es:'¿Es peligroso?', fr:"C'est dangereux ?"},
+    {es:'¿Rentan equipo de esnórquel?', fr:"Louez-vous de l'équipement de snorkel ?"},
+    {es:'No sé nadar bien', fr:'Je ne nage pas bien'},
+    {es:'¡El agua está deliciosa!', fr:"L'eau est bonne !"},
+  ]},
+  { id:'pronombres_pers', es:'Yo, tú, él', fr:'Les pronoms personnels', tag:'Base', color:'blue', items:[
+    {es:'yo', fr:'je (moi)'},
+    {es:'tú', fr:'tu (toi)', note:'Avec accent : « tú » = toi. Sans accent : « tu » = ton, ta.'},
+    {es:'él', fr:'il (lui)'},
+    {es:'ella', fr:'elle'},
+    {es:'usted', fr:'vous (poli)'},
+    {es:'nosotros', fr:'nous'},
+    {es:'ustedes', fr:'vous (plusieurs)', note:'En Amérique latine, « ustedes » sert pour tout le monde au pluriel, ami ou inconnu.'},
+    {es:'ellos', fr:'ils (eux)'},
+    {es:'ellas', fr:'elles'},
+    {es:'Yo trabajo y tú descansas', fr:'Moi je travaille et toi tu te reposes'},
+    {es:'Ella es mi esposa', fr:"C'est ma femme"},
+    {es:'Ellos son mis compañeros', fr:'Ce sont mes collègues'},
+  ]},
+  { id:'articulos', es:'Un, una, unos', fr:'Les articles et le pluriel', tag:'Base', color:'sun', items:[
+    {es:'un', fr:'un (devant un nom)'},
+    {es:'una', fr:'une (devant un nom)'},
+    {es:'unos', fr:'des (masculin)'},
+    {es:'unas', fr:'des (féminin)'},
+    {es:'una manzana', fr:'une pomme'},
+    {es:'unas manzanas', fr:'des pommes'},
+    {es:'un hombre', fr:'un homme'},
+    {es:'una mujer', fr:'une femme'},
+    {es:'los hombres', fr:'les hommes'},
+    {es:'las mujeres', fr:'les femmes'},
+    {es:'los lápices', fr:'les crayons'},
+    {es:'Quiero un café', fr:'Je veux un café'},
+  ]},
+  { id:'lugares', es:'Aquí y allá', fr:'Ici, là-bas, en haut', tag:'Base', color:'teal', items:[
+    {es:'aquí', fr:'ici'},
+    {es:'allá', fr:'là-bas'},
+    {es:'adentro', fr:"à l'intérieur"},
+    {es:'afuera', fr:'dehors'},
+    {es:'arriba', fr:'en haut'},
+    {es:'abajo', fr:'en bas'},
+    {es:'aquí cerca', fr:"près d'ici"},
+    {es:'a la vuelta', fr:'au coin de la rue'},
+    {es:'¿Está aquí?', fr:"Est-ce que c'est ici ?"},
+    {es:'Espérame afuera', fr:'Attends-moi dehors'},
+    {es:'Está arriba', fr:"C'est en haut"},
+    {es:'Ven para acá', fr:'Viens par ici'},
+  ]},
+  { id:'abordar', es:'El control y el abordaje', fr:"La sécurité et l'embarquement", tag:'Voyage', color:'pink', items:[
+    {es:'el pase de abordar', fr:"la carte d'embarquement", note:'« Pase de abordar » au Mexique ; « tarjeta de embarque » en Espagne.'},
+    {es:'la sala de espera', fr:"la salle d'attente"},
+    {es:'el control de seguridad', fr:'le contrôle de sécurité'},
+    {es:'los líquidos', fr:'les liquides'},
+    {es:'la escala', fr:"l'escale"},
+    {es:'Quítese los zapatos', fr:'Enlevez vos chaussures'},
+    {es:'Ponga su bolsa aquí', fr:'Mettez votre sac ici'},
+    {es:'¿Tiene algo que declarar?', fr:'Avez-vous quelque chose à déclarer ?'},
+    {es:'Nada que declarar', fr:'Rien à déclarer'},
+    {es:'El vuelo está abordando', fr:'Le vol est en embarquement'},
+    {es:'Última llamada', fr:'Dernier appel'},
+    {es:'¿Cuál es mi puerta?', fr:"C'est quoi ma porte ?"},
+  ]},
+  { id:'super', es:'En el súper', fr:"À l'épicerie", tag:'Voyage', color:'blue', items:[
+    {es:'el supermercado', fr:"l'épicerie (le supermarché)"},
+    {es:'la cajera', fr:'la caissière'},
+    {es:'el carrito', fr:"le panier d'épicerie"},
+    {es:'¿Me da una bolsa?', fr:'Vous me donnez un sac ?'},
+    {es:'el agua embotellada', fr:"l'eau en bouteille"},
+    {es:'las verduras', fr:'les légumes'},
+    {es:'el queso', fr:'le fromage'},
+    {es:'el jamón', fr:'le jambon'},
+    {es:'el azúcar', fr:'le sucre'},
+    {es:'la sal', fr:'le sel'},
+    {es:'¿Dónde está la leche?', fr:'Où est le lait ?'},
+    {es:'Pago en efectivo', fr:'Je paie comptant'},
+  ]},
+  { id:'servicios', es:'Servicios', fr:'Les services', tag:'Voyage', color:'teal', items:[
+    {es:'la lavandería', fr:'la buanderie'},
+    {es:'la peluquería', fr:'le salon de coiffure'},
+    {es:'la oficina de correos', fr:'le bureau de poste'},
+    {es:'la recepción', fr:'la réception'},
+    {es:'el kilo', fr:'le kilo'},
+    {es:'Quiero lavar mi ropa', fr:'Je veux laver mon linge'},
+    {es:'¿Para cuándo está lista?', fr:'Ce sera prêt pour quand ?'},
+    {es:'Un corte de pelo, por favor', fr:"Une coupe de cheveux, s'il vous plaît"},
+    {es:'Corto de los lados', fr:'Court sur les côtés'},
+    {es:'¿Dónde puedo imprimir?', fr:'Où puis-je imprimer ?'},
+    {es:'¿Cuánto cobran por kilo?', fr:'Combien chargez-vous le kilo ?'},
+    {es:'¿Me puede despertar a las seis?', fr:'Pouvez-vous me réveiller à six heures ?'},
+  ]},
+  { id:'clima_tropical', es:'El clima tropical', fr:'La météo des tropiques', tag:'Voyage', color:'sun', items:[
+    {es:'el huracán', fr:"l'ouragan"},
+    {es:'la tormenta', fr:"l'orage"},
+    {es:'la temporada de lluvias', fr:'la saison des pluies'},
+    {es:'el calor', fr:'la chaleur'},
+    {es:'la sombra', fr:"l'ombre"},
+    {es:'el pronóstico', fr:'la météo (les prévisions)'},
+    {es:'Hace mucho calor', fr:'Il fait très chaud'},
+    {es:'Está nublado', fr:"C'est nuageux"},
+    {es:'Hace sol', fr:'Il fait soleil'},
+    {es:'¿Va a llover hoy?', fr:"Va-t-il pleuvoir aujourd'hui ?"},
+    {es:'Hay alerta de huracán', fr:"Il y a une alerte d'ouragan"},
+    {es:'Busca la sombra', fr:"Cherche l'ombre"},
+  ]},
+  { id:'reservar', es:'Hacer una reservación', fr:'Réserver', tag:'Voyage', color:'pink', items:[
+    {es:'Quiero reservar una mesa', fr:'Je veux réserver une table'},
+    {es:'para esta noche', fr:'pour ce soir'},
+    {es:'para cuatro personas', fr:'pour quatre personnes'},
+    {es:'¿A nombre de quién?', fr:'À quel nom ?'},
+    {es:'A nombre de Marc', fr:'Au nom de Marc'},
+    {es:'¿Hay lugar?', fr:'Y a-t-il de la place ?'},
+    {es:'Está lleno', fr:"C'est complet"},
+    {es:'Quiero cambiar mi reservación', fr:'Je veux changer ma réservation'},
+    {es:'¿Incluye el desayuno?', fr:'Le déjeuner est-il inclus ?'},
+    {es:'¿Cuánto cuesta por persona?', fr:'Combien ça coûte par personne ?'},
+    {es:'¿Pasan por nosotros al hotel?', fr:"Vous venez nous chercher à l'hôtel ?"},
+    {es:'Confirmado', fr:'Confirmé'},
+  ]},
+  { id:'deporte', es:'El deporte', fr:'Le sport', tag:'Quotidien', color:'blue', items:[
+    {es:'correr', fr:'courir'},
+    {es:'caminar', fr:'marcher'},
+    {es:'andar en bicicleta', fr:'faire du vélo'},
+    {es:'jugar', fr:'jouer'},
+    {es:'ganar', fr:'gagner'},
+    {es:'perder', fr:'perdre'},
+    {es:'el equipo', fr:"l'équipe"},
+    {es:'el gol', fr:'le but'},
+    {es:'el entrenador', fr:"l'entraîneur"},
+    {es:'¿Quién ganó?', fr:'Qui a gagné ?'},
+    {es:'Hago ejercicio cada mañana', fr:"Je fais de l'exercice chaque matin"},
+    {es:'Mi equipo favorito es el Canadiense', fr:"Mon équipe préférée, c'est le Canadien"},
+  ]},
+  { id:'escuela', es:'Los niños y la escuela', fr:"Les enfants et l'école", tag:'Quotidien', color:'sun', items:[
+    {es:'la escuela', fr:"l'école"},
+    {es:'el maestro', fr:'le professeur'},
+    {es:'la tarea', fr:'les devoirs'},
+    {es:'el examen', fr:"l'examen"},
+    {es:'la guardería', fr:'la garderie'},
+    {es:'el bebé', fr:'le bébé'},
+    {es:'la primaria', fr:'le primaire'},
+    {es:'¿En qué grado está?', fr:'En quelle année est-il ?'},
+    {es:'Mi hija va a la primaria', fr:'Ma fille va au primaire'},
+    {es:'Tengo que recoger a los niños', fr:'Je dois aller chercher les enfants'},
+    {es:'Los niños están de vacaciones', fr:'Les enfants sont en vacances'},
+    {es:'¿Cuántos años tiene tu hijo?', fr:'Quel âge a ton fils ?'},
   ]},
 ];
 /* Guide : grammaire et prononciation, une unité à la fois */
@@ -4144,8 +4451,50 @@ const TIPS = {
   futuro_simple: [['Les terminaisons', "On ajoute à l'infinitif : -é, -ás, -á, -emos, -án (trabajaré, trabajarás…). Au quotidien, « voy a » + verbe est plus fréquent."]],
   preterito_el: [['Il et ils', 'Verbes en -ar : -ó, -aron (trabajó, trabajaron). En -er/-ir : -ió, -ieron (salió, salieron). Irréguliers : vino, dijo, hizo.']],
   subjuntivo: [['À apprendre par cœur', 'Après « Ojalá », « Espero que », « Quiero que », le verbe change de forme. Retiens ces phrases telles quelles, elles servent tous les jours.']],
+  hora: [['Son las / Es la', '« Es la una » (une heure, singulier), « Son las dos » (deux heures, pluriel). « Y media », « y cuarto » comme en français.']],
+  presentarse: [['Estoy aprendiendo', "« Estoy aprendiendo español » : la phrase magique. Les gens ralentissent et t'aident."]],
+  numeros3: [['Les irréguliers', "500 = quinientos, 700 = setecientos, 900 = novecientos. Ils s'accordent : « doscientas personas »."]],
+  objetos: [['Prestar', '« ¿Me prestas…? » = tu me prêtes… ? Avec un inconnu : « ¿Me presta…? ».']],
+  hospedaje: [['Dejar', '« Dejar » = laisser : « ¿Puedo dejar mi maleta? », « ¿Dónde dejo la basura? ».']],
+  transporte: [['Bajarse / subirse', "« Me bajo aquí » = je descends ici. « Súbase » = montez. Au Mexique, l'autobus, c'est « el camión »."]],
+  comida_calle: [['¿Pica?', 'Demande toujours « ¿Pica? ». La réponse « poquito » (un petit peu) veut souvent dire : ça pique pour un Québécois !']],
+  noche: [['Me la pasé bien', "Expression très mexicaine : « Me la pasé muy bien » = j'ai eu beaucoup de plaisir."]],
+  problemas_viaje: [['Me cobraron', "« Cobrar » = faire payer. « Me cobraron de más » = on m'a fait payer trop. Reste poli : « Disculpe, creo que hay un error »."]],
+  experiencias: [['Le passé composé', '« Haber » + participe : he, has, ha, hemos, han + -ado/-ido. « He visitado », « Hemos comido ». Parfait pour « déjà » et « jamais ».']],
+  playa2: [['Rentar', 'Au Mexique on « renta » : « rentar un carro », « ¿Rentan equipo? ». Ailleurs, « alquilar ».']],
+  pronombres_pers: [['Souvent sans pronom', 'Le verbe dit déjà qui parle : « Trabajo » suffit. « Yo trabajo » sert à insister ou à comparer.']],
+  articulos: [['Le pluriel', 'Mot en voyelle : + s (casa → casas). En consonne : + es (mujer → mujeres). Le z devient c : lápiz → lápices.']],
+  lugares: [['Acá et allá', 'Au Mexique on dit souvent « acá » (ici) et « allá » (là-bas) : « Ven para acá ».']],
+  abordar: [['Les ordres polis', "À l'aéroport, tout est en « usted » : « Quítese », « Ponga », « Pase »."]],
+  super: [['Me da…', '« ¿Me da…? » (vous me donnez… ?) est la façon normale et polie de demander au Mexique.']],
+  servicios: [['Para cuándo', '« ¿Para cuándo está lista? » = ce sera prêt pour quand ? Réponse typique : « Para mañana ».']],
+  clima_tropical: [['Hace / Está', '« Hace sol », « Hace calor », mais « Está nublado », « Está lloviendo ».']],
+  reservar: [['A nombre de', '« A nombre de Marc » = au nom de Marc. Épelle ton nom de famille si besoin.']],
+  deporte: [['Jugar', '« Jugar » + « al » : « jugar al hockey », « jugar al fútbol ». Au Mexique on dit souvent « jugar hockey » sans « al ».']],
+  escuela: [['Recoger', "« Recoger » = aller chercher quelqu'un : « recoger a los niños ». Avec une personne, on ajoute « a »."]],
   hotel: [['Ne marche pas', "« No funciona » = ça ne marche pas. Très utile : « No funciona la ducha », « No funciona el wifi »."]],
 };
+/* Ordre d'apprentissage : la base et le voyage d'abord ; sur le chantier, les consignes
+   et la sécurité avant les outils et les matériaux. Le tableau UNITS est trié selon cette liste. */
+const ORDER = [
+  // Base
+  'saludos','cortesia','presentarse','pronombres_pers','conversacion','articulos','tiempo','hora','lugares','preguntas','verbos','familia','semana','colores','numeros2','numeros3','meses','objetos',
+  // Voyage
+  'viaje','aeropuerto','abordar','avion','ciudad','transporte','dinero','banco','restaurante','reservar','comida_calle','hotel','hospedaje','servicios','compras','super','playa','playa2','clima_tropical',
+  'turismo','naturaleza','noche','fiesta','carro','salud','emergencias','problemas_viaje','experiencias',
+  // Quotidien
+  'sentir','comida','casa','escuela','rutina','telefono','planes','emociones','opiniones','ropa','cuerpo','frecuencia','pasatiempos','deporte','tecnologia','animales',
+  'tradiciones','trabajo','expresiones',
+  // Grammaire
+  'ser_estar','presente','presente_er','tener','gustar','poder_querer','reflexivos','posesivos','preposiciones','adjetivos','comparativos','gerundio',
+  'futuro','pasado','preterito_el','imperfecto','negativos','por_para','ordinales','prohibido','pronombres','usted','conectores','futuro_simple','subjuntivo',
+  // Chantier : d'abord parler avec l'équipe, ensuite les outils et les matériaux
+  'ordenes','seguridad','planificar','problemas','cliente','verbos_obra','oficios',
+  'herramientas','manuales','electricas','medidas','tablaroca','plomeria','electricidad','pintura','carpinteria','ceramica','albanileria','pisos',
+  'ventilacion','cocina_bano','exterior','jardin','limpieza','entrega','ferreteria','inspeccion',
+];
+const rankOf = u => { const k = ORDER.indexOf(u.id); return k < 0 ? ORDER.length : k; };
+UNITS.sort((a, b) => rankOf(a) - rankOf(b));
 UNITS.forEach(u => u.items.forEach(it => it.unit = u.id));
 const ALL = UNITS.flatMap(u => u.items);
 const FLOORS = 4, LPF = 2; // 4 étages par unité, 2 leçons par étage
@@ -4176,6 +4525,7 @@ const P = {
   arrow:'<path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>',
   send:'<path d="M3 11.5L21 3l-6.5 18-3-7.5z" fill="currentColor"/>',
   heart:'<path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" fill="currentColor"/>',
+  mic:'<rect x="8.5" y="2.5" width="7" height="12" rx="3.5" fill="currentColor"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
   chest:'<rect x="5" y="26" width="54" height="30" rx="5" fill="var(--sun-deep)"/><path d="M5 30a27 18 0 0 1 54 0v4H5z" fill="var(--sun)"/><rect x="5" y="32" width="54" height="6" fill="var(--pink)"/><rect x="27" y="30" width="10" height="14" rx="3" fill="var(--pink-deep)"/><circle cx="32" cy="38" r="2.5" fill="var(--sun-soft)"/>',
   sun:'<circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
   plane:'<path d="M2.5 13.5l19-8.5-6.5 16-3-6.5z" fill="currentColor"/>',
@@ -4215,15 +4565,39 @@ const isSentence = it => toks(it.es).length >= 3;
 const dayKey = d => { d = d || new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
 const parseDay = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
 const daysBetween = (a, b) => Math.round((parseDay(b) - parseDay(a)) / 864e5);
-const yesterday = () => dayKey(new Date(Date.now() - 864e5));
+const yesterday = () => { const d = new Date(); d.setDate(d.getDate() - 1); return dayKey(d); };
 const U = id => UNITS.find(u => u.id === id);
 
 /* ===================== SAUVEGARDE (dans ce navigateur) ===================== */
 const KEY = 'pasoapaso.v1';
-const fresh = () => ({ xp:0, streak:0, lastDay:null, progress:{}, done:{}, pesos:0, freezes:0, boostUntil:0, goal:3, track:'Chantier',
+const fresh = () => ({ xp:0, streak:0, lastDay:null, progress:{}, done:{}, pesos:0, freezes:0, boostUntil:0, goal:3, track:'Base',
   sound:true, voiceURI:null, slow:false, stats:{lessons:0, perfect:0, bestCombo:0, quests:0, early:0, tutor:0, exams:0, bestDay:0}, badges:{}, today:null, updatedAt:0, arcadeBest:0, hist:{}, name:'', challenge:null, invitedBy:'', stories:{} });
 let S = fresh();
-const adopt = o => { const n = Object.assign(fresh(), o); n.stats = Object.assign(fresh().stats, o.stats || {}); return n; };
+const adopt = o => {
+  const n = Object.assign(fresh(), o); n.stats = Object.assign(fresh().stats, o.stats || {});
+  ['xp', 'streak', 'pesos', 'freezes', 'arcadeBest', 'boostUntil', 'updatedAt'].forEach(k => n[k] = +n[k] || 0);
+  n.goal = [1, 2, 3, 5].includes(+n.goal) ? +n.goal : 3;
+  Object.keys(n.stats).forEach(k => n.stats[k] = +n.stats[k] || 0);
+  n.challenge = n.challenge && n.challenge.score != null ? { score: +n.challenge.score || 0, from: String(n.challenge.from || 'Un ami').slice(0, 24) } : null;
+  n.name = String(n.name || '').slice(0, 24); n.invitedBy = String(n.invitedBy || '').slice(0, 24);
+  return n;
+};
+/* Fusion avec une sauvegarde en ligne : la progression la plus avancée gagne (XP, puis leçons),
+   l'horodatage ne départage que les égalités. Un téléphone neuf ne peut donc plus écraser
+   des mois de progression parce qu'on y a touché un réglage. */
+function remoteWins(remote, remoteUpdated) {
+  if (!remote) return false;
+  const rx = +remote.xp || 0, lx = +S.xp || 0;
+  if (rx !== lx) return rx > lx;
+  const rl = +(remote.stats && remote.stats.lessons) || 0, ll = +S.stats.lessons || 0;
+  if (rl !== ll) return rl > ll;
+  return (+remoteUpdated || 0) > (S.updatedAt || 0);
+}
+function adoptRemote(o) {
+  const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow, track: S.track, order2: S.order2,
+    challenge: S.challenge || o.challenge || null, invitedBy: S.invitedBy || o.invitedBy || '' };
+  S = Object.assign(adopt(o), keep); checkStreak(); saveLocal(); loadVoices();
+}
 try { const raw = localStorage.getItem(KEY); if (raw) S = adopt(JSON.parse(raw)); } catch (e) {}
 const saveLocal = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
 /* Sauvegarde dans le compte Claude : la progression suit d'un appareil à l'autre.
@@ -4251,11 +4625,9 @@ async function connectCloud() {
     const snap = await ref.get();
     CLOUD = ref; cloudState = 'cloud';
     const r = snap.exists ? snap.data() : null;
-    if (r && (r.updatedAt || 0) > (S.updatedAt || 0)) {
-      const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow }; // réglages propres à l'appareil
-      S = Object.assign(adopt(JSON.parse(r.json)), keep);
-      checkStreak(); saveLocal(); loadVoices();
-    } else if (S.updatedAt && (!r || S.updatedAt > (r.updatedAt || 0))) pushCloud();
+    const remote = r && r.json ? JSON.parse(r.json) : null;
+    if (remoteWins(remote, r && r.updatedAt)) adoptRemote(remote);
+    else if (S.xp || S.stats.lessons) pushCloud();
   } catch (e) { cloudState = 'error'; }
   if (!$('#home').hidden) render();
 }
@@ -4265,6 +4637,7 @@ function T() {
 }
 /* Série : un gel de série couvre chaque jour manqué */
 let frozeNotice = 0;
+if (!S.order2) { S.track = 'Base'; S.order2 = true; saveLocal(); }
 checkStreak();
 function checkStreak() {
   if (!S.lastDay) return;
@@ -4292,8 +4665,9 @@ const boostOn = () => S.boostUntil > Date.now();
 /* Étages et déblocage */
 const floorOf = u => Math.min(FLOORS, Math.floor((S.done[u.id] || 0) / LPF));
 /* Trois parcours en parallèle (Chantier, Voyage, Quotidien) qui partent tous de l'unité de base */
-const TRACKS = [['Chantier', 'helmet'], ['Voyage', 'plane'], ['Quotidien', 'chat'], ['Grammaire', 'book']];
-function prereqOf(u) { const tr = UNITS.filter(x => x.tag === u.tag), j = tr.indexOf(u); return j > 0 ? tr[j - 1] : UNITS[0]; }
+const TRACKS = [['Base', 'star'], ['Voyage', 'plane'], ['Quotidien', 'chat'], ['Grammaire', 'book'], ['Chantier', 'helmet']];
+const CHANTIER_AFTER = 'verbos'; // le chantier s'ouvre une fois l'étape 1 de cette unité de base terminée
+function prereqOf(u) { const tr = UNITS.filter(x => x.tag === u.tag), j = tr.indexOf(u); return j > 0 ? tr[j - 1] : u.tag === 'Chantier' ? U(CHANTIER_AFTER) : UNITS[0]; }
 function unlocked(i) { const u = UNITS[i]; return i === 0 || (S.done[u.id] || 0) > 0 || (S.done[prereqOf(u).id] || 0) >= LPF; }
 
 /* Répétition espacée (boîtes de Leitner) */
@@ -4326,9 +4700,12 @@ const QUESTS = [
 ];
 function seeded(str) { let h = 1779033703 ^ str.length; for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; } return () => { h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; }; }
 function todaysQuests() {
+  const t = T();
+  if (t.quests) return t.quests.map(id => QUESTS.find(q => q.id === id)).filter(Boolean);
   const rnd = seeded('q' + dayKey()); const out = []; const used = new Set();
   const pool = QUESTS.filter(q => (hasSpeech || q.k !== 'listen') && (sampleState !== 'off' || q.k !== 'tutor'));
   while (out.length < 3) { const q = pool[Math.floor(rnd() * pool.length)]; if (!used.has(q.k)) { used.add(q.k); out.push(q); } }
+  t.quests = out.map(q => q.id); saveLocal();
   return out;
 }
 const questDone = q => (T()[q.k] || 0) >= q.n;
@@ -4510,11 +4887,12 @@ function pathView() {
     <details><summary>Voir la traduction</summary><p>${esc(dp.fr)}</p></details></div>`;
   h += `<div class="arcade-card"><div class="art">${ic('bolt')}</div><div class="txt"><b>Défi éclair</b><small>60 secondes, un max de bonnes réponses${S.arcadeBest ? ` · record ${S.arcadeBest}` : ''}</small></div><button class="btn small" id="go-arcade">Jouer</button></div>`;
   if (frozeNotice) h += `<div class="notice"><b>Ta série est sauvée</b>${frozeNotice > 1 ? frozeNotice + ' gels de série ont été utilisés' : 'Un gel de série a été utilisé'} pour ton absence.</div>`;
+  h += practiceCard();
   if (due.length >= 3) h += `<div class="review"><div class="txt"><b>Révision</b><small>${due.length} mots à revoir avant de les oublier</small></div><button class="btn small teal" id="go-review">Réviser</button></div>`;
-  h += `<div class="seg tracks" style="grid-template-columns:repeat(4,1fr);margin-top:24px">${TRACKS.map(([t, icn]) => {
+  h += `<div class="seg tracks" style="grid-template-columns:repeat(5,1fr);margin-top:24px">${TRACKS.map(([t, icn]) => {
     const tu = UNITS.filter(u => u.tag === t), dn = tu.filter(u => floorOf(u) >= FLOORS).length;
     return `<button class="${S.track === t ? 'on' : ''}" data-track="${t}">${ic(icn).replace('<svg', '<svg style="width:22px;height:22px;display:block;margin:0 auto 2px"')}${t}<small>${dn}/${tu.length}</small></button>`; }).join('')}</div>`;
-  [UNITS[0], ...UNITS.filter(u => u.tag === S.track)].forEach((u, pos) => {
+  (S.track === 'Base' ? UNITS.filter(u => u.tag === 'Base') : [UNITS[0], ...UNITS.filter(u => u.tag === S.track)]).forEach((u, pos) => {
     const i = UNITS.indexOf(u);
     const open = unlocked(i), f = floorOf(u), n = S.done[u.id] || 0;
     const col = `--uc:var(--${u.color});--ud:var(--${u.color}-deep);--uc2:var(--${u.color === 'sun' ? 'sun-deep' : u.color})`;
@@ -4561,7 +4939,7 @@ function questsView() {
   return h;
 }
 function weekChart() {
-  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(Date.now() - (6 - i) * 864e5); return { k: dayKey(d), l: 'DLMMJVS'[d.getDay()] }; });
+  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() - (6 - i)); return { k: dayKey(d), l: 'DLMMJVS'[d.getDay()] }; });
   const vals = days.map(d => (S.hist || {})[d.k] || 0), max = Math.max(20, ...vals), total = vals.reduce((a, b) => a + b, 0);
   return `<div class="card"><div style="display:flex;justify-content:space-between;gap:8px;font-weight:800"><span>${total} XP en 7 jours</span><span style="color:var(--muted)">Record : ${S.stats.bestDay || 0} XP en un jour</span></div>
     <div class="week">${days.map((d, i) => `<div class="col${i === 6 ? ' today' : ''}"><span class="v">${vals[i] || ''}</span><div class="barwrap"><div class="bar" style="height:${Math.round(vals[i] / max * 100)}%"></div></div><span class="d">${d.l}</span></div>`).join('')}</div></div>`;
@@ -4598,6 +4976,7 @@ function meView() {
     <p style="margin:6px 0 0"><b>Ordinateur :</b> Microsoft Edge offre des voix « Natural » excellentes (Dalia, Jorge). Chrome offre « Google español de Estados Unidos ».</p></div>
     <h2 class="section-title">Réglages</h2><div class="card">
       <div class="row"><span style="font-weight:700">Voix plus lente</span><button class="switch${S.slow ? ' on' : ''}" id="sw-slow" aria-pressed="${S.slow}" aria-label="Voix plus lente"></button></div>
+      ${speechAvailable() ? `<div class="row"><span style="font-weight:700">Exercices de prononciation<br><small style="color:var(--muted)">Utilise le micro du téléphone</small></span><button class="switch${S.speakOn !== false ? ' on' : ''}" id="sw-speak" aria-pressed="${S.speakOn !== false}" aria-label="Exercices de prononciation"></button></div>` : ''}
       <div class="row"><span style="font-weight:700">Effets sonores</span><button class="switch${S.sound ? ' on' : ''}" id="sw-sound" aria-pressed="${S.sound}" aria-label="Effets sonores"></button></div>
       <div class="row"><span style="font-weight:700">Transférer ma progression<br><small style="color:var(--muted)">Entre l'app du téléphone et la version Claude</small></span><span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button class="btn small line" id="export">Copier</button><button class="btn small line" id="import">Coller</button></span></div>
       ${SOC.session ? `<div class="row"><span style="font-weight:700">Compte<br><small style="color:var(--muted)">${esc(SOC.name || '')} · ${esc(SOC.email || '')}</small></span><button class="btn small line" id="logout">Se déconnecter</button></div>` : ''}
@@ -4622,6 +5001,8 @@ function bindHome() {
   H.querySelectorAll('[data-scene]').forEach(b => b.onclick = () => openScene(SCENES.find(x => x.id === b.dataset.scene)));
   H.querySelectorAll('[data-unit]').forEach(b => b.onclick = () => startLesson(U(b.dataset.unit)));
   const rv = $('#go-review'); if (rv) rv.onclick = () => startLesson(null);
+  H.querySelectorAll('[data-practice]').forEach(b => b.onclick = () => startPractice(b.dataset.practice));
+  const sp = $('#sw-speak'); if (sp) sp.onclick = () => { S.speakOn = S.speakOn === false; S.noSpeakUntil = 0; saveLocal(); render(); };
   H.querySelectorAll('[data-claim]').forEach(b => b.onclick = () => {
     const q = QUESTS.find(x => x.id === b.dataset.claim); const t = T();
     if (t.claimed.includes(q.id)) return;
@@ -4635,18 +5016,18 @@ function bindHome() {
     SFX.level(); confetti(140);
     modal(`<svg viewBox="0 0 64 64" style="width:96px;height:96px" aria-hidden="true">${P.chest}</svg><h2>¡Tesoro!</h2><p>Le coffre contenait <b style="color:var(--teal-deep)">${gain} pesos</b>.</p>`, render);
   };
-  H.querySelectorAll('[data-goal]').forEach(b => b.onclick = () => { S.goal = +b.dataset.goal; save(); SFX.tap(); render(); });
+  H.querySelectorAll('[data-goal]').forEach(b => b.onclick = () => { S.goal = +b.dataset.goal; saveLocal(); SFX.tap(); render(); });
   H.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => {
     if (b.dataset.buy === 'freeze' && S.pesos >= 40 && S.freezes < 2) { S.pesos -= 40; S.freezes++; toast('Gel de série ajouté'); }
     if (b.dataset.buy === 'boost' && S.pesos >= 30 && !boostOn()) { S.pesos -= 30; S.boostUntil = Date.now() + 15 * 60000; toast('XP doublés pendant 15 minutes !'); }
     SFX.coin(); save(); render();
   });
-  H.querySelectorAll('input[name="voice"]').forEach(r => r.onchange = () => { S.voiceURI = r.value; save(); loadVoices(); say('¡Hola! Pásame el martillo, por favor.'); });
+  H.querySelectorAll('input[name="voice"]').forEach(r => r.onchange = () => { S.voiceURI = r.value; saveLocal(); loadVoices(); say('¡Hola! Pásame el martillo, por favor.'); });
   H.querySelectorAll('[data-test]').forEach(b => b.onclick = () => {
     const v = voices.find(x => x.voiceURI === b.dataset.test); const keep = voice; voice = v; say('¡Hola! Pásame el martillo, por favor.'); voice = keep;
   });
-  const sw = $('#sw-sound'); if (sw) sw.onclick = () => { S.sound = !S.sound; save(); render(); SFX.tap(); };
-  const sl = $('#sw-slow'); if (sl) sl.onclick = () => { S.slow = !S.slow; save(); render(); say('Más despacio, por favor'); };
+  const sw = $('#sw-sound'); if (sw) sw.onclick = () => { S.sound = !S.sound; saveLocal(); render(); SFX.tap(); };
+  const sl = $('#sw-slow'); if (sl) sl.onclick = () => { S.slow = !S.slow; saveLocal(); render(); say('Más despacio, por favor'); };
   const ex = $('#export'); if (ex) ex.onclick = () => {
     const code = 'PASO1:' + btoa(unescape(encodeURIComponent(JSON.stringify(S))));
     const done = () => toast('Code copié : colle-le dans l\'autre version (Profil › Coller)');
@@ -4660,8 +5041,7 @@ function bindHome() {
         const raw = $('#code-in').value.trim().replace(/^PASO1:/, '');
         const o = JSON.parse(decodeURIComponent(escape(atob(raw))));
         if (typeof o.xp !== 'number' || !o.progress) throw 0;
-        const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow };
-        S = Object.assign(adopt(o), keep); checkStreak(); save();
+        adoptRemote(o); save();
         $('#layer').innerHTML = ''; SFX.win(); render(); toast('Progression importée : niveau ' + levelInfo(S.xp).lv);
       } catch (e) { $('#code-err').textContent = "Ce code n'est pas valide. Recopie-le au complet, du début à la fin."; }
     };
@@ -4695,10 +5075,12 @@ function typesFor(it, floor) {
     ['type', 'type', sp ? 'listen' : 'type'],
   ][f];
 }
-function buildLesson(unit) {
+function buildLesson(unit, opts) {
   let pool, fresh = [];
-  const floor = unit ? floorOf(unit) : 2;
-  if (unit) {
+  const floor = opts ? 2 : unit ? floorOf(unit) : 2;
+  if (opts) {
+    pool = opts.pool;
+  } else if (unit) {
     const unseen = unit.items.filter(it => !S.progress[it.es]);
     fresh = unseen.slice(0, 4);
     const seen = unit.items.filter(it => S.progress[it.es]).sort((a, b) => weakness(a) - weakness(b));
@@ -4709,12 +5091,50 @@ function buildLesson(unit) {
   const ex = fresh.map(it => ({ t:'intro', it }));
   const words = shuffle(pool.filter(it => !isSentence(it)));
   const rest = [];
-  if (words.length >= 4) rest.push({ t:'match', items: words.slice(0, 4) });
+  if (words.length >= 4 && !(opts && opts.noMatch)) rest.push({ t:'match', items: words.slice(0, 4) });
   pool.forEach(it => {
-    rest.push({ t: pick(typesFor(it, floor)), it });
+    const types = opts && opts.types ? opts.types(it) : typesFor(it, floor).concat(speakOK() && floor >= 1 ? ['speak'] : []);
+    rest.push({ t: pick(types), it });
     if (fresh.includes(it)) rest.push({ t: isSentence(it) ? 'build' : 'fr2es', it });
   });
   return { queue: ex.concat(shuffle(rest)), fresh, floor };
+}
+
+/* Prononciation : reconnaissance vocale du navigateur. Seulement dans l'app publiée
+   (le cadre Claude refuse le micro), et jamais imposée : un bouton la saute 15 minutes. */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+const speechAvailable = () => !!SR && !framed;
+const speakOK = () => speechAvailable() && S.speakOn !== false && Date.now() > (S.noSpeakUntil || 0);
+function speechScore(heard, target) {
+  const want = loose(target).split(' ').filter(Boolean), got = new Set(loose(heard).split(' '));
+  return want.length ? want.filter(w => got.has(w)).length / want.length : 0;
+}
+function skipSpeak() {
+  const ex = L.queue[L.pos];
+  L.queue[L.pos] = { t: 'type', it: ex.it, retry: ex.retry };
+  next();
+}
+
+/* Entraînement : erreurs récentes, écoute seule, prononciation seule */
+const errorItems = () => ALL.filter(it => { const p = S.progress[it.es]; return p && p.wrong > 0 && p.box < 3; })
+  .sort((a, b) => (S.progress[a.es].box - S.progress[b.es].box) || (S.progress[b.es].wrong - S.progress[a.es].wrong));
+const seenItems = () => ALL.filter(it => S.progress[it.es]);
+function practiceCard() {
+  const errs = errorItems().length, seen = seenItems().length;
+  if (seen < 4) return '';
+  return `<div class="card" style="margin-top:12px"><b style="font-family:var(--font-display);font-size:18px">Entraînement</b>
+    <div class="practice">
+      <button data-practice="errors" ${errs >= 3 ? '' : 'disabled'}>${ic('target')}Mes erreurs<small>${errs >= 3 ? errs + ' mots à reprendre' : 'Rien à reprendre'}</small></button>
+      ${hasSpeech ? `<button data-practice="listen">${ic('spk')}Écoute<small>100 % audio</small></button>` : ''}
+      ${speechAvailable() ? `<button data-practice="speak" ${S.speakOn === false ? 'disabled' : ''}>${ic('mic')}Prononciation<small>${S.speakOn === false ? 'Désactivée' : 'Au micro'}</small></button>` : ''}
+    </div></div>`;
+}
+function startPractice(kind) {
+  if (kind === 'errors') return startLesson(null, false, { pool: errorItems().slice(0, 8) });
+  const pool = shuffle(seenItems()).slice(0, kind === 'speak' ? 6 : 8);
+  if (kind === 'listen') return startLesson(null, false, { pool, noMatch: true, types: it => [isSentence(it) ? 'listenBuild' : 'listen'] });
+  S.noSpeakUntil = 0;
+  startLesson(null, false, { pool, noMatch: true, types: () => ['speak'] });
 }
 
 /* ===================== DÉROULEMENT ===================== */
@@ -4725,8 +5145,8 @@ function examPrompt(u) {
     <button class="btn sun wide" id="exam-go">Passer l'examen</button>`, null, 'Pas maintenant');
   $('#exam-go').onclick = () => { $('#layer').innerHTML = ''; startLesson(u, true); };
 }
-function startLesson(unit, exam) {
-  const b = exam ? { queue: shuffle(unit.items).map(it => ({ t: pick(typesFor(it, 3)), it })), fresh: [], floor: 3 } : buildLesson(unit);
+function startLesson(unit, exam, opts) {
+  const b = exam ? { queue: shuffle(unit.items).map(it => ({ t: pick(typesFor(it, 3)), it })), fresh: [], floor: 3 } : buildLesson(unit, opts);
   L = { unit, floor: b.floor, queue: b.queue, fresh: b.fresh, pos: 0, total: b.queue.length, answered: 0, correct: 0, firstOk: 0,
         results: {}, xp: 0, combo: 0, best: 0, typed: 0, listen: 0, exam: !!exam, lives: 3 };
   $('#home').hidden = true; $('#done').hidden = true; $('#tabs').hidden = true; $('#lesson').hidden = false;
@@ -4758,6 +5178,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Enter' || !L || $('#lesson').hidden) return;
+  if (document.activeElement && document.activeElement.id === 'quit') return;
   const b = $('#check'); if (b && !b.disabled && !b.hidden) { e.preventDefault(); b.click(); }
 });
 const PRAISE = ['¡Muy bien!', '¡Excelente!', '¡Eso es!', '¡Perfecto!', '¡Bravo!', '¡Qué bien!'];
@@ -4834,6 +5255,40 @@ const RENDER = {
   },
   build(ex) { tiles(ex, false); },
   listenBuild(ex) { tiles(ex, true); },
+  speak(ex) {
+    const it = ex.it;
+    if (!speakOK()) return RENDER.type(ex);
+    $('#stage').innerHTML = `<div class="prompt-label">Dis cette phrase</div>${scene(`${speakBtn(it.es)}<span class="big">${esc(it.es)}</span>`)}
+      <button class="mic" id="mic" aria-label="Parler">${ic('mic')}<span id="mic-txt">Touche pour parler</span></button>
+      <p class="heard" id="heard"></p>
+      <button class="btn line small" id="no-mic" style="justify-self:center">Je ne peux pas parler maintenant</button>`;
+    $('#check').hidden = true;
+    const lesson = L; let rec = null, tries = 0;
+    const stop = () => { if (rec) { try { rec.abort(); } catch (e) {} rec = null; } };
+    $('#mic').onclick = () => {
+      if (rec) return stop();
+      rec = new SR(); rec.lang = 'es-MX'; rec.interimResults = false; rec.maxAlternatives = 3;
+      $('#mic').classList.add('on'); $('#mic-txt').textContent = "J'écoute… parle maintenant"; $('#heard').textContent = '';
+      rec.onresult = e => {
+        if (L !== lesson) return;
+        const alts = [...e.results[0]].map(a => a.transcript);
+        const best = alts.map(t => [t, speechScore(t, it.es)]).sort((x, y) => y[1] - x[1])[0];
+        tries++;
+        if (best[1] >= 0.75) { $('#check').hidden = false; feedback(true, it, `Entendu : « ${esc(best[0])} »`); }
+        else if (tries < 2) { $('#heard').textContent = `Entendu : « ${best[0]} ». Essaie encore !`; SFX.bad(); }
+        else { $('#check').hidden = false; feedback(false, it, `Entendu : « ${esc(best[0])} »`); }
+      };
+      rec.onerror = e => {
+        if (L !== lesson) return;
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+          S.speakOn = false; saveLocal(); toast('Micro refusé : prononciation désactivée (Profil › Réglages pour la remettre).'); skipSpeak();
+        } else { const h = $('#heard'); if (h) h.textContent = "Je n'ai rien entendu. Touche le micro et réessaie."; }
+      };
+      rec.onend = () => { rec = null; const m = $('#mic'); if (m) { m.classList.remove('on'); $('#mic-txt').textContent = 'Touche pour parler'; } };
+      try { rec.start(); } catch (e) { rec = null; }
+    };
+    $('#no-mic').onclick = () => { stop(); S.noSpeakUntil = Date.now() + 15 * 60000; saveLocal(); toast('Pas de prononciation pendant 15 minutes.'); skipSpeak(); };
+  },
   type(ex) {
     const it = ex.it;
     $('#stage').innerHTML = `<div class="prompt-label">Écris en espagnol</div>${scene(`<span class="fr">« ${esc(it.fr)} »</span>`)}
@@ -4848,8 +5303,11 @@ const RENDER = {
     });
     setTimeout(() => inp.focus({ preventScroll: true }), 50);
     setCheck(() => {
-      const v = inp.value, ok = loose(v) === loose(it.es);
-      feedback(ok, it, ok && strict(v) !== strict(it.es) ? `Petit détail d'accent : on écrit « ${esc(it.es)} ».` : '');
+      const v = inp.value, same = loose(v) === loose(it.es), exact = strict(v) === strict(it.es);
+      // trabajo / trabajó, esta / está : l'accent change le mot, ce n'est plus un détail
+      const accentMatters = /[áéíóú]$/.test(strict(it.es)) || ALL.some(o => o !== it && loose(o.es) === loose(it.es));
+      const ok = same && (exact || !accentMatters);
+      feedback(ok, it, same && !exact ? (ok ? `Petit détail d'accent : on écrit « ${esc(it.es)} ».` : `L'accent compte ici : sans lui, « ${esc(it.es)} » devient un autre mot.`) : '');
     }, false);
   },
   match(ex) {
@@ -4868,7 +5326,9 @@ const RENDER = {
         [a, b].forEach(x => { x.classList.remove('sel'); x.classList.add('right'); x.disabled = true; });
         setTimeout(() => [a, b].forEach(x => { x.classList.remove('right'); x.classList.add('done'); }), 350);
         tone([[660 + (items.length - left) * 110, 0, .1, 'triangle', .12]]);
+        const lesson = L;
         if (--left === 0) setTimeout(() => {
+          if (L !== lesson) return;
           items.forEach(it => record(it, !missed.has(it.es)));
           feedback(missed.size === 0, null, missed.size ? 'Les paires ratées reviendront plus tard.' : 'Toutes les paires du premier coup.');
         }, 400);
@@ -4909,6 +5369,7 @@ function tiles(ex, audioOnly) {
 
 /* ===================== FIN DE LEÇON ET RÉCOMPENSES ===================== */
 function finish() {
+  checkStreak();
   const t = T();
   const lvBefore = levelInfo(S.xp).lv;
   const floorBefore = L.unit ? floorOf(L.unit) : null;
@@ -5037,6 +5498,7 @@ function arcadeQ() {
   });
 }
 function arcadeEnd() {
+  checkStreak();
   clearInterval(A.timer);
   const a = A; A = null;
   const lvBefore = levelInfo(S.xp).lv;
@@ -5050,7 +5512,7 @@ function arcadeEnd() {
   const today = dayKey();
   if (S.lastDay !== today) { S.streak = S.lastDay === yesterday() ? S.streak + 1 : 1; S.lastDay = today; }
   if (a.target && a.target.cid) answerChallenge(a.target.cid, a.score);
-  if (a.target && a.score > a.target.score) { S.stats.challengesWon = (S.stats.challengesWon || 0) + 1; S.challenge = null; }
+  if (a.target && a.score > a.target.score) { S.stats.challengesWon = (S.stats.challengesWon || 0) + 1; if (!a.target.cid) S.challenge = null; }
   const nb = checkBadges(); save();
   const acc = a.answered ? Math.round(a.right / a.answered * 100) : 0;
   $('#arcade').innerHTML = `<div class="done">${mascot(record ? 'wow' : 'happy')}
@@ -5231,6 +5693,123 @@ const STORIES = [
     {w:'Miguel', es:'Está en la camioneta. Ahorita me lo pongo.', fr:'Il est dans le pick-up. Je le mets tout de suite.'},
     {q:"Qu'est-ce que Miguel ne porte pas ?", o:['Son casque', 'Ses gants', 'Ses bottes']},
     {q:'Que veut dire « ¡Aguas! » sur un chantier ?', o:['Attention !', "De l'eau !", 'Vite !']}]},
+  {id:'avion_vecina', es:'Vecinos de asiento', fr:"La voisine d'avion", unit:'presentarse', color:'teal', lines:[
+    {w:'', es:'Marc está en el avión. A su lado hay una señora mexicana.', fr:"Marc est dans l'avion. À côté de lui, il y a une dame mexicaine."},
+    {w:'Lucía', es:'Hola. ¿Usted también va a Cancún?', fr:'Bonjour. Vous allez aussi à Cancún ?'},
+    {w:'Marc', es:'Sí. Es mi primera vez en México.', fr:"Oui. C'est ma première fois au Mexique."},
+    {w:'Lucía', es:'¡Qué bien! ¿De dónde es usted?', fr:"Super ! D'où venez-vous ?"},
+    {w:'Marc', es:'Soy de Quebec, en Canadá. Hablo francés.', fr:'Je viens du Québec, au Canada. Je parle français.'},
+    {q:"D'où vient Marc ?", o:['Du Québec', 'Du Mexique', 'De France']},
+    {w:'Lucía', es:'Pero habla bien español.', fr:'Mais vous parlez bien espagnol.'},
+    {w:'Marc', es:'Un poco. Estoy aprendiendo con una aplicación.', fr:"Un peu. J'apprends avec une application."},
+    {q:"Comment Marc apprend-il l'espagnol ?", o:['Avec une application', "À l'école", 'Avec sa femme']},
+    {w:'Lucía', es:'Yo vivo en Mérida. Tiene que probar la comida de allá.', fr:"Moi, j'habite à Mérida. Vous devez goûter la cuisine de là-bas."},
+    {w:'Marc', es:'¡Claro! Me encantan los tacos.', fr:"Bien sûr ! J'adore les tacos."},
+    {q:'Où habite Lucía ?', o:['À Mérida', 'À Cancún', 'À Montréal']}]},
+  {id:'tacos_merida', es:'Tacos en Mérida', fr:'Des tacos à Mérida', unit:'comida_calle', color:'sun', lines:[
+    {w:'', es:'Marc y su esposa caminan por el centro de Mérida. Tienen hambre.', fr:'Marc et sa femme marchent dans le centre de Mérida. Ils ont faim.'},
+    {w:'Taquero', es:'¡Pásele, pásele! ¿Qué le damos?', fr:"Entrez, entrez ! Qu'est-ce qu'on vous sert ?"},
+    {w:'Marc', es:'Cuatro tacos al pastor, por favor.', fr:"Quatre tacos al pastor, s'il vous plaît."},
+    {w:'Taquero', es:'¿Con todo?', fr:'Avec tout ?'},
+    {w:'Marc', es:'Sí, con todo. ¿La salsa pica?', fr:'Oui, avec tout. La sauce est-elle épicée ?'},
+    {w:'Taquero', es:'La verde, poquito. La roja, ¡pica mucho!', fr:'La verte, un peu. La rouge, elle pique beaucoup !'},
+    {q:'Quelle sauce est la plus épicée ?', o:['La rouge', 'La verte', 'Les deux pareilles']},
+    {w:'Marc', es:'Entonces la verde, por favor. Y dos aguas de horchata.', fr:"Alors la verte, s'il vous plaît. Et deux eaux d'horchata."},
+    {q:'Combien de tacos Marc commande-t-il ?', o:['Quatre', 'Deux', 'Six']},
+    {w:'Taquero', es:'¿Para comer aquí o para llevar?', fr:'Pour manger ici ou pour emporter ?'},
+    {w:'Marc', es:'Para comer aquí. ¿Cuánto es?', fr:"Pour manger ici. C'est combien ?"},
+    {w:'Taquero', es:'Son ciento veinte pesos.', fr:'Ça fait cent vingt pesos.'},
+    {q:'Combien ça coûte ?', o:['Cent vingt pesos', 'Trois cents pesos', 'Vingt pesos']}]},
+  {id:'departamento', es:'Un problema en el departamento', fr:"Un pépin à l'appartement", unit:'hospedaje', color:'blue', lines:[
+    {w:'', es:'Marc llega a su departamento en Playa del Carmen. Llama al anfitrión.', fr:"Marc arrive à son appartement à Playa del Carmen. Il appelle l'hôte."},
+    {w:'Anfitrión', es:'¿Bueno? Hola, Marc. ¿Ya llegaste?', fr:'Allô ? Salut, Marc. Es-tu arrivé ?'},
+    {w:'Marc', es:'Sí, estoy enfrente de la puerta, pero la llave no funciona.', fr:'Oui, je suis devant la porte, mais la clé ne fonctionne pas.'},
+    {w:'Anfitrión', es:'Ah, perdón. Es la otra llave, la pequeña.', fr:"Ah, désolé. C'est l'autre clé, la petite."},
+    {q:'Quel est le premier problème ?', o:['La clé ne fonctionne pas', "Il n'y a pas d'eau", 'Le wifi ne marche pas']},
+    {w:'', es:'Marc entra. Todo está muy limpio. Pero no hay agua caliente.', fr:"Marc entre. Tout est très propre. Mais il n'y a pas d'eau chaude."},
+    {w:'Marc', es:'Una pregunta más: no hay agua caliente.', fr:"Une dernière question : il n'y a pas d'eau chaude."},
+    {w:'Anfitrión', es:'El calentador está en la azotea. Tienes que prenderlo.', fr:"Le chauffe-eau est sur le toit. Tu dois l'allumer."},
+    {q:'Où est le chauffe-eau ?', o:['Sur le toit', 'Dans la cuisine', 'Au sous-sol']},
+    {w:'Marc', es:'Perfecto. ¿Y la contraseña del wifi?', fr:'Parfait. Et le mot de passe du wifi ?'},
+    {w:'Anfitrión', es:'Está en la puerta del refrigerador. ¡Disfruta tu estancia!', fr:'Il est sur la porte du frigo. Profite de ton séjour !'},
+    {q:'Où est le mot de passe du wifi ?', o:['Sur la porte du frigo', 'Sous la table', "Il n'y en a pas"]}]},
+  {id:'ferry', es:'El ferry a Cozumel', fr:'Le traversier pour Cozumel', unit:'transporte', color:'teal', lines:[
+    {w:'', es:'Es sábado. Marc quiere ir a la isla de Cozumel.', fr:"C'est samedi. Marc veut aller à l'île de Cozumel."},
+    {w:'Marc', es:'Buenos días. Dos boletos para Cozumel, por favor.', fr:"Bonjour. Deux billets pour Cozumel, s'il vous plaît."},
+    {w:'Vendedor', es:'¿Sencillo o de ida y vuelta?', fr:'Aller simple ou aller-retour ?'},
+    {w:'Marc', es:'De ida y vuelta. ¿A qué hora sale el próximo ferry?', fr:'Aller-retour. À quelle heure part le prochain traversier ?'},
+    {w:'Vendedor', es:'A las diez en punto. Llega a Cozumel en cuarenta y cinco minutos.', fr:'À dix heures pile. Il arrive à Cozumel en quarante-cinq minutes.'},
+    {q:'À quelle heure part le traversier ?', o:['À dix heures pile', 'À neuf heures et demie', 'À midi']},
+    {w:'Marc', es:'¿Y el último ferry de regreso?', fr:'Et le dernier traversier pour revenir ?'},
+    {w:'Vendedor', es:'A las once de la noche. No lo pierdan.', fr:'À onze heures du soir. Ne le manquez pas.'},
+    {q:'Combien de temps dure la traversée ?', o:['Quarante-cinq minutes', 'Deux heures', 'Dix minutes']},
+    {w:'', es:'En el ferry hay muchas olas. La esposa de Marc se siente mareada.', fr:'Sur le traversier, il y a beaucoup de vagues. La femme de Marc a mal au cœur.'},
+    {w:'Marc', es:'¿Estás bien? Mira el horizonte, ayuda mucho.', fr:"Ça va ? Regarde l'horizon, ça aide beaucoup."},
+    {q:'Pourquoi la femme de Marc ne se sent-elle pas bien ?', o:['Il y a beaucoup de vagues', 'Elle a faim', 'Il fait trop chaud']}]},
+  {id:'arrecife', es:'Esnórquel en el arrecife', fr:'Snorkel sur le récif', unit:'playa2', color:'pink', lines:[
+    {w:'', es:'En Cozumel, Marc y su esposa toman un tour de esnórquel.', fr:'À Cozumel, Marc et sa femme font un tour de snorkel.'},
+    {w:'Guía', es:'¡Bienvenidos! Primero, todos se ponen el chaleco salvavidas.', fr:"Bienvenue ! D'abord, tout le monde met sa veste de sauvetage."},
+    {w:'Marc', es:'¿Es peligroso? No sé nadar muy bien.', fr:"C'est dangereux ? Je ne nage pas très bien."},
+    {w:'Guía', es:'No se preocupe. Con el chaleco, usted flota. Y yo estoy con ustedes.', fr:'Ne vous inquiétez pas. Avec la veste, vous flottez. Et je suis avec vous.'},
+    {q:'Pourquoi Marc est-il inquiet ?', o:['Il ne nage pas très bien', 'Il a peur des poissons', 'Il a froid']},
+    {w:'', es:'La lancha llega al arrecife. El agua es azul y transparente.', fr:"Le bateau arrive au récif. L'eau est bleue et transparente."},
+    {w:'Guía', es:'No toquen el arrecife, por favor. Es muy delicado.', fr:"Ne touchez pas au récif, s'il vous plaît. Il est très fragile."},
+    {q:"Qu'est-ce qu'il ne faut pas faire ?", o:['Toucher le récif', 'Nager', 'Prendre des photos']},
+    {w:'Esposa', es:'¡Mira, Marc! ¡Una tortuga y muchos peces de colores!', fr:'Regarde, Marc ! Une tortue et plein de poissons colorés !'},
+    {w:'Marc', es:'¡Qué bonito! Es el mejor día del viaje.', fr:"Que c'est beau ! C'est la meilleure journée du voyage."},
+    {q:"Qu'a vu la femme de Marc ?", o:['Une tortue et des poissons colorés', 'Un requin', 'Un dauphin']}]},
+  {id:'super_compras', es:'En el súper', fr:"À l'épicerie", unit:'super', color:'blue', lines:[
+    {w:'', es:'Marc y su esposa compran comida para el departamento.', fr:"Marc et sa femme achètent de la nourriture pour l'appartement."},
+    {w:'Marc', es:'Necesitamos agua, pan, queso y fruta.', fr:"On a besoin d'eau, de pain, de fromage et de fruits."},
+    {w:'Esposa', es:'Y café para la mañana. ¿Dónde está el café?', fr:'Et du café pour le matin. Où est le café ?'},
+    {w:'Empleado', es:'En el pasillo cinco, al lado del azúcar.', fr:"Dans l'allée cinq, à côté du sucre."},
+    {q:'Où est le café ?', o:["Dans l'allée cinq, à côté du sucre", 'Près de la caisse', "Il n'y en a pas"]},
+    {w:'', es:'En la caja, la cajera pasa todo.', fr:'À la caisse, la caissière passe tout.'},
+    {w:'Cajera', es:'Son trescientos cuarenta pesos. ¿Quiere bolsa?', fr:'Ça fait trois cent quarante pesos. Voulez-vous un sac ?'},
+    {w:'Marc', es:'Sí, por favor. Pago con tarjeta.', fr:"Oui, s'il vous plaît. Je paie par carte."},
+    {q:"Combien coûte l'épicerie ?", o:['Trois cent quarante pesos', 'Cent pesos', 'Mille pesos']},
+    {w:'Cajera', es:'Lo siento, la terminal no funciona. Solo efectivo hoy.', fr:"Désolée, le terminal ne fonctionne pas. Comptant seulement aujourd'hui."},
+    {w:'Marc', es:'No hay problema. Aquí tiene.', fr:'Pas de problème. Voici.'},
+    {q:'Comment Marc paie-t-il finalement ?', o:['Comptant', 'Par carte', 'Il ne paie pas']}]},
+  {id:'tour_reserva', es:'Un tour a Chichén Itzá', fr:'Un tour à Chichén Itzá', unit:'reservar', color:'teal', lines:[
+    {w:'', es:'Marc llama a una agencia para reservar un tour.', fr:'Marc appelle une agence pour réserver un tour.'},
+    {w:'Agente', es:'Tours Maya, buenos días. ¿En qué le puedo ayudar?', fr:'Tours Maya, bonjour. Comment puis-je vous aider ?'},
+    {w:'Marc', es:'Quiero reservar el tour a Chichén Itzá para el jueves.', fr:'Je veux réserver le tour de Chichén Itzá pour jeudi.'},
+    {w:'Agente', es:'Muy bien. ¿Para cuántas personas?', fr:'Très bien. Pour combien de personnes ?'},
+    {w:'Marc', es:'Para dos. ¿Cuánto cuesta por persona?', fr:'Pour deux. Combien ça coûte par personne ?'},
+    {q:'Pour combien de personnes Marc réserve-t-il ?', o:['Deux', 'Quatre', 'Une']},
+    {w:'Agente', es:'Mil doscientos pesos. Incluye el transporte y la comida.', fr:'Mille deux cents pesos. Le transport et le repas sont inclus.'},
+    {q:"Qu'est-ce qui est inclus ?", o:['Le transport et le repas', "L'hôtel", 'Rien']},
+    {w:'Marc', es:'¿Pasan por nosotros al hotel?', fr:"Vous venez nous chercher à l'hôtel ?"},
+    {w:'Agente', es:'Sí, a las siete de la mañana en la recepción. ¿A nombre de quién?', fr:'Oui, à sept heures du matin à la réception. À quel nom ?'},
+    {q:'À quelle heure vient-on les chercher ?', o:['À sept heures du matin', 'À midi', 'À neuf heures du soir']},
+    {w:'Marc', es:'A nombre de Marc Côté.', fr:'Au nom de Marc Côté.'},
+    {w:'Agente', es:'Confirmado. Lleven sombrero y agua, ¡hace mucho calor!', fr:"Confirmé. Apportez un chapeau et de l'eau, il fait très chaud !"}]},
+  {id:'huracan', es:'Alerta de huracán', fr:"Alerte d'ouragan", unit:'clima_tropical', color:'sun', lines:[
+    {w:'', es:'En la tele, el pronóstico dice que viene una tormenta fuerte.', fr:'À la télé, la météo annonce un gros orage.'},
+    {w:'Recepcionista', es:'Buenas tardes. Hay alerta de huracán para mañana.', fr:"Bon après-midi. Il y a une alerte d'ouragan pour demain."},
+    {w:'Marc', es:'¿Es peligroso? ¿Qué tenemos que hacer?', fr:"C'est dangereux ? Qu'est-ce qu'on doit faire ?"},
+    {w:'Recepcionista', es:'No se preocupe. Es un huracán pequeño. Pero mañana no salgan del hotel.', fr:"Ne vous inquiétez pas. C'est un petit ouragan. Mais demain, ne sortez pas de l'hôtel."},
+    {q:'Que doivent faire Marc et sa femme demain ?', o:["Rester à l'hôtel", 'Aller à la plage', "Prendre l'avion"]},
+    {w:'Marc', es:'¿Y la playa?', fr:'Et la plage ?'},
+    {w:'Recepcionista', es:'Cerrada hasta el sábado. Las olas van a ser muy grandes.', fr:"Fermée jusqu'à samedi. Les vagues vont être très grosses."},
+    {q:"Jusqu'à quand la plage est-elle fermée ?", o:['Samedi', 'Ce soir', 'Dans un mois']},
+    {w:'Esposa', es:'Entonces mañana vemos películas y comemos en el restaurante del hotel.', fr:"Alors demain, on regarde des films et on mange au restaurant de l'hôtel."},
+    {w:'', es:'El sábado sale el sol. ¡El huracán ya pasó!', fr:"Samedi, le soleil revient. L'ouragan est passé !"},
+    {w:'Marc', es:'¡Qué bueno! Vamos a la playa.', fr:'Tant mieux ! Allons à la plage.'},
+    {q:'Quel temps fait-il samedi ?', o:['Il fait soleil', 'Il pleut', 'Il neige']}]},
+  {id:'lavanderia', es:'La lavandería', fr:'La buanderie', unit:'servicios', color:'pink', lines:[
+    {w:'', es:'Después de una semana de viaje, Marc no tiene ropa limpia.', fr:"Après une semaine de voyage, Marc n'a plus de vêtements propres."},
+    {w:'Marc', es:'Buenas tardes. Quiero lavar mi ropa. ¿Cuánto cobran?', fr:'Bon après-midi. Je veux laver mon linge. Combien chargez-vous ?'},
+    {w:'Señora', es:'Treinta pesos por kilo. Lavado y secado.', fr:'Trente pesos le kilo. Lavé et séché.'},
+    {q:'Combien coûte la buanderie ?', o:['Trente pesos le kilo', 'Trois cents pesos', "C'est gratuit"]},
+    {w:'', es:'La señora pone la ropa en la báscula.', fr:'La dame met le linge sur la balance.'},
+    {w:'Señora', es:'Son cuatro kilos. Ciento veinte pesos.', fr:'Ça fait quatre kilos. Cent vingt pesos.'},
+    {q:'Combien de kilos de linge Marc a-t-il ?', o:['Quatre', 'Deux', 'Dix']},
+    {w:'Marc', es:'¿Para cuándo está lista?', fr:'Ce sera prêt pour quand ?'},
+    {w:'Señora', es:'Mañana a las diez. ¿Le doblo la ropa?', fr:'Demain à dix heures. Je vous plie le linge ?'},
+    {q:'Quand le linge sera-t-il prêt ?', o:['Demain à dix heures', 'Dans une heure', 'Lundi']},
+    {w:'Marc', es:'Sí, por favor. ¡Muchas gracias!', fr:"Oui, s'il vous plaît. Merci beaucoup !"}]},
 ];
 /* ===================== HISTOIRES ===================== */
 const storyOpen = st => unlocked(UNITS.findIndex(u => u.id === st.unit));
@@ -5238,7 +5817,7 @@ function storiesView() {
   const done = Object.keys(S.stories || {}).length;
   let h = `<div class="tutor-hero">${mascot('happy')}<div><h2>Les histoires</h2><p>De petites scènes à lire et à écouter, avec des questions en chemin. Touche une phrase pour voir la traduction.</p></div></div>
     <p style="font-weight:800;margin:12px 0 0">${done} / ${STORIES.length} histoires lues</p><div class="scenes">`;
-  STORIES.forEach(st => {
+  STORIES.slice().sort((x, y) => rankOf(U(x.unit)) - rankOf(U(y.unit))).forEach(st => {
     const open = storyOpen(st), read = (S.stories || {})[st.id], u = U(st.unit);
     h += `<button class="story-card${open ? '' : ' locked'}" data-story="${st.id}" style="--sc:var(--${st.color});--sd:var(--${st.color}-deep)" ${open ? '' : 'disabled'}>
       <div class="cover"${st.color === 'sun' ? ' style="color:var(--sun-ink)"' : ''}>${ic(open ? 'book' : 'lock')}</div>
@@ -5260,7 +5839,7 @@ function openStory(st) {
   SFX.tap(); drawStory(); window.scrollTo(0, 0); speakLine(st.lines[0]);
 }
 function speakLine(l) { if (l && !l.q) say(l.es, false, l.w ? whoStyle(ST.st, l.w).pitch : 1); }
-function drawStory() {
+function drawStory(scroll) {
   const st = ST.st, shown = st.lines.slice(0, ST.i);
   const pending = shown.length && shown[shown.length - 1].q && !ST.answered[ST.i - 1];
   const pct = Math.round(ST.i / st.lines.length * 100);
@@ -5284,6 +5863,7 @@ function drawStory() {
   $('#st-quit').onclick = () => { ST = null; if (hasSpeech) speechSynthesis.cancel(); $('#story').hidden = true; showHome(); };
   $('#story').querySelectorAll('[data-line]').forEach(b => b.onclick = () => speakLine(st.lines[+b.dataset.line]));
   $('#story').querySelectorAll('[data-trl]').forEach(b => b.onclick = () => { const i = +b.dataset.trl; ST.showFr[i] = !ST.showFr[i]; drawStory(); });
+  if (scroll) window.scrollTo(0, document.body.scrollHeight);
   $('#story').querySelectorAll('[data-q]').forEach(b => b.onclick = () => {
     const i = +b.dataset.q;
     if (+b.dataset.k === 0) { ST.answered[i] = true; SFX.ok(); drawStory(); }
@@ -5291,11 +5871,11 @@ function drawStory() {
   });
   $('#st-next').onclick = () => {
     if (end) return finishStory();
-    ST.i++; ST.fresh = ST.i - 1; SFX.tap(); drawStory(); speakLine(st.lines[ST.i - 1]);
+    ST.i++; ST.fresh = ST.i - 1; SFX.tap(); drawStory(true); speakLine(st.lines[ST.i - 1]);
   };
-  window.scrollTo(0, document.body.scrollHeight);
 }
 function finishStory() {
+  checkStreak();
   const st = ST.st, first = !(S.stories || {})[st.id], mistakes = ST.mistakes;
   ST = null;
   const lvBefore = levelInfo(S.xp).lv;
@@ -5334,7 +5914,7 @@ function challengeBanner() {
 function nameField() {
   return `<label style="text-align:left;font-weight:800;font-size:14px;display:grid;gap:4px">Ton prénom (tes amis le verront)<input class="namefield" id="my-name" maxlength="24" autocomplete="given-name" value="${esc(S.name || '')}" placeholder="Ex. Francis"></label>`;
 }
-function bindNameField() { const n = $('#my-name'); if (n) n.oninput = () => { S.name = n.value.trim().slice(0, 24); save(); }; }
+function bindNameField() { const n = $('#my-name'); if (n) n.oninput = () => { S.name = n.value.trim().slice(0, 24); saveLocal(); }; }
 function qrSvg(text) {
   try { const q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 4, margin: 2, scalable: true }); } catch (e) { return ''; }
 }
@@ -5432,10 +6012,8 @@ async function afterLogin() {
   if (!S.name) S.name = SOC.name;
   const rows = await api(`saves?id=eq.${uid}&select=data,updated_at`);
   const r = rows && rows[0];
-  if (r && (r.updated_at || 0) > (S.updatedAt || 0) && r.data && r.data.json) {
-    const keep = { voiceURI: S.voiceURI, sound: S.sound, slow: S.slow, track: S.track };
-    S = Object.assign(adopt(JSON.parse(r.data.json)), keep); checkStreak(); saveLocal();
-  }
+  const remote = r && r.data && r.data.json ? JSON.parse(r.data.json) : null;
+  if (remoteWins(remote, r && r.updated_at)) adoptRemote(remote);
   CLOUD = supaCloud; cloudState = 'cloud';
   if (!S.updatedAt) S.updatedAt = Date.now();
   await pushCloud();
@@ -5577,7 +6155,7 @@ const SCENES = [
   {id:'libre', title:'Jase libre', sub:'Parle de ta journée avec Paco', icon:'chat', color:'blue', who:'Paco · ton ami mexicain',
    prompt:"Tu es Paco, un ami mexicain jovial. Discute avec lui de sa journée, de son travail en rénovation, de sa famille, de ses prochaines vacances."},
 ];
-let SAMPLE = null, sampleState = 'pending'; // pending | on | off
+let SAMPLE = null, sampleState = (window.claude && window.claude.use) ? 'pending' : 'off'; // pending | on | off
 async function connectSample() {
   if (!window.claude || !window.claude.use) { sampleState = 'off'; if (!$('#home').hidden && tab === 'tutor') render(); return; }
   try { SAMPLE = await claude.use('sample'); } catch (e) { SAMPLE = null; }
@@ -5712,6 +6290,7 @@ async function ask(text, mine) {
   }
 }
 function rewardTutor(clean) {
+  checkStreak();
   const lvBefore = levelInfo(S.xp).lv, t = T();
   let xp = clean ? 5 : 3; if (boostOn()) xp *= 2;
   addXp(xp); t.tutor = (t.tutor || 0) + 1; S.stats.tutor++;
@@ -5729,11 +6308,13 @@ function showHome() {
   $('#lesson').hidden = true; $('#done').hidden = true; $('#home').hidden = false; $('#tabs').hidden = false;
   render(); window.scrollTo(0, 0);
 }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { checkStreak(); if (!$('#home').hidden) render(); } });
 readInviteParams();
 render();
 connectCloud();
 connectSample();
 connectSocial();
-setInterval(() => { if (!$('#home').hidden && boostOn()) render(); }, 60000);
+let boostShown = boostOn();
+setInterval(() => { const on = boostOn(); if (!$('#home').hidden && (on || boostShown)) { boostShown = on; render(); } }, 60000);
 </script>
 <script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script></body></html>
