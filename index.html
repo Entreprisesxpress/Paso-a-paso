@@ -459,6 +459,31 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .hf-ctl .main{width:96px;height:96px;background:var(--blue);color:var(--on);box-shadow:0 6px 0 var(--blue-deep)}
 .hf-ctl .main svg{width:44px;height:44px}
 .hf-stats{display:flex;justify-content:center;gap:18px;color:var(--muted);font-weight:800;margin-top:14px;font-variant-numeric:tabular-nums}
+.field{margin-top:12px;border-radius:20px;padding:14px;background:var(--sun-soft);border:2px solid var(--sun);display:grid;gap:10px}
+.field .eyebrow{color:var(--sun-deep)}
+.field .row1{display:flex;gap:10px;align-items:center}
+.field .es{font-family:var(--font-display);font-size:22px;font-weight:800;line-height:1.2;flex:1;min-width:0}
+.field .fr{margin:0;font-weight:700;color:var(--muted)}
+.field .acts{display:flex;gap:8px;flex-wrap:wrap}
+.field.done{background:var(--ok-bg);border-color:var(--ok)}
+.field.done .eyebrow{color:var(--ok-deep)}
+.field .lbl-link{margin:2px 0 0}
+.lbl-link{display:flex;align-items:center;gap:6px;margin:12px auto 0;background:none;border:0;color:var(--muted);font:inherit;font-weight:800;font-size:14px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.lbl-link svg{width:16px;height:16px}
+.lbl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.lbl{border:2px dashed var(--line);border-radius:12px;padding:12px 8px;text-align:center;background:var(--surface)}
+.lbl b{display:block;font-family:var(--font-display);font-size:20px;line-height:1.1}
+.lbl small{color:var(--muted);font-weight:700}
+#print-area{display:none}
+@media print{
+  body > *:not(#print-area){display:none!important}
+  :root,body{padding:0!important;margin:0!important;background:#fff!important}
+  #print-area{display:grid!important;grid-template-columns:repeat(3,1fr);gap:0;font-family:var(--font-body)}
+  #print-area .p-lbl{border:1px dashed #888;padding:6mm 3mm;text-align:center;break-inside:avoid;color:#000}
+  #print-area .p-lbl b{display:block;font-size:20pt;font-weight:800;line-height:1.1}
+  #print-area .p-lbl small{font-size:10pt;color:#444}
+  @page{margin:10mm}
+}
 .xpfloat{position:fixed;right:20px;bottom:150px;z-index:30;font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--sun-deep);animation:floatup 1.2s ease-out forwards;pointer-events:none}
 @keyframes floatup{to{transform:translateY(-60px);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -473,6 +498,8 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 <div class="wrap" id="arcade" hidden></div>
 <div class="wrap" id="story" hidden></div>
 <div class="wrap" id="audio" hidden></div>
+<div class="wrap" id="labels" hidden></div>
+<div id="print-area" aria-hidden="true"></div>
 <div id="layer"></div>
 
 <script>
@@ -5541,6 +5568,7 @@ const P = {
   pause:'<rect x="6" y="4.5" width="4" height="15" rx="1.2" fill="currentColor"/><rect x="14" y="4.5" width="4" height="15" rx="1.2" fill="currentColor"/>',
   next:'<path d="M5 5v14l10-7zM16 5h3v14h-3z" fill="currentColor"/>',
   prev:'<path d="M19 5v14L9 12zM5 5h3v14H5z" fill="currentColor"/>',
+  tag:'<path d="M3 12V4.5A1.5 1.5 0 0 1 4.5 3H12l9 9-9 9z" fill="currentColor"/><circle cx="7.5" cy="7.5" r="1.8" fill="var(--surface)"/>',
   mic:'<rect x="8.5" y="2.5" width="7" height="12" rx="3.5" fill="currentColor"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3.5M8.5 21.5h7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
   chest:'<rect x="5" y="26" width="54" height="30" rx="5" fill="var(--sun-deep)"/><path d="M5 30a27 18 0 0 1 54 0v4H5z" fill="var(--sun)"/><rect x="5" y="32" width="54" height="6" fill="var(--pink)"/><rect x="27" y="30" width="10" height="14" rx="3" fill="var(--pink-deep)"/><circle cx="32" cy="38" r="2.5" fill="var(--sun-soft)"/>',
   sun:'<circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>',
@@ -5757,6 +5785,8 @@ const BADGES = [
   ['lect1','Lecteur','Lis ta première histoire','book','teal', s => Object.keys(s.stories || {}).length >= 1],
   ['lect5','Rat de bibliothèque','Lis 5 histoires','book','pink', s => Object.keys(s.stories || {}).length >= 5],
   ['lectall','Toutes les histoires','Lis toutes les histoires','book','sun', () => STORIES.every(st => (S.stories || {})[st.id])],
+  ['terrain1','Sur le terrain','Dis la phrase du jour à ton équipe','helmet','sun', s => (s.stats.field || 0) >= 1],
+  ['terrain10','Le patron parle espagnol','10 phrases dites à ton équipe','helmet','pink', s => (s.stats.field || 0) >= 10],
   ['ami1','Ambassadeur','Invite un ami','user','teal', s => (s.stats.invites || 0) >= 1],
   ['ami5','Rassembleur','Invite 5 amis','user','pink', s => (s.stats.invites || 0) >= 5],
   ['defi1','Défi relevé','Bats le score d\'un ami au Défi éclair','bolt','blue', s => (s.stats.challengesWon || 0) >= 1],
@@ -5892,9 +5922,7 @@ function goalCard() {
 function pathView() {
   const due = dueItems();
   let h = challengeBanner() + goalCard();
-  const sents = ALL.filter(isSentence), dp = sents[Math.floor(seeded('p' + dayKey())() * sents.length)];
-  h += `<div class="daily"><span class="eyebrow">Phrase du jour</span><div class="row1">${speakBtn(dp.es)}<span class="es">${esc(dp.es)}</span></div>
-    <details><summary>Voir la traduction</summary><p>${esc(dp.fr)}</p></details></div>`;
+  h += fieldCard();
   h += `<div class="arcade-card"><div class="art">${ic('bolt')}</div><div class="txt"><b>Défi éclair</b><small>60 secondes, un max de bonnes réponses${S.arcadeBest ? ` · record ${S.arcadeBest}` : ''}</small></div><button class="btn small" id="go-arcade">Jouer</button></div>`;
   if (frozeNotice) h += `<div class="notice"><b>Ta série est sauvée</b>${frozeNotice > 1 ? frozeNotice + ' gels de série ont été utilisés' : 'Un gel de série a été utilisé'} pour ton absence.</div>`;
   h += handsFreeCard() + practiceCard();
@@ -6013,6 +6041,9 @@ function bindHome() {
   const rv = $('#go-review'); if (rv) rv.onclick = () => startLesson(null);
   H.querySelectorAll('[data-practice]').forEach(b => b.onclick = () => startPractice(b.dataset.practice));
   const hf = $('#go-hf'); if (hf) hf.onclick = openHandsFree;
+  const fd = $('#field-done'); if (fd) fd.onclick = fieldDone;
+  const fo = $('#field-other'); if (fo) fo.onclick = () => { const t = T(); t.fieldPick = (t.fieldPick || 0) + 1; saveLocal(); SFX.tap(); render(); };
+  document.querySelectorAll('[data-golabels]').forEach(b => b.onclick = openLabels);
   const sp = $('#sw-speak'); if (sp) sp.onclick = () => { S.speakOn = S.speakOn === false; S.noSpeakUntil = 0; saveLocal(); render(); };
   H.querySelectorAll('[data-claim]').forEach(b => b.onclick = () => {
     const q = QUESTS.find(x => x.id === b.dataset.claim); const t = T();
@@ -6140,6 +6171,7 @@ function practiceCard() {
     <div class="practice">
       <button data-practice="errors" ${errs >= 3 ? '' : 'disabled'}>${ic('target')}Mes erreurs<small>${errs >= 3 ? errs + ' mots à reprendre' : 'Rien à reprendre'}</small></button>
       ${hasSpeech ? `<button data-practice="listen">${ic('spk')}Écoute<small>100 % audio</small></button>` : ''}
+      <button data-golabels>${ic('tag')}Étiquettes<small>À coller sur tes outils</small></button>
       ${speechAvailable() ? `<button data-practice="speak" ${S.speakOn === false ? 'disabled' : ''}>${ic('mic')}Prononciation<small>${S.speakOn === false ? 'Désactivée' : 'Au micro'}</small></button>` : ''}
     </div></div>`;
 }
@@ -6149,6 +6181,73 @@ function startPractice(kind) {
   if (kind === 'listen') return startLesson(null, false, { pool, noMatch: true, types: it => [isSentence(it) ? 'listenBuild' : 'listen'] });
   S.noSpeakUntil = 0;
   startLesson(null, false, { pool, noMatch: true, types: () => ['speak'] });
+}
+
+/* ===================== PHRASE DU JOUR AU CHANTIER =====================
+   Une phrase utile à dire VRAIMENT à l'équipe aujourd'hui. Le bouton « Je l'ai dite »
+   récompense l'usage réel, ce qu'aucun exercice ne remplace. */
+function fieldPool() { return UNITS.filter(u => u.tag === 'Chantier').flatMap(u => u.items).filter(isSentence); }
+function fieldPhrase() {
+  const pool = fieldPool(), t = T();
+  const base = Math.floor(seeded('f' + dayKey())() * pool.length);
+  return pool[(base + (t.fieldPick || 0)) % pool.length];
+}
+function fieldCard() {
+  const it = fieldPhrase(), t = T(), done = !!t.fieldDone;
+  return `<div class="field${done ? ' done' : ''}"><span class="eyebrow">${done ? 'Phrase du jour au chantier : dite !' : 'Phrase du jour au chantier'}</span>
+    <div class="row1">${speakBtn(it.es)}${speakBtn(it.es, true)}<span class="es">${esc(it.es)}</span></div>
+    <p class="fr">${esc(it.fr)}</p>
+    <div class="acts">${done ? `<span style="font-weight:800;color:var(--ok-deep)">${ic('check').replace('<svg', '<svg style="width:18px;height:18px;vertical-align:-3px"')} Bravo, tu l'as utilisée pour vrai. À demain !</span>`
+      : `<button class="btn small ok" id="field-done">Je l'ai dite à mon équipe</button><button class="btn small line" id="field-other">Une autre phrase</button>`}</div>
+    <button class="lbl-link" data-golabels>${ic('tag')} Étiquettes à coller sur tes outils</button></div>`;
+}
+function fieldDone() {
+  const t = T(); if (t.fieldDone) return;
+  checkStreak();
+  t.fieldDone = fieldPhrase().es;
+  S.stats.field = (S.stats.field || 0) + 1;
+  let xp = 10; if (boostOn()) xp *= 2; addXp(xp);
+  const today = dayKey(); if (S.lastDay !== today) { S.streak = S.lastDay === yesterday() ? S.streak + 1 : 1; S.lastDay = today; }
+  const nb = checkBadges(); save();
+  SFX.win(); confetti(80); render();
+  toast(`+${xp} XP : c'est comme ça qu'on apprend !`);
+  if (nb.length) setTimeout(() => toast('Trophée débloqué : ' + nb[0][1]), 2600);
+}
+
+/* ===================== ÉTIQUETTES À IMPRIMER ===================== */
+const LABEL_SETS = [
+  ['Outils', ['herramientas', 'manuales', 'electricas', 'medicion']],
+  ['Matériaux', ['tablaroca', 'pintura', 'carpinteria', 'ceramica', 'albanileria', 'cimientos', 'material_cantidades', 'pisos', 'ventilacion']],
+  ['Plomberie et électricité', ['plomeria', 'electricidad', 'bano_completo', 'cocina_bano']],
+  ['Maison', ['casa', 'puertas', 'objetos', 'cocinar', 'escaleras']],
+  ['Sécurité', ['seguridad', 'primeros_auxilios']],
+];
+let LB = null;
+function labelItems(k) {
+  const seen = new Set();
+  return LABEL_SETS[k][1].map(U).filter(Boolean).flatMap(u => u.items).filter(it => !isSentence(it) && !/^a /i.test(it.es) && !seen.has(it.es) && seen.add(it.es));
+}
+function openLabels() {
+  LB = { set: 0 };
+  $('#home').hidden = true; $('#tabs').hidden = true; $('#labels').hidden = false;
+  SFX.tap(); drawLabels(); window.scrollTo(0, 0);
+}
+function drawLabels() {
+  const items = labelItems(LB.set);
+  $('#labels').innerHTML = `<div class="lesson-top"><button class="x" id="lb-close" aria-label="Fermer">${ic('close')}</button><b style="font-family:var(--font-display);font-size:20px;flex:1">Étiquettes à imprimer</b></div>
+    <p style="color:var(--muted);font-weight:700;margin:12px 0 0">Imprime, découpe et colle les étiquettes sur les vrais objets : tu verras le mot espagnol chaque fois que tu prends l'outil.</p>
+    <div class="seg" style="grid-template-columns:repeat(3,1fr);margin-top:14px">${LABEL_SETS.map(([n], k) => `<button class="${k === LB.set ? 'on' : ''}" data-lbset="${k}">${n}</button>`).join('')}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;flex-wrap:wrap"><b>${items.length} étiquettes</b>
+      <button class="btn small" id="lb-print">${framed ? 'Copier la liste' : 'Imprimer'}</button></div>
+    ${framed ? `<p class="notice" style="margin-top:10px">L'impression fonctionne dans l'app du téléphone ou de l'ordinateur (entreprisesxpress.github.io/Paso-a-paso). Ici, tu peux copier la liste.</p>` : ''}
+    <div class="lbl-grid">${items.map(it => `<div class="lbl"><b>${esc(it.es)}</b><small>${esc(it.fr)}</small></div>`).join('')}</div>`;
+  $('#lb-close').onclick = () => { LB = null; $('#labels').hidden = true; showHome(); };
+  $('#labels').querySelectorAll('[data-lbset]').forEach(b => b.onclick = () => { LB.set = +b.dataset.lbset; SFX.tap(); drawLabels(); });
+  $('#lb-print').onclick = () => {
+    if (framed) { shareOut('Étiquettes ' + LABEL_SETS[LB.set][0] + ' :\n' + items.map(it => it.es + ' = ' + it.fr).join('\n'), ''); return; }
+    $('#print-area').innerHTML = items.map(it => `<div class="p-lbl"><b>${esc(it.es)}</b><small>${esc(it.fr)}</small></div>`).join('');
+    setTimeout(() => window.print(), 50);
+  };
 }
 
 /* ===================== ÉCOUTE MAINS LIBRES =====================
