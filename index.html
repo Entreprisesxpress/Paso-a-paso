@@ -471,6 +471,60 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .field.done{background:var(--ok-bg);border-color:var(--ok)}
 .field.done .eyebrow{color:var(--ok-deep)}
 .field .lbl-link{margin:2px 0 0}
+.rf-card{margin-top:12px;border-radius:20px;padding:12px 14px;background:var(--teal);color:var(--on);box-shadow:0 4px 0 var(--teal-deep)}
+.rf-top{display:flex;align-items:center;gap:12px}
+.rf-card .art,.ch-card .art{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.22);display:grid;place-items:center;flex:none}
+.rf-card .art svg,.ch-card .art svg{width:30px;height:30px}
+.rf-card .txt,.ch-card .txt{flex:1;min-width:0}
+.rf-card b,.ch-card b{font-family:var(--font-display);font-size:19px;display:block;line-height:1.1}
+.rf-card small{font-weight:700;opacity:.9}
+.rf-card .btn{--c:var(--surface);--d:var(--teal-deep);color:var(--teal-deep)}
+.rf-card .btn:disabled{opacity:.6}
+.rf-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.rf-chips button{border:2px solid rgba(255,255,255,.5);background:none;color:var(--on);border-radius:99px;padding:4px 11px;font:inherit;font-weight:800;font-size:13px}
+.rf-chips button.on{background:var(--surface);color:var(--teal-deep);border-color:var(--surface)}
+.ch-card{margin-top:12px;display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:center;border-radius:20px;padding:12px 14px;background:var(--surface);border:2px solid var(--line);border-bottom-width:5px}
+.ch-card .art{background:var(--blue-soft);color:var(--blue)}
+.ch-card small{font-weight:700;color:var(--muted)}
+.ch-card .acts{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ch-sub{color:var(--muted);font-weight:700;margin:12px 0 0}
+.ch-list{display:grid;gap:8px;margin:12px 0 24px}
+.ch-list button{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;text-align:left;background:var(--surface);border:2px solid var(--line);border-bottom-width:4px;border-radius:16px;padding:10px 12px;font:inherit;color:var(--ink)}
+.ch-list .num{width:40px;height:40px;border-radius:12px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:17px}
+.ch-list .read .num{background:var(--ok-bg);color:var(--ok-deep)}
+.ch-list .num svg{width:22px;height:22px}
+.ch-list b{font-family:var(--font-display);font-size:16px;display:block;line-height:1.2}
+.ch-list small{color:var(--muted);font-weight:700}
+.ch-page{margin-top:12px}
+.ch-page h2{font-family:var(--font-display);font-size:26px;margin:2px 0 6px;line-height:1.15}
+.ch-page p{line-height:1.55;margin:10px 0}
+.ch-page p b{color:var(--blue)}
+.gtab-wrap{overflow-x:auto;margin:12px 0;border-radius:14px;border:2px solid var(--line)}
+.gtab{width:100%;border-collapse:collapse;font-size:15px;background:var(--surface)}
+.gtab th{background:var(--blue-soft);color:var(--blue);text-align:left;padding:8px 10px;font-family:var(--font-display);font-size:14px}
+.gtab td{padding:7px 10px;border-top:1px solid var(--line);vertical-align:top}
+.gtab.lead td:first-child,.vtab td:first-child{color:var(--muted);font-weight:700}
+.ch-ex{margin-top:14px;background:var(--sunk);border-radius:16px;padding:10px 12px}
+.ch-nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0 24px}
+.vb-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:12px 0 24px}
+.vb-list button{text-align:left;background:var(--surface);border:2px solid var(--line);border-bottom-width:4px;border-radius:14px;padding:8px 10px;font:inherit;color:var(--ink);display:grid;gap:1px}
+.vb-list b{font-family:var(--font-display);font-size:17px}
+.vb-list small{color:var(--muted);font-weight:700;font-size:13px}
+.vk{font-size:11px;font-weight:800;color:var(--pink);text-transform:uppercase;letter-spacing:.04em}
+.vb-head{display:flex;gap:12px;align-items:center;margin-top:14px}
+.vb-head h2{font-family:var(--font-display);font-size:30px;margin:0;line-height:1}
+.vb-head small{color:var(--muted);font-weight:700}
+.vb-forms{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.vb-forms > div{background:var(--sunk);border-radius:14px;padding:8px 10px;display:grid}
+.vt{margin-top:14px}
+.vt > b{font-family:var(--font-display);font-size:18px;display:block}
+.vt > small{color:var(--muted);font-weight:700}
+.vtab{margin-top:6px;border:2px solid var(--line);border-radius:14px;overflow:hidden;border-collapse:separate;border-spacing:0}
+.vtab tr:first-child td{border-top:0}
+.vtab td:first-child{width:45%}
+.vf{background:none;border:0;padding:0;font:inherit;font-weight:800;color:var(--ink);text-align:left;cursor:pointer;font-size:16px}
+.vf:active{color:var(--blue)}
+.vk-none{color:var(--muted);font-weight:700;margin:10px 0}
 .lbl-link{display:flex;align-items:center;gap:6px;margin:12px auto 0;background:none;border:0;color:var(--muted);font:inherit;font-weight:800;font-size:14px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .lbl-link svg{width:16px;height:16px}
 .lbl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
@@ -502,6 +556,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 <div class="wrap" id="story" hidden></div>
 <div class="wrap" id="audio" hidden></div>
 <div class="wrap" id="labels" hidden></div>
+<div class="wrap" id="cahier" hidden></div>
 <div id="print-area" aria-hidden="true"></div>
 <div id="layer"></div>
 
@@ -6001,6 +6056,202 @@ const UNITS = [
     {es:'Se va a congelar la tubería', fr:'La tuyauterie va geler'},
     {es:'Prende la calefacción en la obra', fr:'Allume le chauffage sur le chantier'},
   ]},
+  { id:'frutas_verduras', es:'Frutas y verduras', fr:'Fruits et légumes', tag:'Base', color:'teal', items:[
+    {es:'la zanahoria', fr:'la carotte'},
+    {es:'la cebolla', fr:"l'oignon"},
+    {es:'el ajo', fr:"l'ail"},
+    {es:'la lechuga', fr:'la laitue'},
+    {es:'la papa', fr:'la pomme de terre', note:'Au Mexique : « la papa », jamais « patata ».'},
+    {es:'la sandía', fr:"le melon d'eau"},
+    {es:'la piña', fr:"l'ananas"},
+    {es:'las fresas', fr:'les fraises'},
+    {es:'la guayaba', fr:'la goyave'},
+    {es:'la calabaza', fr:'la courge'},
+    {es:'Me gustan las fresas', fr:"J'aime les fraises"},
+    {es:'Sin cebolla, por favor', fr:"Sans oignon, s'il vous plaît"},
+  ]},
+  { id:'camping', es:'Acampar', fr:'Faire du camping', tag:'Voyage', color:'teal', items:[
+    {es:'acampar', fr:'faire du camping'},
+    {es:'la casa de campaña', fr:'la tente', note:'Au Mexique : « casa de campaña » ; « tienda de campaña » se dit surtout en Espagne.'},
+    {es:'la bolsa de dormir', fr:'le sac de couchage'},
+    {es:'la fogata', fr:'le feu de camp'},
+    {es:'el bosque', fr:'la forêt'},
+    {es:'la linterna', fr:'la lampe de poche'},
+    {es:'los cerillos', fr:'les allumettes'},
+    {es:'¿Se puede acampar aquí?', fr:'Peut-on camper ici ?'},
+    {es:'Armamos la casa de campaña', fr:'On monte la tente'},
+    {es:'Prendemos una fogata', fr:'On allume un feu de camp'},
+    {es:'Escuché un animal afuera', fr:"J'ai entendu un animal dehors"},
+    {es:'Apaguen bien la fogata', fr:'Éteignez bien le feu'},
+  ]},
+  { id:'chiapas', es:'Chiapas', fr:'Le Chiapas', tag:'Voyage', color:'blue', items:[
+    {es:'las ruinas de Palenque', fr:'les ruines de Palenque'},
+    {es:'el cañón del Sumidero', fr:'le canyon du Sumidero'},
+    {es:'el café de Chiapas', fr:'le café du Chiapas'},
+    {es:'el textil bordado', fr:'le textile brodé'},
+    {es:'las comunidades indígenas', fr:'les communautés autochtones'},
+    {es:'la neblina', fr:'la brume'},
+    {es:'Hace fresco en las montañas', fr:'Il fait frais dans les montagnes'},
+    {es:'¿Puedo tomarle una foto?', fr:'Puis-je vous prendre en photo ?', note:'Dans les communautés autochtones, on demande toujours avant de photographier une personne.'},
+    {es:'El camino tiene muchas curvas', fr:'La route a beaucoup de virages'},
+    {es:'Vamos en lancha por el cañón', fr:'On va en bateau dans le canyon'},
+    {es:'Las cascadas de Agua Azul son preciosas', fr:"Les chutes d'Agua Azul sont magnifiques"},
+    {es:'Compré una blusa bordada a mano', fr:"J'ai acheté une blouse brodée à la main"},
+  ]},
+  { id:'san_miguel', es:'San Miguel y Guanajuato', fr:'San Miguel et Guanajuato', tag:'Voyage', color:'pink', items:[
+    {es:'el callejón', fr:'la ruelle'},
+    {es:'la ciudad colonial', fr:'la ville coloniale'},
+    {es:'la parroquia', fr:"l'église paroissiale"},
+    {es:'las momias de Guanajuato', fr:'les momies de Guanajuato'},
+    {es:'el callejón del Beso', fr:'la ruelle du Baiser', note:"Ruelle si étroite, à Guanajuato, que deux balcons se touchent presque ; une légende d'amour s'y rattache."},
+    {es:'la callejoneada', fr:'la promenade musicale dans les ruelles', note:'Le soir, on suit des musiciens étudiants en costume (la estudiantina) dans les ruelles.'},
+    {es:'las calles empedradas', fr:'les rues pavées'},
+    {es:'el mirador', fr:'le belvédère'},
+    {es:'Subimos al mirador', fr:'On monte au belvédère'},
+    {es:'Las calles son muy empinadas', fr:'Les rues sont très en pente'},
+    {es:'Hay muchos artistas extranjeros', fr:"Il y a beaucoup d'artistes étrangers"},
+    {es:'¡Qué colores tan bonitos!', fr:'Quelles belles couleurs !'},
+  ]},
+  { id:'los_cabos', es:'Baja California', fr:'La Basse-Californie', tag:'Voyage', color:'sun', items:[
+    {es:'el desierto', fr:'le désert'},
+    {es:'los cactus gigantes', fr:'les cactus géants'},
+    {es:'el traje de neopreno', fr:'la combinaison isothermique'},
+    {es:'la ballena gris', fr:'la baleine grise', note:'De janvier à mars, les baleines grises viennent mettre bas dans les lagunes de Basse-Californie.'},
+    {es:'el Arco de Cabo San Lucas', fr:"l'Arche de Cabo San Lucas"},
+    {es:'los lobos marinos', fr:'les otaries'},
+    {es:'el Mar de Cortés', fr:'la mer de Cortés'},
+    {es:'Las olas están muy grandes', fr:'Les vagues sont très grosses'},
+    {es:'¿Dónde rentan tablas de surf?', fr:'Où loue-t-on des planches de surf ?'},
+    {es:'Quiero aprender a bucear', fr:'Je veux apprendre la plongée'},
+    {es:'No se puede nadar en esta playa', fr:'On ne peut pas se baigner sur cette plage'},
+    {es:'Vimos lobos marinos en el arco', fr:"On a vu des otaries près de l'arche"},
+  ]},
+  { id:'accidente_carro', es:'Un problema en la carretera', fr:'Un pépin sur la route', tag:'Voyage', color:'blue', items:[
+    {es:'el choque', fr:"l'accrochage, la collision"},
+    {es:'la llanta ponchada', fr:'le pneu crevé'},
+    {es:'el tránsito', fr:'la police de la circulation', note:'Au Mexique, on appelle souvent la police routière « el tránsito » ou « los de tránsito ».'},
+    {es:'la multa', fr:'la contravention'},
+    {es:'el seguro del carro', fr:"l'assurance auto"},
+    {es:'la licencia de manejo', fr:'le permis de conduire'},
+    {es:'la llanta de refacción', fr:'le pneu de secours'},
+    {es:'Se me ponchó una llanta', fr:"J'ai crevé un pneu"},
+    {es:'Hubo un choque', fr:'Il y a eu un accrochage'},
+    {es:'¿Hay alguien herido?', fr:'Y a-t-il un blessé ?'},
+    {es:'Voy a llamar al seguro', fr:"Je vais appeler l'assurance"},
+    {es:'¿Me permite su licencia?', fr:'Puis-je voir votre permis ?'},
+  ]},
+  { id:'lavanderia', es:'Lavar la ropa', fr:'Faire le lavage', tag:'Quotidien', color:'blue', items:[
+    {es:'la lavadora', fr:'la laveuse'},
+    {es:'la secadora', fr:'la sécheuse'},
+    {es:'el detergente', fr:'le détersif'},
+    {es:'el suavizante', fr:"l'assouplissant"},
+    {es:'el tendedero', fr:'la corde à linge'},
+    {es:'la plancha', fr:'le fer à repasser'},
+    {es:'la ropa sucia', fr:'le linge sale'},
+    {es:'Pon la ropa en la lavadora', fr:'Mets le linge dans la laveuse'},
+    {es:'¿Ya está seca la ropa?', fr:'Le linge est-il sec ?'},
+    {es:'Se encogió mi camisa', fr:'Ma chemise a rétréci'},
+    {es:'Separa la ropa blanca', fr:'Sépare le linge blanc'},
+    {es:'¿Me plancha esta camisa?', fr:'Pouvez-vous repasser cette chemise ?'},
+  ]},
+  { id:'noticias', es:'Las noticias', fr:'Les nouvelles', tag:'Quotidien', color:'teal', items:[
+    {es:'las noticias', fr:'les nouvelles'},
+    {es:'el periódico', fr:'le journal'},
+    {es:'el gobierno', fr:'le gouvernement'},
+    {es:'las elecciones', fr:'les élections'},
+    {es:'votar', fr:'voter'},
+    {es:'el presidente', fr:'le président'},
+    {es:'la economía', fr:"l'économie"},
+    {es:'¿Viste las noticias?', fr:'As-tu vu les nouvelles ?'},
+    {es:'Subió el precio de la gasolina', fr:"Le prix de l'essence a monté"},
+    {es:'Hubo un temblor en el sur', fr:'Il y a eu un tremblement de terre dans le sud'},
+    {es:'No me gusta hablar de política', fr:"Je n'aime pas parler de politique"},
+    {es:'¿Qué dicen las noticias?', fr:'Que disent les nouvelles ?'},
+  ]},
+  { id:'departamento', es:'Rentar un departamento', fr:'Louer un appartement', tag:'Quotidien', color:'pink', items:[
+    {es:'el casero', fr:'le propriétaire (le proprio)'},
+    {es:'el mes de depósito', fr:'le mois de dépôt'},
+    {es:'el contrato de arrendamiento', fr:'le bail'},
+    {es:'el elevador', fr:"l'ascenseur"},
+    {es:'amueblado', fr:'meublé'},
+    {es:'los servicios incluidos', fr:'les services inclus'},
+    {es:'¿Cuánto es la renta?', fr:"C'est combien, le loyer ?"},
+    {es:'¿Se aceptan mascotas?', fr:'Les animaux sont-ils acceptés ?'},
+    {es:'¿Está incluida la luz?', fr:"L'électricité est-elle incluse ?"},
+    {es:'El calentador no funciona', fr:'Le chauffe-eau ne marche pas'},
+    {es:'Me cambio el primero de mes', fr:'Je déménage le premier du mois'},
+    {es:'¿Puedo ver el departamento?', fr:"Je peux visiter l'appartement ?"},
+  ]},
+  { id:'relativos', es:'Que, quien, donde', fr:'Qui, que, où', tag:'Grammaire', color:'teal', items:[
+    {es:'el hombre que trabaja aquí', fr:"l'homme qui travaille ici"},
+    {es:'la casa donde vivo', fr:'la maison où je vis'},
+    {es:'la persona con quien hablé', fr:"la personne avec qui j'ai parlé"},
+    {es:'lo que quieras', fr:'ce que tu veux'},
+    {es:'El taladro que compré no sirve', fr:"La perceuse que j'ai achetée ne marche pas"},
+    {es:'Es el cliente que llamó ayer', fr:"C'est le client qui a appelé hier"},
+    {es:'La obra donde trabajamos está lejos', fr:'Le chantier où on travaille est loin'},
+    {es:'El señor con quien hablaste es el dueño', fr:'Le monsieur avec qui tu as parlé est le propriétaire'},
+    {es:'Ese es el carro del que te hablé', fr:"C'est l'auto dont je t'ai parlé"},
+    {es:'El día que llegaste', fr:'Le jour où tu es arrivé', note:'« Le jour où » se dit « el día que », jamais « el día donde ».'},
+    {es:'Todo lo que necesitas está aquí', fr:'Tout ce dont tu as besoin est ici'},
+    {es:'Los que terminen pueden irse', fr:'Ceux qui finissent peuvent partir'},
+  ]},
+  { id:'deseos', es:'¡Que te vaya bien!', fr:'Les souhaits', tag:'Grammaire', color:'pink', items:[
+    {es:'¡Que te vaya muy bien en tu nuevo trabajo!', fr:'Bonne chance dans ton nouvel emploi !'},
+    {es:'¡Que descansen!', fr:'Reposez-vous bien ! (à plusieurs)'},
+    {es:'¡Que tengas buen día!', fr:'Bonne journée !'},
+    {es:'¡Que se diviertan!', fr:'Amusez-vous bien !'},
+    {es:'¡Que les vaya bien!', fr:'Bonne chance à vous tous !'},
+    {es:'Ojalá que llegue a tiempo', fr:"Pourvu qu'il arrive à temps"},
+    {es:'Ojalá que no llueva mañana', fr:"Pourvu qu'il ne pleuve pas demain"},
+    {es:'¡Que cumplas muchos más!', fr:'Que tu en fêtes encore beaucoup !'},
+    {es:'¡Que tengas buen viaje!', fr:'Bon voyage !'},
+    {es:'¡Que Dios te bendiga!', fr:'Que Dieu te bénisse !', note:'Formule très courante au Mexique, même chez les gens peu pratiquants.'},
+    {es:'Espero que te guste', fr:"J'espère que ça te plaît"},
+    {es:'¡Que duermas bien!', fr:'Dors bien !'},
+  ]},
+  { id:'echar_mano', es:'¿Me echas la mano?', fr:'Un coup de main entre collègues', tag:'Chantier', color:'pink', items:[
+    {es:'echar la mano', fr:'donner un coup de main'},
+    {es:'sostener', fr:'tenir, soutenir'},
+    {es:'agarrar', fr:'prendre, attraper'},
+    {es:'aguantar', fr:'tenir, endurer'},
+    {es:'jalar', fr:'tirer'},
+    {es:'empujar', fr:'pousser'},
+    {es:'¿Me echas la mano?', fr:'Tu me donnes un coup de main ?'},
+    {es:'Préstame tu nivel', fr:'Prête-moi ton niveau'},
+    {es:'Aguanta tantito', fr:'Attends une petite seconde'},
+    {es:'Jálale más fuerte', fr:'Tire plus fort'},
+    {es:'A la una, a las dos, a las tres', fr:'À un, à deux, à trois'},
+    {es:'¿Quién agarró mi martillo?', fr:'Qui a pris mon marteau ?'},
+  ]},
+  { id:'sotano', es:'El sótano', fr:'Le sous-sol', tag:'Chantier', color:'blue', items:[
+    {es:'la infiltración', fr:"l'infiltration"},
+    {es:'la mancha de humedad', fr:"la tache d'humidité"},
+    {es:'impermeabilizar', fr:'imperméabiliser'},
+    {es:'la bomba sumergible', fr:'la pompe de puisard'},
+    {es:'el drenaje perimetral', fr:'le drain français', note:'Au Québec, on dit « drain français » ; en espagnol, « drenaje perimetral ».'},
+    {es:'el deshumidificador', fr:'le déshumidificateur'},
+    {es:'el muro de cimentación', fr:'le mur de fondation'},
+    {es:'Hay agua en el sótano', fr:"Il y a de l'eau au sous-sol"},
+    {es:'Huele a humedad', fr:"Ça sent l'humidité"},
+    {es:'Hay que sacar todo el moho', fr:'Il faut enlever toute la moisissure'},
+    {es:'Pongan el plástico contra el muro de concreto', fr:'Posez le polythène contre le mur de béton'},
+    {es:'Esa fisura deja pasar el agua', fr:"Cette fissure laisse passer l'eau"},
+  ]},
+  { id:'terraza', es:'La terraza', fr:'La galerie (le patio)', tag:'Chantier', color:'sun', items:[
+    {es:'la terraza de madera', fr:'la galerie en bois'},
+    {es:'la madera tratada', fr:'le bois traité'},
+    {es:'el poste', fr:'le poteau'},
+    {es:'la zapata', fr:'la semelle (le pilier de béton)'},
+    {es:'los tornillos para exterior', fr:'les vis extérieures'},
+    {es:'la pérgola', fr:'la pergola'},
+    {es:'Deja un espacio entre las tablas', fr:'Laisse un espace entre les planches'},
+    {es:'Los postes van cada cuatro pies', fr:'Les poteaux vont aux quatre pieds'},
+    {es:'Tiene que quedar a nivel', fr:'Il faut que ce soit de niveau'},
+    {es:'Pon el barandal antes de pintar', fr:'Pose le garde-corps avant de peindre'},
+    {es:'El cliente quiere una pérgola', fr:'Le client veut une pergola'},
+    {es:'Hay que sellar la madera cada año', fr:'Il faut sceller le bois chaque année'},
+  ]},
 ];
 /* Guide : grammaire et prononciation, une unité à la fois */
 const TIPS = {
@@ -6248,26 +6499,40 @@ const TIPS = {
   tablero_electrico: [['Se botó', '« Se botó la pastilla » = le disjoncteur a sauté. Expression très mexicaine.']],
   deficiencias: [['Faltar + infinitif', '« Falta retocar la pintura » = il reste à retoucher la peinture. Parfait pour la liste de déficiences.']],
   calefaccion: [['Prender / apagar', 'Au Mexique, on « prende » (allume) et on « apaga » (éteint) le chauffage, la lumière, la machine.']],
+  frutas_verduras: [['Limón = lime', "Au Mexique, « limón » désigne la petite lime verte qu'on presse sur tout. Le citron jaune est rare."]],
+  camping: [['Prender / apagar', '« Prender una fogata » = allumer un feu. « Apaguen bien la fogata » : la forme ustedes, pour tout le groupe.']],
+  chiapas: [['Le respect avant la photo', '« ¿Puedo tomarle una foto? » : toujours demander. Beaucoup de gens des communautés préfèrent ne pas être photographiés.']],
+  san_miguel: [['Empinado', '« Empinado » = en pente raide, escarpé. Guanajuato est construite dans un ravin : de bons souliers !']],
+  los_cabos: [['Aprender a', '« Aprender a » + infinitif : « Quiero aprender a bucear », « Estoy aprendiendo a hablar español ».']],
+  accidente_carro: [['Ponchar', "« Se me ponchó una llanta » = j'ai crevé un pneu. Le petit garage qui répare les pneus, c'est « la vulcanizadora »."]],
+  lavanderia: [['Se encogió', "« Se encogió » = ça a rétréci. Encore le « se » de l'accident : ce n'est la faute de personne !"]],
+  noticias: [['Temblor', "Au Mexique, « temblor » est le mot de tous les jours pour un tremblement de terre, petit ou gros (« el temblor del 85 »). « Sismo » est le terme des nouvelles ; « terremoto » sert pour un séisme dévastateur."]],
+  departamento: [['Cambiarse', '« Me cambio » = je déménage (au Mexique). « Mudarse » se comprend aussi.']],
+  relativos: [['Que, partout', '« Que » sert pour les personnes ET les choses : el hombre que…, el taladro que… Après une préposition, pour une personne : « con quien ».']],
+  deseos: [['Que + subjonctif', '« ¡Que te vaya bien! » est la formule pour se quitter. Réponse : « Igualmente » (pareillement).']],
+  echar_mano: [['Tantito', '« Aguanta tantito » = attends une petite seconde. Pour « tiens-le », on dit « aguántalo ». « Tantito » est un mot très mexicain pour « un tout petit peu ».']],
+  sotano: [['Huele a…', "« Huele a humedad » = ça sent l'humidité. « Huele a gas » : là, on sort tout de suite !"]],
+  terraza: [['Cada', '« Cada cuatro pies » = aux quatre pieds (tous les quatre pieds). « Cada año » = chaque année.']],
   hotel: [['Ne marche pas', "« No funciona » = ça ne marche pas. Très utile : « No funciona la regadera », « No funciona el wifi »."]],
 };
 /* Ordre d'apprentissage : la base et le voyage d'abord ; sur le chantier, les consignes
    et la sécurité avant les outils et les matériaux. Le tableau UNITS est trié selon cette liste. */
 const ORDER = [
   // Base
-  'saludos','cortesia','presentarse','alfabeto','pronombres_pers','conversacion','articulos','demostrativos','tiempo','hora','adverbios_tiempo','lugares','preguntas','palabras_clave','verbos','verbos_utiles','verbos_movimiento','familia','semana','dias_relativos','estaciones','colores','describir','formas_tamanos','opuestos','numeros2','numeros3','cantidades','meses','objetos','de_que_es',
+  'saludos','cortesia','presentarse','alfabeto','pronombres_pers','conversacion','articulos','demostrativos','tiempo','hora','adverbios_tiempo','lugares','preguntas','palabras_clave','verbos','verbos_utiles','verbos_movimiento','familia','semana','dias_relativos','estaciones','colores','describir','formas_tamanos','opuestos','numeros2','numeros3','cantidades','meses','objetos','de_que_es','frutas_verduras',
   // Voyage
-  'viaje','maleta','aeropuerto','abordar','avion','migracion','celular_viaje','ciudad','direcciones','cdmx','transporte','uber','autobus','tren_ferry','dinero','banco','restaurante','desayuno','cafeteria','reservar','restaurante2','comida_calle','mariscos','hotel','hospedaje','servicios','compras','mercado','artesanias','super','tiendita','playa','playa2','playa_seguridad','vallarta','clima_tropical',
-  'turismo','fotos','cultura','museo','ruinas','oaxaca','naturaleza','cenotes','aventura','noche','bebidas','espectaculos','fiesta','carro','rentar','salud','farmacia','emergencias','problemas_viaje','quejas','experiencias','regreso',
+  'viaje','maleta','aeropuerto','abordar','avion','migracion','celular_viaje','ciudad','direcciones','cdmx','transporte','uber','autobus','tren_ferry','dinero','banco','restaurante','desayuno','cafeteria','reservar','restaurante2','comida_calle','mariscos','hotel','hospedaje','servicios','compras','mercado','artesanias','super','tiendita','playa','playa2','playa_seguridad','vallarta','los_cabos','clima_tropical',
+  'turismo','fotos','cultura','museo','ruinas','oaxaca','chiapas','san_miguel','naturaleza','cenotes','aventura','camping','noche','bebidas','espectaculos','fiesta','carro','rentar','accidente_carro','salud','farmacia','emergencias','problemas_viaje','quejas','experiencias','regreso',
   // Quotidien
-  'sentir','comida','cocinar','cocina_mexicana','casa','mudanza','escuela','rutina','quehaceres','amistad','pareja','ninos','telefono','mensajes','llamada_formal','planes','emociones','opiniones','ropa','cuerpo','dentista','gripa','peluqueria','frecuencia','pasatiempos','musica','ocio','deporte','bienestar','invierno_quebec','tecnologia','taller','compras_linea','paqueteria','animales','mascotas',
+  'sentir','comida','cocinar','cocina_mexicana','casa','mudanza','departamento','escuela','rutina','quehaceres','lavanderia','amistad','pareja','ninos','telefono','mensajes','llamada_formal','planes','emociones','opiniones','ropa','cuerpo','dentista','gripa','peluqueria','frecuencia','pasatiempos','musica','ocio','deporte','bienestar','invierno_quebec','tecnologia','noticias','taller','compras_linea','paqueteria','animales','mascotas',
   'tradiciones','dia_muertos','navidad','celebraciones','trabajo','dinero_personal','tramites','vida_quebec','expresiones',
   // Grammaire
   'ser_estar','que_cual','lo_que','estado_participio','presente','presente_er','irregulares','tener','tener_expr','gustar','como_gustar','poder_querer','reflexivos','posesivos','preposiciones','adjetivos','diminutivos','comparativos','superlativos','muy_mucho','gerundio','pasado_progresivo','perifrasis',
-  'futuro','pasado','preterito_el','pret_irreg','presente_perfecto','imperfecto','hace_tiempo','negativos','por_para','ordinales','prohibido','pronombres','pronombres_dobles','imperativo_tu','usted','ustedes_imp','usted_neg','conectores','se_impersonal','se_accidental','futuro_simple','condicional','si_condicional','subjuntivo','subjuntivo2',
+  'futuro','pasado','preterito_el','pret_irreg','presente_perfecto','imperfecto','hace_tiempo','negativos','por_para','ordinales','prohibido','pronombres','pronombres_dobles','imperativo_tu','usted','ustedes_imp','usted_neg','conectores','relativos','se_impersonal','se_accidental','futuro_simple','condicional','si_condicional','subjuntivo','subjuntivo2','deseos',
   // Chantier : d'abord parler avec l'équipe, ensuite les outils et les matériaux
-  'ordenes','junta','seguridad','altura','primeros_auxilios','clima_obra','planificar','problemas','evaluar','contratar','nomina','cliente','cotizacion','vecinos','verbos_obra','oficios',
-  'herramientas','manuales','electricas','medidas','medicion','demolicion','tablaroca','plomeria','electricidad','tablero_electrico','pintura','carpinteria','puertas','ventanas','escaleras','ceramica','albanileria','cimientos','pisos',
-  'ventilacion','calefaccion','aislamiento','cocina_bano','bano_completo','exterior','techo','jardin','limpieza','entrega','ferreteria','material_cantidades','inspeccion','deficiencias','pendientes',
+  'ordenes','junta','seguridad','altura','primeros_auxilios','clima_obra','planificar','problemas','evaluar','contratar','nomina','cliente','cotizacion','vecinos','verbos_obra','echar_mano','oficios',
+  'herramientas','manuales','electricas','medidas','medicion','demolicion','tablaroca','plomeria','electricidad','tablero_electrico','pintura','carpinteria','puertas','ventanas','escaleras','ceramica','albanileria','cimientos','sotano','pisos',
+  'ventilacion','calefaccion','aislamiento','cocina_bano','bano_completo','exterior','techo','terraza','jardin','limpieza','entrega','ferreteria','material_cantidades','inspeccion','deficiencias','pendientes',
 ];
 const rankOf = u => { const k = ORDER.indexOf(u.id); return k < 0 ? ORDER.length : k; };
 UNITS.sort((a, b) => rankOf(a) - rankOf(b));
@@ -6663,6 +6928,7 @@ function render() {
    pour qu'il reste court : objectif, phrase du chantier, révision, puis le parcours. */
 function practiceView() {
   let h = `<div class="tutor-hero">${mascot('happy')}<div><h2>Pratique</h2><p>Pour t'entraîner autrement : un jeu rapide, de l'audio pour l'auto ou le chantier, et tes points faibles.</p></div></div>`;
+  h += reinforceCard() + cahierCard();
   h += `<div class="arcade-card"><div class="art">${ic('bolt')}</div><div class="txt"><b>Défi éclair</b><small>60 secondes, un max de bonnes réponses${S.arcadeBest ? ` · record ${S.arcadeBest}` : ''}</small></div><button class="btn small" id="go-arcade">Jouer</button></div>`;
   h += handsFreeCard();
   h += practiceCard() || `<div class="card" style="margin-top:12px"><b style="font-family:var(--font-display);font-size:18px">Entraînement</b><p style="margin:6px 0 0;color:var(--muted);font-weight:700">Fais ta première leçon : tes erreurs, l'écoute et la prononciation apparaîtront ici.</p><button class="btn small line" data-golabels style="margin-top:10px">${ic('tag').replace('<svg', '<svg style="width:16px;height:16px;vertical-align:-3px;margin-right:4px"')}Étiquettes à imprimer</button></div>`;
@@ -6798,6 +7064,8 @@ function bindHome() {
   const fd = $('#field-done'); if (fd) fd.onclick = fieldDone;
   const fo = $('#field-other'); if (fo) fo.onclick = () => { const t = T(); t.fieldPick = (t.fieldPick || 0) + 1; saveLocal(); SFX.tap(); render(); };
   document.querySelectorAll('[data-golabels]').forEach(b => b.onclick = openLabels);
+  const rf = $('#go-rf'); if (rf) rf.onclick = startReinforce;
+  document.querySelectorAll('[data-rf]').forEach(b => b.onclick = () => { try { localStorage.setItem(RF_KEY, b.dataset.rf); } catch (e) {} SFX.tap(); render(); });
   const sp = $('#sw-speak'); if (sp) sp.onclick = () => { S.speakOn = S.speakOn === false; S.noSpeakUntil = 0; saveLocal(); render(); };
   H.querySelectorAll('[data-claim]').forEach(b => b.onclick = () => {
     const q = QUESTS.find(x => x.id === b.dataset.claim); const t = T();
@@ -6971,7 +7239,7 @@ function fieldDone() {
 /* ===================== ÉTIQUETTES À IMPRIMER ===================== */
 const LABEL_SETS = [
   ['Outils', ['herramientas', 'manuales', 'electricas', 'medicion']],
-  ['Matériaux', ['tablaroca', 'pintura', 'carpinteria', 'ceramica', 'albanileria', 'cimientos', 'material_cantidades', 'pisos', 'ventilacion', 'aislamiento', 'demolicion', 'techo', 'ventanas']],
+  ['Matériaux', ['tablaroca', 'pintura', 'carpinteria', 'ceramica', 'albanileria', 'cimientos', 'material_cantidades', 'pisos', 'ventilacion', 'aislamiento', 'demolicion', 'techo', 'ventanas', 'sotano', 'terraza']],
   ['Plomberie et électricité', ['plomeria', 'electricidad', 'bano_completo', 'cocina_bano', 'tablero_electrico', 'calefaccion']],
   ['Maison', ['casa', 'puertas', 'objetos', 'cocinar', 'escaleras']],
   ['Sécurité', ['seguridad', 'primeros_auxilios', 'altura']],
@@ -7003,6 +7271,285 @@ function drawLabels() {
     setTimeout(() => window.print(), 50);
   };
 }
+
+/* ===================== RENFORCER MES MOTS =====================
+   Des leçons faites UNIQUEMENT de mots déjà vus, les plus fragiles d'abord. Rejouable à volonté,
+   indépendamment de la révision « due » (qui, elle, attend que l'oubli guette). */
+const RF_KEY = 'pasoapaso.rf';
+const rfTrack = () => { try { return localStorage.getItem(RF_KEY) || 'all'; } catch (e) { return 'all'; } };
+const learnedIn = tr => seenItems().filter(it => tr === 'all' || (U(it.unit) && U(it.unit).tag === tr));
+function reinforceCard() {
+  const all = seenItems().length;
+  let tr = rfTrack(); if (tr !== 'all' && learnedIn(tr).length < 4) tr = 'all';
+  const n = learnedIn(tr).length;
+  const chips = [['all', 'Tout']].concat(TRACKS.map(([t]) => [t, t])).filter(([k]) => k === 'all' || learnedIn(k).length >= 4);
+  return `<div class="rf-card"><div class="rf-top"><div class="art">${ic('target')}</div><div class="txt"><b>Renforcer mes mots</b>
+      <small>${all >= 4 ? `${n} mots appris · les plus fragiles d'abord` : 'Fais ta première leçon pour débloquer'}</small></div>
+      <button class="btn small" id="go-rf" ${n >= 4 ? '' : 'disabled'}>Pratiquer</button></div>
+    ${chips.length > 2 ? `<div class="rf-chips">${chips.map(([k, l]) => `<button class="${k === tr ? 'on' : ''}" data-rf="${k}">${l}</button>`).join('')}</div>` : ''}</div>`;
+}
+function startReinforce() {
+  let tr = rfTrack(); if (tr !== 'all' && learnedIn(tr).length < 4) tr = 'all';
+  const weak = learnedIn(tr).sort((a, b) => weakness(a) - weakness(b)).slice(0, 24);
+  startLesson(null, false, { pool: shuffle(weak).slice(0, 10) });
+}
+
+/* ===================== CAHIER D'ÉCOLE =====================
+   Grammaire à lire (chapitres avec tableaux et exemples à écouter) et tables de conjugaison.
+   Espagnol d'Amérique latine : pas de « vosotros », « ustedes » partout. */
+const CAHIER = [
+ {id:'genre', t:"Le genre et les articles", s:"el, la, los, las", b:[
+  {p:"En espagnol, chaque nom est masculin ou féminin, comme en français — mais pas toujours le même !"},
+  {t:['', 'Masculin', 'Féminin'], r:[['le, la', 'el', 'la'], ['les', 'los', 'las'], ['un, une', 'un', 'una'], ['des', 'unos', 'unas']]},
+  {p:"<b>Règle de base :</b> -o = masculin (el martillo), -a = féminin (la casa). Les mots en -ción et -dad sont féminins : la instalación, la ciudad."},
+  {p:"<b>Pièges :</b> el problema, el día, el mapa, el sistema sont masculins ; la mano, la foto, la radio sont féminins. « El agua » est féminin, mais prend « el » pour la sonorité : el agua fría."},
+  {p:"<b>Pas le même genre qu'en français :</b> la leche (le lait), la sal (le sel), la sangre (le sang), el color (la couleur), el dolor (la douleur), el equipo (l'équipe)."},
+  {p:"<b>Pluriel :</b> voyelle + s (casas), consonne + es (paredes, camiones). -z devient -ces : el lápiz → los lápices."},
+  {ex:[['el martillo y la sierra', 'le marteau et la scie'], ['los clavos y las tablas', 'les clous et les planches'], ['El agua está fría', "L'eau est froide"], ['Hay un problema', 'Il y a un problème']]}]},
+ {id:'pronoms', t:"Les pronoms sujets et « usted »", s:"yo, tú, usted, ustedes", b:[
+  {t:['Espagnol', 'Français', 'Note'], r:[['yo', 'je', ''], ['tú', 'tu', 'amis, famille, collègues'], ['él / ella', 'il / elle', ''], ['usted', 'vous (une personne)', 'client, patron, inconnu ; se conjugue comme « él »'], ['nosotros / nosotras', 'nous', ''], ['ellos / ellas', 'ils / elles', ''], ['ustedes', 'vous (plusieurs)', 'toujours, même entre amis ; se conjugue comme « ellos »']]},
+  {p:"En Amérique latine, « vosotros » n'existe pas : à plusieurs, on dit toujours « ustedes ». C'est pour ça que l'app ne l'enseigne pas."},
+  {p:"Le pronom sujet est souvent omis : la terminaison du verbe dit déjà qui parle. « Trabajo » = je travaille. On le garde pour insister : « Yo trabajo, tú descansas »."},
+  {p:"<b>Tu ou vous sur le chantier ?</b> Entre collègues, « tú » est normal. Avec un client ou une personne âgée, commence par « usted »."},
+  {ex:[['¿Usted es el dueño?', 'Êtes-vous le propriétaire ?'], ['¿Tú eres José?', 'Tu es José ?'], ['Ustedes trabajan mañana', 'Vous travaillez demain'], ['Trabajo aquí', 'Je travaille ici']]}]},
+ {id:'ser_estar', t:"Ser ou estar ?", s:"Les deux verbes « être »", b:[
+  {p:"Truc : <b>SER</b> = ce que la chose EST (identité, caractéristique). <b>ESTAR</b> = comment ou où elle SE TROUVE (état, lieu, résultat)."},
+  {t:['SER', 'ESTAR'], r:[['Identité : Soy Marc', 'Lieu : Estoy en la obra'], ['Origine : Soy de Quebec', 'État passager : Estoy cansado'], ['Métier : Es plomero', 'Résultat : La pared está pintada'], ['Description : La casa es grande', 'Action en cours : Estoy trabajando'], ["Heure, date : Son las tres", "Humeur : Está contento"], ["Lieu d'un événement : La junta es aquí", "Goût d'un plat : La sopa está rica"]]},
+  {p:"<b>Même adjectif, autre sens :</b> « Es listo » (il est intelligent) / « Está listo » (il est prêt). « Es aburrido » (il est ennuyant) / « Está aburrido » (il s'ennuie). « Es malo » (il est méchant) / « Está malo » (il est malade, ou c'est mauvais)."},
+  {p:"<b>Piège :</b> l'endroit où se trouve une chose prend toujours estar (El taladro está en el carro). Mais l'endroit où a lieu un événement prend ser (La fiesta es en mi casa)."},
+  {t:['', 'ser', 'estar'], r:[['yo', 'soy', 'estoy'], ['tú', 'eres', 'estás'], ['él / usted', 'es', 'está'], ['nosotros', 'somos', 'estamos'], ['ellos / ustedes', 'son', 'están']]},
+  {ex:[['Soy contratista', 'Je suis entrepreneur'], ['Estoy en la obra', 'Je suis sur le chantier'], ['La cocina ya está lista', 'La cuisine est déjà prête'], ['Es muy listo', 'Il est très intelligent']]}]},
+ {id:'present', t:"Le présent", s:"-ar, -er, -ir et les verbes en botte", b:[
+  {p:"Trois familles selon la fin de l'infinitif : -ar, -er, -ir. On enlève la terminaison et on ajoute :"},
+  {t:['', 'hablar (parler)', 'comer (manger)', 'vivir (vivre)'], r:[['yo', 'hablo', 'como', 'vivo'], ['tú', 'hablas', 'comes', 'vives'], ['él / usted', 'habla', 'come', 'vive'], ['nosotros', 'hablamos', 'comemos', 'vivimos'], ['ellos / ustedes', 'hablan', 'comen', 'viven']]},
+  {p:"<b>Les verbes « en botte » :</b> le radical change partout, sauf à « nosotros » (sur le tableau, les formes qui changent dessinent une botte). e → ie : querer → quiero. o → ue : poder → puedo. e → i : pedir → pido."},
+  {t:['', 'querer', 'poder', 'pedir'], r:[['yo', 'quiero', 'puedo', 'pido'], ['tú', 'quieres', 'puedes', 'pides'], ['él / usted', 'quiere', 'puede', 'pide'], ['nosotros', 'queremos', 'podemos', 'pedimos'], ['ellos / ustedes', 'quieren', 'pueden', 'piden']]},
+  {p:"<b>Les verbes en « -go » :</b> la forme « yo » se termine en -go : tengo (tener), hago (hacer), pongo (poner), salgo (salir), vengo (venir), digo (decir), traigo (traer). Attention : tener, venir et decir changent aussi de radical aux autres personnes (tienes, vienes, dices)."},
+  {p:"Le présent sert aussi pour un futur proche : « Mañana empiezo » = je commence demain."},
+  {ex:[['Trabajo de lunes a viernes', 'Je travaille du lundi au vendredi'], ['¿Puedes venir mañana?', 'Peux-tu venir demain ?'], ['Tengo una pregunta', "J'ai une question"], ['Pongo la escalera aquí', "Je mets l'échelle ici"]]}]},
+ {id:'questions', t:"Poser des questions", s:"qué, quién, dónde, cuándo…", b:[
+  {p:"Les mots interrogatifs portent toujours un accent écrit. La question s'ouvre avec ¿ et se ferme avec ?."},
+  {t:['Espagnol', 'Français', 'Exemple'], r:[['¿Qué?', 'Quoi ? Que ?', '¿Qué necesitas?'], ['¿Quién?', 'Qui ?', '¿Quién tiene la llave?'], ['¿Dónde?', 'Où ?', '¿Dónde está el baño?'], ['¿Cuándo?', 'Quand ?', '¿Cuándo terminamos?'], ['¿Cómo?', 'Comment ?', '¿Cómo se dice «gypse»?'], ['¿Cuánto? ¿Cuántos?', 'Combien ?', '¿Cuántos clavos faltan?'], ['¿Por qué?', 'Pourquoi ?', '¿Por qué no viniste?'], ['¿Cuál?', 'Lequel ? Quel ?', '¿Cuál prefieres?'], ['¿A qué hora?', 'À quelle heure ?', '¿A qué hora llegas?']]},
+  {p:"<b>Qué ou cuál ?</b> Devant un nom : « qué » (¿Qué color?). Devant « es / son » quand on choisit : « cuál » (¿Cuál es tu número?)."},
+  {p:"Sans mot interrogatif, seule l'intonation change : « Tienes el taladro. » → « ¿Tienes el taladro? »."},
+  {p:"Au Mexique, pour faire répéter, on dit poliment « ¿Mande? ». « ¿Qué? » tout court peut sembler sec."},
+  {ex:[['¿Dónde está el nivel?', 'Où est le niveau ?'], ['¿A qué hora empezamos?', 'À quelle heure on commence ?'], ['¿Cuántas hojas faltan?', 'Combien de feuilles manque-t-il ?'], ['¿Mande?', 'Pardon ?']]}]},
+ {id:'negation', t:"La négation", s:"no, nada, nadie, nunca", b:[
+  {p:"Pas de « ne… pas » : on met simplement « no » devant le verbe. No trabajo hoy."},
+  {p:"<b>Double négation obligatoire :</b> si le mot négatif vient après le verbe, on garde aussi « no »."},
+  {t:['Mot', 'Sens', 'Exemple'], r:[['nada', 'rien', 'No hay nada'], ['nadie', 'personne', 'No vino nadie'], ['nunca', 'jamais', 'No fumo nunca · Nunca fumo'], ['tampoco', 'non plus', 'Yo tampoco'], ['ningún / ninguna', 'aucun / aucune', 'No tengo ningún problema'], ['ni… ni…', 'ni… ni…', 'No hay ni clavos ni tornillos']]},
+  {p:"Les pronoms se placent entre « no » et le verbe : No lo sé (je ne le sais pas). No me gusta."},
+  {ex:[['No hay nada en el carro', "Il n'y a rien dans l'auto"], ['Nunca trabajamos el domingo', 'On ne travaille jamais le dimanche'], ['No lo sé', 'Je ne sais pas'], ['Yo tampoco', 'Moi non plus']]}]},
+ {id:'gustar', t:"Gustar et ses cousins", s:"me gusta, me duele, me falta", b:[
+  {p:"« Gustar » marche à l'envers : la chose qui plaît est le sujet. « Me gusta el café » = le café me plaît."},
+  {t:['À qui ?', 'Une chose', 'Plusieurs choses'], r:[['à moi', 'me gusta', 'me gustan'], ['à toi', 'te gusta', 'te gustan'], ['à lui, elle, vous', 'le gusta', 'le gustan'], ['à nous', 'nos gusta', 'nos gustan'], ['à eux, vous (pl.)', 'les gusta', 'les gustan']]},
+  {p:"Le verbe s'accorde avec la CHOSE : me gusta el taco, me gustan los tacos. Avec un verbe, toujours au singulier : me gusta trabajar."},
+  {p:"Pour préciser ou insister : « A mí me gusta », « A José le gusta », « ¿A usted le gusta? »."},
+  {p:"<b>Même mécanique :</b> encantar (adorer), doler (faire mal : me duele la espalda), faltar (manquer : nos faltan tornillos), importar (no me importa), quedar (aller, en parlant d'un vêtement : me queda grande)."},
+  {ex:[['Me gustan los tacos', "J'aime les tacos"], ['¿Te gusta trabajar aquí?', "Aimes-tu travailler ici ?"], ['Me duele la espalda', "J'ai mal au dos"], ['Nos faltan tornillos', 'Il nous manque des vis']]}]},
+ {id:'futur', t:"Parler du futur", s:"ir a…, futur simple", b:[
+  {t:['Forme', 'Construction', 'Exemple'], r:[['Présent', 'présent + moment', 'Mañana empiezo'], ['Futur proche', 'ir a + infinitif', 'Voy a llamar al cliente'], ['Futur simple', 'infinitif + é, ás, á, emos, án', 'Terminaremos el viernes']]},
+  {p:"Au Mexique, le futur proche (ir a…) est de loin le plus utilisé à l'oral."},
+  {t:['', 'ir a…', 'futur simple'], r:[['yo', 'voy a trabajar', 'trabajaré'], ['tú', 'vas a trabajar', 'trabajarás'], ['él / usted', 'va a trabajar', 'trabajará'], ['nosotros', 'vamos a trabajar', 'trabajaremos'], ['ellos / ustedes', 'van a trabajar', 'trabajarán']]},
+  {p:"<b>Irréguliers du futur</b> (même radical au conditionnel) : tener → tendré, hacer → haré, poder → podré, poner → pondré, salir → saldré, venir → vendré, decir → diré, saber → sabré, querer → querré."},
+  {p:"<b>Astuce :</b> le futur exprime souvent une supposition. « ¿Dónde estará José? » = où peut bien être José ? « Serán las tres » = il doit être trois heures."},
+  {ex:[['Voy a comprar material', 'Je vais acheter du matériel'], ['¿Vas a venir mañana?', 'Vas-tu venir demain ?'], ['Terminaremos el viernes', 'On finira vendredi'], ['¿Dónde estará el taladro?', 'Où peut bien être la perceuse ?']]}]},
+ {id:'passe', t:"Le passé : prétérit ou imparfait ?", s:"ayer trabajé · antes trabajaba", b:[
+  {p:"Le <b>prétérit</b> raconte une action terminée, à un moment précis : c'est le passé de base au Mexique. L'<b>imparfait</b> décrit le décor, l'habitude, ce qui était en cours."},
+  {t:['Prétérit : action finie', 'Imparfait : décor, habitude'], r:[['Ayer terminé el baño', 'Antes trabajaba en Montreal'], ['Llegó a las ocho', 'Eran las ocho'], ['Se rompió el tubo', 'El tubo estaba viejo'], ['Fui a México en 2019', 'Cuando era niño, iba a la playa']]},
+  {p:"<b>Mots déclencheurs :</b> prétérit → ayer, anoche, el lunes, la semana pasada, hace dos días. Imparfait → siempre, antes, todos los días, cuando era…"},
+  {t:['Prétérit', 'hablar', 'comer / vivir'], r:[['yo', 'hablé', 'comí / viví'], ['tú', 'hablaste', 'comiste / viviste'], ['él / usted', 'habló', 'comió / vivió'], ['nosotros', 'hablamos', 'comimos / vivimos'], ['ellos / ustedes', 'hablaron', 'comieron / vivieron']]},
+  {t:['Imparfait', 'hablar', 'comer / vivir'], r:[['yo', 'hablaba', 'comía / vivía'], ['tú', 'hablabas', 'comías / vivías'], ['él / usted', 'hablaba', 'comía / vivía'], ['nosotros', 'hablábamos', 'comíamos / vivíamos'], ['ellos / ustedes', 'hablaban', 'comían / vivían']]},
+  {p:"<b>Prétérits irréguliers à connaître :</b> ser et ir → fui ; tener → tuve ; estar → estuve ; hacer → hice ; poder → pude ; poner → puse ; decir → dije ; venir → vine ; traer → traje. Tout est dans l'onglet « Verbes »."},
+  {p:"<b>Les deux ensemble :</b> « Estaba trabajando cuando llamaste » (j'étais en train de travailler — le décor — quand tu as appelé — l'action)."},
+  {p:"Le passé composé (he trabajado) existe, mais au Mexique on préfère le prétérit : « Ya comí » plutôt que « Ya he comido »."}]},
+ {id:'complements', t:"Lo, la, le : les pronoms compléments", s:"lo tengo, se lo doy", b:[
+  {t:['', 'Direct (le, la, les)', 'Indirect (lui, leur)'], r:[['moi', 'me', 'me'], ['toi', 'te', 'te'], ['lui, elle, vous', 'lo (masc.) · la (fém.)', 'le'], ['nous', 'nos', 'nos'], ['eux, vous (pl.)', 'los · las', 'les']]},
+  {p:"<b>Direct :</b> la chose ou la personne qui subit l'action. « ¿Tienes el martillo? — Sí, lo tengo. » <b>Indirect :</b> à qui ? « Le doy el martillo a José »."},
+  {p:"<b>Position :</b> AVANT le verbe conjugué (Lo tengo · No lo sé). COLLÉ à la fin d'un infinitif, d'un gérondif ou d'un impératif affirmatif (Voy a comprarlo · Estoy pintándola · ¡Pásamelo!)."},
+  {p:"<b>Les deux ensemble :</b> l'indirect d'abord, puis le direct. « Le / les » devient « se » devant lo, la, los, las : « Se lo doy » (je le lui donne), jamais « le lo »."},
+  {ex:[['No lo veo', 'Je ne le vois pas'], ['Le llamo mañana', 'Je vous appelle demain'], ['Dámelo', 'Donne-le-moi'], ['Se lo explico al cliente', "Je l'explique au client"]]}]},
+ {id:'por_para', t:"Por ou para ?", s:"Les deux « pour »", b:[
+  {p:"Truc : <b>PARA</b> regarde vers le BUT (destination, destinataire, échéance). <b>POR</b> regarde vers la CAUSE ou le CHEMIN (raison, échange, passage, moyen)."},
+  {t:['PARA : le but', 'POR : la cause, le moyen'], r:[['Destinataire : Es para el cliente', 'Cause : Paramos por la lluvia'], ['But : Trabajo para vivir', 'Prix, échange : Lo compré por cien pesos'], ['Destination : Salgo para Cancún', 'Passage : Pasamos por Mérida'], ['Échéance : Para el viernes', 'Moment flou : Por la mañana'], ['Utilité : Es para cortar madera', 'Moyen : Por teléfono'], ['Opinion : Para mí, está bien', 'Remercier : Gracias por todo']]},
+  {p:"<b>Expressions fixes avec por :</b> por favor, por eso (c'est pour ça), por fin (enfin), por ejemplo, por supuesto (bien sûr), por si acaso (au cas où)."},
+  {ex:[['Esta pintura es para la cocina', 'Cette peinture est pour la cuisine'], ['Llegué tarde por el tráfico', "Je suis arrivé en retard à cause du trafic"], ['Lo necesito para el lunes', "J'en ai besoin pour lundi"], ['Gracias por tu ayuda', 'Merci pour ton aide']]}]},
+ {id:'imperatif', t:"L'impératif : donner des consignes", s:"limpia, limpie, limpien", b:[
+  {p:"Sur le chantier, l'impératif sert à tout ! La forme change selon à qui tu parles."},
+  {t:['', 'tú (un collègue)', 'usted (un client)', "ustedes (l'équipe)"], r:[['limpiar', 'limpia', 'limpie', 'limpien'], ['barrer', 'barre', 'barra', 'barran'], ['subir', 'sube', 'suba', 'suban']]},
+  {p:"<b>Astuce :</b> pour « tú », c'est la forme « él » du présent (él limpia → ¡Limpia!). Pour « usted » et « ustedes », on échange la voyelle : -ar prend un e, -er et -ir prennent un a."},
+  {p:"<b>Irréguliers avec « tú » :</b> ven (venir), ten (tener), pon (poner), haz (hacer), di (decir), sal (salir), ve (ir), sé (ser)."},
+  {p:"<b>À la forme négative</b>, on prend le subjonctif : ¡No toques! (tú) · ¡No toque! (usted) · ¡No toquen! (ustedes)."},
+  {p:"Les pronoms se collent à la fin de l'impératif affirmatif (Pásamelo · Ayúdenme), mais se placent avant à la forme négative (No lo muevas)."},
+  {ex:[['Pásame el nivel', 'Passe-moi le niveau'], ['Pongan la lona', 'Mettez la bâche'], ['Espere aquí, por favor', "Attendez ici, s'il vous plaît"], ['No lo toques', 'Ne le touche pas']]}]},
+ {id:'subjonctif', t:"Le subjonctif présent", s:"quiero que vengas", b:[
+  {p:"Il exprime un souhait, un ordre indirect, un doute ou une émotion. On le trouve presque toujours après « que »."},
+  {p:"<b>Formation :</b> on part de la forme « yo » du présent, on enlève le -o, et on échange la voyelle : -ar → e ; -er et -ir → a."},
+  {t:['', 'hablar (hablo)', 'comer (como)', 'tener (tengo)'], r:[['yo', 'hable', 'coma', 'tenga'], ['tú', 'hables', 'comas', 'tengas'], ['él / usted', 'hable', 'coma', 'tenga'], ['nosotros', 'hablemos', 'comamos', 'tengamos'], ['ellos / ustedes', 'hablen', 'coman', 'tengan']]},
+  {t:['Déclencheur', 'Exemple'], r:[['querer que (vouloir que)', 'Quiero que limpies la obra'], ['para que (pour que)', 'Te lo explico para que entiendas'], ['ojalá (pourvu que)', 'Ojalá no llueva'], ['cuando (moment à venir)', 'Cuando llegues, llámame'], ['es importante que', 'Es importante que uses el casco'], ['no creer que (douter)', 'No creo que termine hoy'], ['antes de que', 'Antes de que venga el cliente']]},
+  {p:"<b>Irréguliers fréquents :</b> ser → sea, ir → vaya, estar → esté, dar → dé, saber → sepa, haber → haya."},
+  {p:"« Cuando » + subjonctif pour un moment futur (Cuando termines, avísame), mais + indicatif pour une habitude (Cuando termino, descanso)."}]},
+ {id:'conditionnel', t:"Le conditionnel et le « si »", s:"podría, si tuviera…", b:[
+  {p:"<b>Formation :</b> infinitif + ía, ías, ía, íamos, ían. Mêmes irréguliers que le futur : tendría, haría, podría…"},
+  {t:['', 'trabajar', 'poder'], r:[['yo', 'trabajaría', 'podría'], ['tú', 'trabajarías', 'podrías'], ['él / usted', 'trabajaría', 'podría'], ['nosotros', 'trabajaríamos', 'podríamos'], ['ellos / ustedes', 'trabajarían', 'podrían']]},
+  {p:"<b>Pour être poli :</b> « ¿Podría ayudarme? » (pourriez-vous m'aider ?), « Me gustaría… » (j'aimerais…), « ¿Sería posible…? »."},
+  {t:['Type de phrase', 'Construction', 'Exemple'], r:[['Condition réelle', 'si + présent', 'Si llueve, no trabajamos'], ['Hypothèse', 'si + subj. imparfait, puis conditionnel', 'Si tuviera tiempo, te ayudaría'], ['Regret', 'si + subj. plus-que-parfait', 'Si lo hubiera sabido…']]},
+  {p:"Comme en français, jamais de futur ni de conditionnel juste après « si »."},
+  {p:"<b>Subjonctif imparfait courant :</b> tener → tuviera, ser et ir → fuera, poder → pudiera, hacer → hiciera, estar → estuviera, saber → supiera."}]},
+ {id:'possessifs', t:"Possessifs et démonstratifs", s:"mi, tu, su · este, ese, aquel", b:[
+  {t:['', 'un objet', 'plusieurs objets'], r:[['mon, ma', 'mi', 'mis'], ['ton, ta', 'tu', 'tus'], ['son, sa, votre', 'su', 'sus'], ['notre', 'nuestro, nuestra', 'nuestros, nuestras'], ['leur, votre (pl.)', 'su', 'sus']]},
+  {p:"« Su » est ambigu (son, sa, leur, votre). Pour préciser : « el carro de usted », « la casa de ella »."},
+  {p:"<b>Le mien, le tien :</b> es mío, es tuyo, es suyo, es nuestro. « ¿De quién es este taladro? — Es mío. »"},
+  {t:['Distance', 'Masculin', 'Féminin', 'Neutre'], r:[['ici (près de moi)', 'este, estos', 'esta, estas', 'esto'], ['là (près de toi)', 'ese, esos', 'esa, esas', 'eso'], ['là-bas (loin)', 'aquel, aquellos', 'aquella, aquellas', 'aquello']]},
+  {ex:[['¿Es tu carro?', "C'est ton auto ?"], ['Es mío', "C'est à moi"], ['Pásame esa caja', 'Passe-moi cette boîte-là'], ['¿Qué es esto?', "Qu'est-ce que c'est ?"]]}]},
+ {id:'comparer', t:"Comparer", s:"más… que, tan… como, mejor", b:[
+  {t:['Sens', 'Construction', 'Exemple'], r:[['plus… que', 'más + adjectif + que', 'Es más caro que la sierra'], ['moins… que', 'menos + adjectif + que', 'Es menos difícil que ayer'], ['aussi… que', 'tan + adjectif + como', 'Es tan alto como su papá'], ['autant de… que', 'tanto / tanta + nom + como', 'Tengo tanto trabajo como tú'], ['le plus…', 'el / la más + adjectif', 'Es la casa más grande'], ['très très…', 'adjectif + -ísimo', 'Está carísimo']]},
+  {p:"<b>Irréguliers :</b> bueno → mejor (meilleur), malo → peor (pire), grande → mayor (plus âgé), pequeño → menor (plus jeune). « Más grande » reste correct pour la taille."},
+  {p:"Devant un nombre, « que » devient « de » : más de cien pesos."}]},
+ {id:'prononciation', t:"La prononciation", s:"j, ll, ñ, rr, et l'accent", b:[
+  {t:['Lettre', 'Se prononce', 'Exemple'], r:[['j, g (devant e, i)', 'un « h » soufflé fort, raclé', 'José, gente'], ['h', 'jamais prononcé', 'hola'], ['ll, y', '« y » comme dans « yeux »', 'calle, ya'], ['ñ', '« gn » comme dans « ligne »', 'mañana'], ['r entre voyelles', 'r battu, une fois', 'pero'], ['rr, r au début', 'r roulé', 'perro, Roberto'], ['c (devant e, i), z', '« s » en Amérique latine', 'cinco, zapato'], ['b, v', 'le même son', 'vaso, bueno'], ['u', '« ou »', 'uno'], ['e', '« é »', 'leche'], ['qu', '« k »', 'queso'], ['gu (devant e, i)', '« g » dur', 'guitarra']]},
+  {p:"<b>L'accent tonique :</b> un mot fini par une voyelle, n ou s est accentué sur l'avant-dernière syllabe (casa, hablan). Les autres, sur la dernière (pared, trabajar). Un mot qui ne suit pas la règle porte un accent écrit (café, teléfono, árbol)."},
+  {p:"<b>L'accent écrit change parfois le sens :</b> si (si) / sí (oui), el (le) / él (il), tu (ton) / tú (tu), mas (mais) / más (plus), se (se) / sé (je sais)."},
+  {ex:[['mañana', 'demain'], ['el perro', 'le chien'], ['la calle', 'la rue'], ['José trabaja', 'José travaille']]}]},
+ {id:'mexique', t:"Parler comme au Mexique", s:"¿Mande?, órale, ¡aguas!", b:[
+  {t:['Expression', 'Sens', 'Note'], r:[['¿Mande?', 'Pardon ? (faire répéter)', 'très poli, typiquement mexicain'], ['Órale', "D'accord ! Vas-y ! Wow !", 'selon le ton'], ['Ándale', "Allez ! C'est ça !", ''], ['Ahorita', 'tout de suite… ou plus tard', 'le contexte décide'], ['¡Aguas!', 'Attention !', "cri d'alerte sur le chantier"], ['la chamba', 'le travail, la job', '« Tengo mucha chamba »'], ['¡Qué padre!', "Que c'est cool !", ''], ['No hay bronca', 'Pas de problème', ''], ['Está chido', "C'est cool", 'familier'], ['¿Qué onda?', 'Salut ! Quoi de neuf ?', 'entre amis'], ['Sale', "Ça marche, d'accord", '« ¿Mañana a las siete? — Sale »'], ['güey', 'le gars, mon chum', 'très familier, entre amis seulement']]},
+  {p:"Avec un client, reste dans un espagnol neutre et poli (usted, por favor). Les mexicanismes, c'est pour l'équipe et les amis."},
+  {ex:[['¿Mande?', 'Pardon ?'], ['¡Aguas con el cable!', 'Attention au fil !'], ['Órale, vamos', "D'accord, on y va"], ['No hay bronca', 'Pas de problème']]}]},
+];
+/* Lien unité → chapitre du cahier (bouton dans le Guide de l'unité) */
+const CH_OF = {articulos:'genre', pronombres_pers:'pronoms', usted:'pronoms', ser_estar:'ser_estar', estado_participio:'ser_estar', presente:'present', presente_er:'present', irregulares:'present',
+  preguntas:'questions', que_cual:'questions', negativos:'negation', gustar:'gustar', como_gustar:'gustar', futuro:'futur', futuro_simple:'futur',
+  pasado:'passe', preterito_el:'passe', pret_irreg:'passe', imperfecto:'passe', pasado_progresivo:'passe', presente_perfecto:'passe',
+  pronombres:'complements', pronombres_dobles:'complements', por_para:'por_para', imperativo_tu:'imperatif', ustedes_imp:'imperatif', usted_neg:'imperatif',
+  subjuntivo:'subjonctif', subjuntivo2:'subjonctif', condicional:'conditionnel', si_condicional:'conditionnel', posesivos:'possessifs', demostrativos:'possessifs',
+  comparativos:'comparer', deseos:'subjonctif', superlativos:'comparer', alfabeto:'prononciation', palabras_clave:'mexique', expresiones:'mexique'};
+
+/* --- Conjugaison : moteur pour les réguliers et les verbes en botte, tables explicites pour les irréguliers --- */
+const PERS = ['yo', 'tú', 'él / ella / usted', 'nosotros', 'ellos / ustedes'];
+const VERBS = [
+ {inf:'ser', fr:'être (identité)', o:{pres:['soy','eres','es','somos','son'], pret:['fui','fuiste','fue','fuimos','fueron'], imp:['era','eras','era','éramos','eran'], subj:['sea','seas','sea','seamos','sean']}, it:'sé', gr:'siendo', pp:'sido'},
+ {inf:'estar', fr:'être (état, lieu)', o:{pres:['estoy','estás','está','estamos','están'], pret:['estuve','estuviste','estuvo','estuvimos','estuvieron'], subj:['esté','estés','esté','estemos','estén']}},
+ {inf:'ir', fr:'aller', o:{pres:['voy','vas','va','vamos','van'], pret:['fui','fuiste','fue','fuimos','fueron'], imp:['iba','ibas','iba','íbamos','iban'], subj:['vaya','vayas','vaya','vayamos','vayan']}, it:'ve', gr:'yendo'},
+ {inf:'tener', fr:'avoir', o:{pres:['tengo','tienes','tiene','tenemos','tienen'], pret:['tuve','tuviste','tuvo','tuvimos','tuvieron']}, fs:'tendr', ss:'teng', it:'ten'},
+ {inf:'hacer', fr:'faire', o:{pres:['hago','haces','hace','hacemos','hacen'], pret:['hice','hiciste','hizo','hicimos','hicieron']}, fs:'har', ss:'hag', it:'haz', pp:'hecho'},
+ {inf:'poder', fr:'pouvoir', t:'ue', o:{pret:['pude','pudiste','pudo','pudimos','pudieron']}, fs:'podr', gr:'pudiendo', noImp:1},
+ {inf:'querer', fr:'vouloir, aimer', t:'ie', o:{pret:['quise','quisiste','quiso','quisimos','quisieron']}, fs:'querr', noImp:1},
+ {inf:'poner', fr:'mettre', o:{pres:['pongo','pones','pone','ponemos','ponen'], pret:['puse','pusiste','puso','pusimos','pusieron']}, fs:'pondr', ss:'pong', it:'pon', pp:'puesto'},
+ {inf:'saber', fr:'savoir', o:{pres:['sé','sabes','sabe','sabemos','saben'], pret:['supe','supiste','supo','supimos','supieron']}, fs:'sabr', ss:'sep'},
+ {inf:'decir', fr:'dire', o:{pres:['digo','dices','dice','decimos','dicen'], pret:['dije','dijiste','dijo','dijimos','dijeron']}, fs:'dir', ss:'dig', it:'di', gr:'diciendo', pp:'dicho'},
+ {inf:'venir', fr:'venir', o:{pres:['vengo','vienes','viene','venimos','vienen'], pret:['vine','viniste','vino','vinimos','vinieron']}, fs:'vendr', ss:'veng', it:'ven', gr:'viniendo'},
+ {inf:'salir', fr:'sortir, partir', o:{pres:['salgo','sales','sale','salimos','salen']}, fs:'saldr', ss:'salg', it:'sal'},
+ {inf:'traer', fr:'apporter', o:{pres:['traigo','traes','trae','traemos','traen'], pret:['traje','trajiste','trajo','trajimos','trajeron']}, ss:'traig', gr:'trayendo', pp:'traído'},
+ {inf:'ver', fr:'voir', o:{pres:['veo','ves','ve','vemos','ven'], pret:['vi','viste','vio','vimos','vieron'], imp:['veía','veías','veía','veíamos','veían']}, ss:'ve', pp:'visto'},
+ {inf:'dar', fr:'donner', o:{pres:['doy','das','da','damos','dan'], pret:['di','diste','dio','dimos','dieron'], subj:['dé','des','dé','demos','den']}},
+ {inf:'conocer', fr:'connaître', o:{pres:['conozco','conoces','conoce','conocemos','conocen']}, ss:'conozc'},
+ {inf:'hablar', fr:'parler'}, {inf:'trabajar', fr:'travailler'}, {inf:'necesitar', fr:'avoir besoin'}, {inf:'llegar', fr:'arriver'}, {inf:'buscar', fr:'chercher'},
+ {inf:'pagar', fr:'payer'}, {inf:'empezar', fr:'commencer', t:'ie'}, {inf:'cerrar', fr:'fermer', t:'ie'}, {inf:'pensar', fr:'penser', t:'ie'},
+ {inf:'entender', fr:'comprendre', t:'ie'}, {inf:'probar', fr:'essayer, goûter', t:'ue'}, {inf:'encontrar', fr:'trouver', t:'ue'},
+ {inf:'volver', fr:'revenir, refaire', t:'ue', pp:'vuelto'}, {inf:'mover', fr:'bouger, déplacer', t:'ue'}, {inf:'dormir', fr:'dormir', t:'ue'},
+ {inf:'jugar', fr:'jouer', o:{pres:['juego','juegas','juega','jugamos','juegan'], pret:['jugué','jugaste','jugó','jugamos','jugaron'], subj:['juegue','juegues','juegue','juguemos','jueguen']}},
+ {inf:'pedir', fr:'demander, commander', t:'i'}, {inf:'medir', fr:'mesurer', t:'i'}, {inf:'repetir', fr:'répéter', t:'i'}, {inf:'sentir', fr:'sentir, regretter', t:'ie'},
+ {inf:'seguir', fr:'suivre, continuer', o:{pres:['sigo','sigues','sigue','seguimos','siguen'], pret:['seguí','seguiste','siguió','seguimos','siguieron'], subj:['siga','sigas','siga','sigamos','sigan']}, gr:'siguiendo'},
+ {inf:'comer', fr:'manger'}, {inf:'beber', fr:'boire'}, {inf:'aprender', fr:'apprendre'}, {inf:'vender', fr:'vendre'}, {inf:'barrer', fr:'balayer'},
+ {inf:'leer', fr:'lire', o:{pret:['leí','leíste','leyó','leímos','leyeron']}, gr:'leyendo', pp:'leído'}, {inf:'romper', fr:'casser', pp:'roto'},
+ {inf:'vivir', fr:'vivre'}, {inf:'abrir', fr:'ouvrir', pp:'abierto'}, {inf:'escribir', fr:'écrire', pp:'escrito'}, {inf:'subir', fr:'monter'},
+ {inf:'construir', fr:'construire', uir:1}, {inf:'cortar', fr:'couper'}, {inf:'pintar', fr:'peindre'}, {inf:'limpiar', fr:'nettoyer'}, {inf:'quitar', fr:'enlever'},
+ {inf:'instalar', fr:'installer'}, {inf:'cargar', fr:'porter, charger'}, {inf:'manejar', fr:'conduire'}, {inf:'ayudar', fr:'aider'}, {inf:'terminar', fr:'finir'},
+ {inf:'llamar', fr:'appeler'}, {inf:'comprar', fr:'acheter'}, {inf:'llevar', fr:'apporter, emporter'}, {inf:'tomar', fr:'prendre, boire'}, {inf:'lijar', fr:'sabler, poncer'},
+];
+const lastSwap = (s, a, b) => { const k = s.lastIndexOf(a); return k < 0 ? s : s.slice(0, k) + b + s.slice(k + 1); };
+function conjugate(v) {
+  const inf = v.inf, g = inf.slice(-2), st = inf.slice(0, -2), o = v.o || {}, ar = g === 'ar', ir = g === 'ir';
+  const strong = v.t === 'ie' ? lastSwap(st, 'e', 'ie') : v.t === 'ue' ? lastSwap(st, 'o', 'ue') : v.t === 'i' ? lastSwap(st, 'e', 'i') : st;
+  const weak = ir && v.t ? (v.t === 'ue' ? lastSwap(st, 'o', 'u') : lastSwap(st, 'e', 'i')) : st;
+  const spell = s => ar ? s.replace(/c$/, 'qu').replace(/g$/, 'gu').replace(/z$/, 'c') : s;
+  const boot = k => k !== 3;
+  const uy = v.uir ? 'y' : '';
+  const pres = o.pres || (ar ? ['o','as','a','amos','an'] : g === 'er' ? ['o','es','e','emos','en'] : ['o','es','e','imos','en'])
+    .map((e, k) => (boot(k) ? strong + uy : st) + e);
+  const pret = o.pret || (ar ? ['é','aste','ó','amos','aron'] : ['í','iste', v.uir ? 'yó' : 'ió','imos', v.uir ? 'yeron' : 'ieron'])
+    .map((e, k) => (k === 0 ? spell(st) : (k === 2 || k === 4) ? weak : st) + e);
+  const imp = o.imp || (ar ? ['aba','abas','aba','ábamos','aban'] : ['ía','ías','ía','íamos','ían']).map(e => st + e);
+  const fs = v.fs || inf;
+  const fut = ['é','ás','á','emos','án'].map(e => fs + e), cond = ['ía','ías','ía','íamos','ían'].map(e => fs + e);
+  const ys = v.ss || (o.pres ? o.pres[0].replace(/o$/, '') : spell(strong + uy));
+  const ns = v.ss || (v.t ? (ir ? weak : spell(st)) : ys);
+  const subj = o.subj || (ar ? ['e','es','e','emos','en'] : ['a','as','a','amos','an']).map((e, k) => (k === 3 ? ns : ys) + e);
+  const pp = v.pp || st + (ar ? 'ado' : 'ido');
+  const gr = v.gr || (v.uir ? st + 'yendo' : ar ? st + 'ando' : weak + 'iendo');
+  const imper = v.noImp ? null : { tu: v.it || pres[2], usted: subj[2], ustedes: subj[4], neg: 'no ' + subj[1] };
+  return { pres, pret, imp, fut, cond, subj, imper, pp, gr };
+}
+const TENSES = [['pres', 'Présent', 'je parle, je parle en ce moment'], ['pret', 'Prétérit (passé)', "hier, j'ai parlé — action terminée"], ['imp', 'Imparfait', 'je parlais, avant, en général'],
+  ['fut', 'Futur', 'je parlerai'], ['cond', 'Conditionnel', 'je parlerais'], ['subj', 'Subjonctif présent', 'que je parle (après « quiero que », « ojalá »…)']];
+const verbKind = v => v.o || v.fs || v.ss || v.it ? 'Irrégulier' : v.t ? `Radical ${v.t === 'ie' ? 'e → ie' : v.t === 'ue' ? 'o → ue' : 'e → i'}` : v.uir ? 'Ajoute un y' : 'Régulier';
+
+let CB = null;
+const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function openCahier(tab, id) {
+  CB = { tab: tab || 'gram', ch: tab === 'gram' ? id || null : null, verb: tab === 'verb' ? id || null : null, q: '' };
+  $('#layer').innerHTML = '';
+  $('#home').hidden = true; $('#tabs').hidden = true; $('#cahier').hidden = false;
+  SFX.tap(); drawCahier();
+}
+function drawCahier() {
+  const el = $('#cahier'), read = S.cahier || {};
+  let h = `<div class="lesson-top"><button class="x" id="ch-close" aria-label="${CB.ch || CB.verb ? 'Retour' : 'Fermer'}">${CB.ch || CB.verb ? ic('arrow').replace('<svg', '<svg style="transform:scaleX(-1)"') : ic('close')}</button><b style="font-family:var(--font-display);font-size:20px;flex:1">Cahier d'école</b></div>`;
+  if (CB.ch) {
+    const k = CAHIER.findIndex(c => c.id === CB.ch), c = CAHIER[k];
+    h += `<article class="ch-page"><span class="eyebrow">Chapitre ${k + 1}</span><h2>${esc(c.t)}</h2>${c.b.map(bl => {
+      if (bl.p) return `<p>${bl.p}</p>`;
+      if (bl.t) return `<div class="gtab-wrap"><table class="gtab${bl.t[0] === '' || /^(Prétérit|Imparfait)$/.test(bl.t[0]) ? ' lead' : ''}"><thead><tr>${bl.t.map(x => `<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${bl.r.map(row => `<tr>${row.map(x => `<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      return `<div class="ch-ex"><span class="eyebrow">Exemples à écouter</span>${bl.ex.map(([es, fr]) => `<div class="lex">${speakBtn(es)}<div style="min-width:0"><b>${esc(es)}</b><small>${esc(fr)}</small></div></div>`).join('')}</div>`;
+    }).join('')}</article>
+    <div class="ch-nav">${k > 0 ? `<button class="btn small line" data-ch="${CAHIER[k - 1].id}">← Précédent</button>` : '<span></span>'}${k < CAHIER.length - 1 ? `<button class="btn small" data-ch="${CAHIER[k + 1].id}">Chapitre suivant →</button>` : `<button class="btn small" id="ch-list">Retour aux chapitres</button>`}</div>`;
+    if (!read[CB.ch]) { S.cahier = Object.assign({}, read, { [CB.ch]: Date.now() }); save(); }
+  } else if (CB.verb) {
+    const v = VERBS.find(x => x.inf === CB.verb), c = conjugate(v);
+    const cell = f => `<button class="vf" data-say="${esc(f)}">${esc(f)}</button>`;
+    h += `<div class="vb-head">${speakBtn(v.inf)}<div><h2>${esc(v.inf)}</h2><small>${esc(v.fr)} · <span class="vk">${verbKind(v)}</span></small></div></div>
+      <div class="vb-forms"><div><span class="eyebrow">Participe</span>${cell(c.pp)}</div><div><span class="eyebrow">Gérondif</span>${cell(c.gr)}</div></div>
+      ${TENSES.map(([k, n, hint]) => `<section class="vt"><b>${n}</b><small>${hint}</small><table class="gtab vtab"><tbody>${c[k].map((f, i) => `<tr><td>${PERS[i]}</td><td>${cell(f)}</td></tr>`).join('')}</tbody></table></section>`).join('')}
+      <section class="vt"><b>Impératif</b><small>donner un ordre</small>${c.imper ? `<table class="gtab vtab"><tbody>
+        <tr><td>tú</td><td>${cell(c.imper.tu)}</td></tr><tr><td>usted</td><td>${cell(c.imper.usted)}</td></tr><tr><td>ustedes</td><td>${cell(c.imper.ustedes)}</td></tr><tr><td>tú (négatif)</td><td>${cell(c.imper.neg)}</td></tr></tbody></table>`
+        : `<p class="vk-none">Pas d'impératif courant pour ce verbe.</p>`}</section>
+      <p class="vk-none">Les formes « usted » se conjuguent comme « él », et « ustedes » comme « ellos ». Pas de « vosotros » en Amérique latine.</p>`;
+  } else {
+    h += `<div class="seg" style="grid-template-columns:1fr 1fr;margin-top:12px"><button class="${CB.tab === 'gram' ? 'on' : ''}" data-chtab="gram">Grammaire</button><button class="${CB.tab === 'verb' ? 'on' : ''}" data-chtab="verb">Verbes</button></div>`;
+    if (CB.tab === 'gram') {
+      const n = CAHIER.filter(c => read[c.id]).length;
+      h += `<p class="ch-sub">Les règles expliquées comme dans un cahier, avec des tableaux et des exemples à écouter. ${n} / ${CAHIER.length} chapitres lus.</p>
+        <div class="ch-list">${CAHIER.map((c, k) => `<button data-ch="${c.id}" class="${read[c.id] ? 'read' : ''}"><span class="num">${read[c.id] ? ic('check') : k + 1}</span><span class="txt"><b>${esc(c.t)}</b><small>${esc(c.s)}</small></span></button>`).join('')}</div>`;
+    } else {
+      h += `<p class="ch-sub">Les tables de conjugaison de ${VERBS.length} verbes courants, à tous les temps. Touche une forme pour l'entendre.</p>
+        <input class="namefield" id="vb-q" type="search" placeholder="Chercher un verbe (espagnol ou français)" value="${esc(CB.q)}" autocomplete="off">
+        <div class="vb-list" id="vb-list"></div>`;
+    }
+  }
+  el.innerHTML = h;
+  $('#ch-close').onclick = () => { if (CB.ch || CB.verb) { CB.ch = CB.verb = null; drawCahier(); window.scrollTo(0, 0); } else { CB = null; $('#cahier').hidden = true; showHome(); } };
+  el.querySelectorAll('[data-chtab]').forEach(b => b.onclick = () => { CB.tab = b.dataset.chtab; SFX.tap(); drawCahier(); });
+  el.querySelectorAll('[data-ch]').forEach(b => b.onclick = () => { CB.ch = b.dataset.ch; SFX.tap(); drawCahier(); window.scrollTo(0, 0); });
+  const back = $('#ch-list'); if (back) back.onclick = () => { CB.ch = null; drawCahier(); window.scrollTo(0, 0); };
+  const q = $('#vb-q');
+  if (q) { const list = () => drawVerbList(); q.oninput = () => { CB.q = q.value; list(); }; list(); }
+}
+function drawVerbList() {
+  const f = fold(CB.q.trim());
+  const vs = VERBS.filter(v => !f || fold(v.inf).includes(f) || fold(v.fr).includes(f)).sort((a, b) => a.inf.localeCompare(b.inf, 'es'));
+  const el = $('#vb-list');
+  el.innerHTML = vs.length ? vs.map(v => `<button data-verb="${v.inf}"><b>${esc(v.inf)}</b><small>${esc(v.fr)}</small>${verbKind(v) === 'Régulier' ? '' : `<span class="vk">${verbKind(v)}</span>`}</button>`).join('')
+    : `<p class="vk-none">Aucun verbe trouvé.</p>`;
+  el.querySelectorAll('[data-verb]').forEach(b => b.onclick = () => { CB.verb = b.dataset.verb; SFX.tap(); drawCahier(); window.scrollTo(0, 0); });
+}
+function cahierCard() {
+  const n = CAHIER.filter(c => (S.cahier || {})[c.id]).length;
+  return `<div class="ch-card"><div class="art">${ic('book')}</div><div class="txt"><b>Cahier d'école</b><small>${CAHIER.length} chapitres de grammaire · tables de ${VERBS.length} verbes${n ? ` · ${n} lus` : ''}</small></div>
+    <div class="acts"><button class="btn small line" data-open-cahier="gram">Grammaire</button><button class="btn small line" data-open-cahier="verb">Verbes</button></div></div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-open-cahier]'); if (b) return openCahier(b.dataset.openCahier, b.dataset.id);
+});
 
 /* ===================== ÉCOUTE MAINS LIBRES =====================
    Pour l'auto ou le travail : l'app parle seule, en boucle. Trois styles :
@@ -8146,6 +8693,30 @@ const STORIES = [
     {w:'Marc', es:'Ya hay corriente. Conecta el calentador en otro circuito, en la cocina.', fr:'Il y a du courant. Branche la chaufferette sur un autre circuit, dans la cuisine.'},
     {q:'Que doit faire José maintenant ?', o:['Brancher la chaufferette ailleurs', 'Éteindre la scie pour la journée', "Appeler l'électricien"]},
     {w:'José', es:'Va, jefe. ¡Y que no se congele la tubería!', fr:"D'accord, patron. Et que la tuyauterie ne gèle pas !"}]},
+  {id:'ponchada', es:'Una llanta ponchada', fr:'Un pneu crevé', unit:'accidente_carro', color:'blue', lines:[
+    {w:'', es:'Marc y Julie manejan de Mérida a Valladolid en un carro rentado.', fr:'Marc et Julie roulent de Mérida à Valladolid dans une auto louée.'},
+    {w:'Julie', es:'Marc, ¿oyes ese ruido?', fr:'Marc, entends-tu ce bruit ?'},
+    {w:'Marc', es:'Sí… Se nos ponchó una llanta. Me voy a parar aquí.', fr:"Oui… On a crevé un pneu. Je vais m'arrêter ici."},
+    {q:'Quel est le problème ?', o:['Un pneu crevé', "Plus d'essence", 'Un accrochage']},
+    {w:'', es:'Un señor se para para ayudarlos.', fr:"Un monsieur s'arrête pour les aider."},
+    {w:'Señor', es:'¿Todo bien? ¿Tienen gato?', fr:'Tout va bien ? Vous avez un cric ?'},
+    {w:'Marc', es:'Creo que sí, en la cajuela. ¿Me echa la mano?', fr:'Je crois que oui, dans le coffre. Vous me donnez un coup de main ?'},
+    {w:'Señor', es:'Claro. Pero la llanta de refacción está baja. Hay una vulcanizadora a dos kilómetros.', fr:'Bien sûr. Mais le pneu de secours est dégonflé. Il y a un réparateur de pneus à deux kilomètres.'},
+    {q:'Où peuvent-ils faire réparer le pneu ?', o:['À un réparateur à 2 km', "À l'aéroport", "À l'hôtel"]},
+    {w:'Julie', es:'¡Muchas gracias, señor! Es usted muy amable.', fr:'Merci beaucoup, monsieur ! Vous êtes très gentil.'},
+    {w:'Señor', es:'No hay de qué. ¡Que les vaya bien!', fr:'De rien. Bonne route !'}]},
+  {id:'sotano_agua', es:'Agua en el sótano', fr:"De l'eau au sous-sol", unit:'sotano', color:'teal', lines:[
+    {w:'', es:'Es abril. La nieve se derrite y el señor Lavoie llama a Marc.', fr:"C'est avril. La neige fond et monsieur Lavoie appelle Marc."},
+    {w:'Sr. Lavoie', es:'Marc, hay agua en el sótano y huele a humedad.', fr:"Marc, il y a de l'eau au sous-sol et ça sent l'humidité."},
+    {w:'', es:'Marc llega con Luis y bajan al sótano.', fr:'Marc arrive avec Luis et ils descendent au sous-sol.'},
+    {w:'Luis', es:'Mire, jefe: esa fisura en el muro deja pasar el agua.', fr:"Regardez, patron : cette fissure dans le mur laisse passer l'eau."},
+    {w:'Marc', es:'Y la bomba sumergible no funciona. Por eso se juntó el agua.', fr:"Et la pompe de puisard ne marche pas. C'est pour ça que l'eau s'est accumulée."},
+    {q:"Pourquoi l'eau s'est-elle accumulée ?", o:['La pompe de puisard ne marche pas', 'Une fenêtre est ouverte', 'Le chauffe-eau fuit']},
+    {w:'Marc', es:'Primero cambiamos la bomba. Luego hay que impermeabilizar el muro por fuera.', fr:"D'abord, on change la pompe. Ensuite, il faut imperméabiliser le mur par l'extérieur."},
+    {w:'Luis', es:'¿Y el moho en la pared?', fr:'Et la moisissure sur le mur ?'},
+    {w:'Marc', es:'Hay que sacar todo el moho y poner un deshumidificador.', fr:'Il faut enlever toute la moisissure et mettre un déshumidificateur.'},
+    {q:'Que faut-il faire contre la moisissure ?', o:["L'enlever et mettre un déshumidificateur", 'Peindre par-dessus', "Attendre l'été"]},
+    {w:'Sr. Lavoie', es:'Muy bien. ¿Me manda la cotización?', fr:"Très bien. Vous m'envoyez la soumission ?"}]},
 ];
 /* ===================== HISTOIRES ===================== */
 const storyOpen = st => unlocked(UNITS.findIndex(u => u.id === st.unit));
@@ -8471,7 +9042,7 @@ function lexicon(u) {
       <div class="dots" aria-label="${seen ? 'Maîtrise ' + box + ' sur 5' : 'Pas encore vu'}">${[1,2,3,4,5].map(k => `<i class="${box >= k ? 'on' : ''}"></i>`).join('')}</div></div>`;
   }).join('');
   const tips = (TIPS[u.id] || []).map(t => `<div class="tip"><b>${esc(t[0])}</b><p>${esc(t[1])}</p></div>`).join('');
-  modal(`<span class="eyebrow" style="text-align:center">${esc(u.fr)}</span><h2>${esc(u.es)}</h2>${tips ? `<div>${tips}</div>` : ''}<span class="eyebrow" style="margin-top:8px">Vocabulaire</span><div>${rows}</div>`, null, 'Fermer', 'list');
+  modal(`<span class="eyebrow" style="text-align:center">${esc(u.fr)}</span><h2>${esc(u.es)}</h2>${tips ? `<div>${tips}</div>` : ''}${CH_OF[u.id] ? `<button class="btn small line" data-open-cahier="gram" data-id="${CH_OF[u.id]}" style="justify-self:center;margin-top:10px">${ic('book').replace('<svg', '<svg style="width:16px;height:16px;vertical-align:-3px;margin-right:6px"')}Lire la leçon du cahier</button>` : ''}<span class="eyebrow" style="margin-top:8px">Vocabulaire</span><div>${rows}</div>`, null, 'Fermer', 'list');
 }
 
 /* ===================== TUTEUR IA (Paco) ===================== */
