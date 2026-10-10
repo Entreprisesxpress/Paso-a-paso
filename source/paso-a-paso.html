@@ -7081,6 +7081,188 @@ const UNITS = [
     {es:'Las estopas con aceite pueden prenderse solas', fr:"Les chiffons huileux peuvent s'enflammer tout seuls"},
     {es:'Pon una segunda mano de barniz', fr:'Mets une deuxième couche de vernis'},
   ]},
+  { id:'lugar_posicion', es:'Encima, debajo, adentro', fr:'Où ? Les positions', tag:'Base', color:'teal', items:[
+    {es:'encima de', fr:'sur, par-dessus'},
+    {es:'hasta arriba', fr:'tout en haut'},
+    {es:'hasta abajo', fr:'tout en bas'},
+    {es:'enfrente de la casa', fr:'devant la maison'},
+    {es:'en medio', fr:'au milieu'},
+    {es:'en el rincón', fr:'dans le coin (de la pièce)'},
+    {es:'Está encima de la mesa', fr:"C'est sur la table"},
+    {es:'Ponlo debajo de la escalera', fr:"Mets-le sous l'escalier"},
+    {es:'Los clavos están adentro de la caja', fr:'Les clous sont dans la boîte'},
+    {es:'Deja las botas afuera', fr:'Laisse les bottes dehors'},
+    {es:'Está detrás de la puerta', fr:"C'est derrière la porte"},
+    {es:'Ponlo entre las dos ventanas', fr:'Mets-le entre les deux fenêtres'},
+  ]},
+  { id:'respuestas', es:'Sí, no, tal vez', fr:'Répondre', tag:'Base', color:'pink', items:[
+    {es:'Claro que sí', fr:'Bien sûr que oui'},
+    {es:'Puede ser', fr:'Ça se peut'},
+    {es:'A lo mejor', fr:'Peut-être bien'},
+    {es:'Depende del cliente', fr:'Ça dépend du client'},
+    {es:'Ni modo', fr:'Tant pis', note:"Très mexicain : « Ni modo » = tant pis, on n'y peut rien."},
+    {es:'Sí, cómo no', fr:'Oui, bien sûr', note:'Au Mexique, « ¿cómo no? » = bien sûr, avec plaisir.'},
+    {es:'Mejor no', fr:'Plutôt pas'},
+    {es:'Para nada', fr:'Pas du tout'},
+    {es:'¡Exacto!', fr:'Exactement !'},
+    {es:'Ya veo', fr:'Je vois'},
+    {es:'Déjame ver', fr:'Laisse-moi voir'},
+    {es:'Ahorita te digo', fr:'Je te dis ça tantôt'},
+  ]},
+  { id:'horario', es:'El horario de trabajo', fr:"L'horaire de travail", tag:'Base', color:'blue', items:[
+    {es:'de lunes a viernes', fr:'du lundi au vendredi'},
+    {es:'en la mañana', fr:'le matin'},
+    {es:'al mediodía', fr:'à midi'},
+    {es:'en la tarde', fr:"l'après-midi"},
+    {es:'en la noche', fr:'le soir'},
+    {es:'la hora de la comida', fr:"l'heure du dîner", note:"Au Mexique, « la comida » (vers 14 h) est le repas principal ; au chantier, c'est le dîner."},
+    {es:'Entramos a las siete', fr:'On commence à sept heures'},
+    {es:'Salimos a las cuatro y media', fr:'On finit à quatre heures et demie'},
+    {es:'El sábado trabajamos medio día', fr:'Le samedi, on travaille une demi-journée'},
+    {es:'¿A qué hora llegas mañana?', fr:'À quelle heure arrives-tu demain ?'},
+    {es:'Llego a las siete en punto', fr:"J'arrive à sept heures pile"},
+    {es:'Tomamos un descanso a las diez', fr:'On prend une pause à dix heures'},
+  ]},
+  { id:'necesito_quiero', es:'Necesito, quiero, hay', fr:'Les verbes de tous les jours', tag:'Base', color:'sun', items:[
+    {es:'Necesito más tiempo', fr:"J'ai besoin de plus de temps"},
+    {es:'Quiero ver cómo quedó', fr:'Je veux voir le résultat'},
+    {es:'Tengo dos minutos', fr:"J'ai deux minutes"},
+    {es:'Ya puedes irte', fr:'Tu peux partir maintenant'},
+    {es:'hay', fr:'il y a'},
+    {es:'no hay', fr:"il n'y a pas"},
+    {es:'Necesito un martillo', fr:"J'ai besoin d'un marteau"},
+    {es:'Quiero agua, por favor', fr:"Je veux de l'eau, s'il te plaît"},
+    {es:'¿Hay café?', fr:"Est-ce qu'il y a du café ?"},
+    {es:'No hay clavos', fr:"Il n'y a plus de clous"},
+    {es:'¿Puedo ayudar?', fr:'Je peux aider ?'},
+    {es:'Tengo todo lo que necesito', fr:"J'ai tout ce qu'il me faut"},
+  ]},
+  { id:'prender_apagar', es:'Abre, cierra, prende, apaga', fr:'Ouvrir, fermer, allumer, éteindre', tag:'Base', color:'teal', items:[
+    {es:'Cierra con llave', fr:'Ferme à clé'},
+    {es:'Deja la puerta abierta', fr:'Laisse la porte ouverte'},
+    {es:'prender', fr:'allumer'},
+    {es:'apagar', fr:'éteindre'},
+    {es:'conectar', fr:'brancher'},
+    {es:'desconectar', fr:'débrancher'},
+    {es:'Abre la puerta', fr:'Ouvre la porte'},
+    {es:'Cierra la ventana', fr:'Ferme la fenêtre'},
+    {es:'Prende la luz', fr:'Allume la lumière'},
+    {es:'Apaga la sierra', fr:'Éteins la scie'},
+    {es:'Desconecta el taladro', fr:'Débranche la perceuse'},
+    {es:'¿Puedes abrir la llave del agua?', fr:"Peux-tu ouvrir l'eau ?"},
+  ]},
+  { id:'mas_menos', es:'Más, menos, igual', fr:'Plus, moins, pareil', tag:'Base', color:'pink', items:[
+    {es:'más largo', fr:'plus long'},
+    {es:'más corto', fr:'plus court'},
+    {es:'Otra igual, por favor', fr:"Une autre pareille, s'il te plaît"},
+    {es:'el mismo', fr:'le même'},
+    {es:'igual', fr:'pareil'},
+    {es:'diferente', fr:'différent'},
+    {es:'Dame otro', fr:"Donne-m'en un autre"},
+    {es:'Es lo mismo', fr:"C'est la même chose"},
+    {es:'Un poco más a la izquierda', fr:'Un peu plus à gauche'},
+    {es:'Necesito menos', fr:"Il m'en faut moins"},
+    {es:'Es diferente al otro', fr:"C'est différent de l'autre"},
+    {es:'Hazlo igual que ayer', fr:'Fais-le comme hier'},
+  ]},
+  { id:'herrajes', es:'Pijas, taquetes y tuercas', fr:'Vis, chevilles et écrous', tag:'Chantier', color:'sun', items:[
+    {es:'la pija', fr:'la vis (à bois, à gypse)', note:"Au Mexique, une vis à bois ou à gypse, c'est souvent « una pija »."},
+    {es:'el taquete', fr:'la cheville (ancrage de plastique)', note:"« Taquete » = la cheville qu'on met dans le mur avant la vis."},
+    {es:'la rondana', fr:'la rondelle'},
+    {es:'la tuerca', fr:"l'écrou"},
+    {es:'el perno', fr:'le boulon'},
+    {es:'el ancla para concreto', fr:"l'ancrage à béton"},
+    {es:'la armella', fr:'le piton (crochet à vis)'},
+    {es:'Pon un taquete antes de la pija', fr:'Mets une cheville avant la vis'},
+    {es:'Necesito pijas de dos pulgadas', fr:"J'ai besoin de vis de deux pouces"},
+    {es:'Aprieta bien la tuerca', fr:"Serre bien l'écrou"},
+    {es:'Ponle rondana', fr:'Mets une rondelle'},
+    {es:'Este tornillo está barrido', fr:'Cette vis est foirée', note:'« Barrido » = foiré : la tête ou le filet est usé.'},
+  ]},
+  { id:'cintas_adhesivos', es:'Cintas y pegamentos', fr:'Rubans et colles', tag:'Chantier', color:'blue', items:[
+    {es:'la cinta de ducto', fr:'le ruban adhésif en toile'},
+    {es:'la cinta masking', fr:'le ruban-cache'},
+    {es:'el pegamento blanco', fr:'la colle blanche (à bois)'},
+    {es:'el adhesivo de construcción', fr:'la colle de construction'},
+    {es:'la pistola de calafateo', fr:'le fusil à calfeutrer'},
+    {es:'el cartucho', fr:'le tube (de colle, de silicone)'},
+    {es:'Pon cinta masking antes de pintar', fr:'Mets du ruban-cache avant de peindre'},
+    {es:'Quita la cinta antes de que seque la pintura', fr:'Enlève le ruban avant que la peinture sèche'},
+    {es:'Ponle pegamento y luego clávalo', fr:'Mets de la colle, puis cloue-le'},
+    {es:'Se acabó el cartucho', fr:'Le tube est vide'},
+    {es:'Corta la punta en diagonal', fr:'Coupe le bout en biseau'},
+    {es:'Deja secar el pegamento una hora', fr:'Laisse sécher la colle une heure'},
+  ]},
+  { id:'material_electrico', es:'Material eléctrico', fr:'Le matériel électrique', tag:'Chantier', color:'teal', items:[
+    {es:'la caja eléctrica', fr:'la boîte électrique'},
+    {es:'el poliducto', fr:'le conduit flexible', note:"Au Mexique, le conduit électrique flexible orange s'appelle « poliducto »."},
+    {es:'la lámpara', fr:'le luminaire'},
+    {es:'la clavija', fr:'la fiche (prise mâle)'},
+    {es:'la tapa del contacto', fr:'la plaque de la prise'},
+    {es:'el cable de tres hilos', fr:'le fil à trois conducteurs'},
+    {es:'el conector', fr:'le connecteur (marrette)'},
+    {es:'Pasa el cable por la pared', fr:'Passe le fil dans le mur'},
+    {es:'Necesitamos cuatro cajas más', fr:'On a besoin de quatre boîtes de plus'},
+    {es:'Esa lámpara va en el centro del techo', fr:'Ce luminaire va au centre du plafond'},
+    {es:'Usa conectores, no cinta', fr:'Utilise des connecteurs, pas du ruban'},
+    {es:'Pon todas las tapas al final', fr:'Pose toutes les plaques à la fin'},
+  ]},
+  { id:'conexiones_plomeria', es:'Codos, coples y válvulas', fr:'Les raccords de plomberie', tag:'Chantier', color:'blue', items:[
+    {es:'el codo', fr:'le coude'},
+    {es:'la te', fr:'le té'},
+    {es:'el cople', fr:'le manchon (raccord droit)'},
+    {es:'el tubo PEX', fr:'le tuyau PEX'},
+    {es:'la válvula', fr:'la valve'},
+    {es:'el céspol', fr:'le siphon (renvoi)', note:"Au Mexique, le siphon sous l'évier, c'est « el céspol »."},
+    {es:'la cinta teflón', fr:'le ruban téflon'},
+    {es:'Pon teflón en la rosca', fr:'Mets du téflon sur le filet'},
+    {es:'Falta un codo de noventa', fr:'Il manque un coude à quatre-vingt-dix'},
+    {es:'Esta conexión gotea', fr:'Ce raccord dégoutte'},
+    {es:'Cambia el céspol del lavabo', fr:'Change le siphon du lavabo'},
+    {es:'Aprieta la conexión, pero no tanto', fr:'Serre le raccord, mais pas trop'},
+  ]},
+  { id:'herramientas_corte', es:'Herramientas para cortar', fr:'Les outils de coupe', tag:'Chantier', color:'pink', items:[
+    {es:'la caladora', fr:'la scie sauteuse'},
+    {es:'la sierra de mesa', fr:'la scie à table'},
+    {es:'la cortadora de azulejo', fr:'la coupe-céramique'},
+    {es:'la segueta', fr:'la scie à métaux'},
+    {es:'el disco de diamante', fr:'la lame au diamant'},
+    {es:'la sierra recíproca', fr:'la scie alternative'},
+    {es:'Corta con la caladora', fr:'Coupe avec la scie sauteuse'},
+    {es:'Usa el disco de diamante para el porcelanato', fr:'Utilise la lame au diamant pour la céramique'},
+    {es:'Mantén las manos lejos de la hoja', fr:'Garde les mains loin de la lame'},
+    {es:'Desconecta antes de cambiar el disco', fr:'Débranche avant de changer la lame'},
+    {es:'Corta por fuera de la línea', fr:"Coupe à l'extérieur de la ligne"},
+    {es:'Usa lentes para cortar', fr:'Mets tes lunettes pour couper'},
+  ]},
+  { id:'molduras', es:'Molduras y zoclos', fr:'Moulures et plinthes', tag:'Chantier', color:'sun', items:[
+    {es:'el zoclo de madera', fr:'la plinthe de bois'},
+    {es:'la chambrana', fr:'le cadrage (moulure de porte)'},
+    {es:'la cornisa', fr:'la corniche (moulure de plafond)'},
+    {es:'el cuarto bocel', fr:'le quart-de-rond'},
+    {es:'la clavadora de acabado', fr:'la cloueuse de finition'},
+    {es:'el clavo sin cabeza', fr:'le clou de finition'},
+    {es:'Mide dos veces antes de cortar el zoclo', fr:'Mesure deux fois avant de couper la plinthe'},
+    {es:'Las esquinas van a cuarenta y cinco', fr:'Les coins vont à quarante-cinq'},
+    {es:'Rellena los hoyos con masilla', fr:'Remplis les trous avec du mastic'},
+    {es:'Pon la chambrana alrededor de la puerta', fr:'Pose le cadrage autour de la porte'},
+    {es:'Calafatea la unión con la pared', fr:'Calfeutre le joint avec le mur'},
+    {es:'Lija las esquinas antes de pintar', fr:'Sable les coins avant de peindre'},
+  ]},
+  { id:'mezcla', es:'La mezcla de concreto', fr:'Le mélange de béton', tag:'Chantier', color:'teal', items:[
+    {es:'el bote de mezcla', fr:'le seau à mortier'},
+    {es:'la cal', fr:'la chaux'},
+    {es:'la arena cernida', fr:'le sable tamisé'},
+    {es:'el mortero', fr:'le mortier'},
+    {es:'el agua limpia', fr:"l'eau propre"},
+    {es:'la cuchara de albañil', fr:'la truelle'},
+    {es:'Una de cemento por tres de arena', fr:'Une part de ciment pour trois de sable'},
+    {es:'No le eches tanta agua', fr:"Ne mets pas autant d'eau"},
+    {es:'La mezcla está muy aguada', fr:'Le mélange est trop liquide'},
+    {es:'Úsala antes de que fragüe', fr:"Utilise-le avant qu'il prenne", note:'« Fraguar » = prendre, durcir (pour le béton ou le mortier).'},
+    {es:'Lava la revolvedora al terminar', fr:'Lave la bétonnière en finissant'},
+    {es:'Moja la pared antes de aplanar', fr:'Mouille le mur avant de crépir'},
+  ]},
 ];
 /* Guide : grammaire et prononciation, une unité à la fois */
 const TIPS = {
@@ -7398,13 +7580,26 @@ const TIPS = {
   maderas: [['Triplay', '« Triplay » vient de « three-ply » (trois plis). Une feuille de 3/4 : « una hoja de triplay de tres cuartos ».']],
   pisos_acabado: [['Parejo', '« Parejo » = égal, uniforme. « Que quede parejo » = que ce soit égal. Mot clé pour le carrelage.']],
   tinte_barniz: [['Mano = couche', '« Una mano de barniz » = une couche de vernis. « Dar otra mano » = donner une autre couche.']],
+  lugar_posicion: [['Encima / debajo', '« Encima de » = sur, « debajo de » = sous. On garde le « de » : « debajo de la mesa ».']],
+  respuestas: [['Ni modo', "« Ni modo » est le haussement d'épaules mexicain : il pleut, on ne peut pas couler le béton… ¡ni modo!"]],
+  horario: [['A las…', "Pour l'heure, on dit « a la una » (1 h) mais « a las dos, a las siete » : au pluriel à partir de deux heures."]],
+  necesito_quiero: [['Hay', '« Hay » = il y a, pour tout : « Hay café », « No hay clavos », « ¿Hay baño? ». Un seul mot, jamais au pluriel.']],
+  prender_apagar: [['Prender', 'Au Mexique, on « prende » (allume) la lumière, la radio, la scie. En Espagne on dirait « encender ».']],
+  mas_menos: [['Otro, sans « un »', "« Dame otro » = donne-m'en un autre. Jamais « un otro » : « otro » contient déjà le « un »."]],
+  herrajes: [['Pija ou tornillo ?', '« Tornillo » est le mot général pour une vis ; sur un chantier mexicain, les vis à bois et à gypse sont souvent des « pijas ».']],
+  cintas_adhesivos: [['Masking', 'Les mots anglais sont courants : « cinta masking », « cinta de ducto ». Tes employés les comprendront tout de suite.']],
+  material_electrico: [['Contacto', "Au Mexique, une prise électrique, c'est « un contacto » ; l'interrupteur, « el apagador »."]],
+  conexiones_plomeria: [['Gotear', '« Gotea » = ça dégoutte. Pour une grosse fuite : « hay una fuga ».']],
+  herramientas_corte: [['La hoja', "« La hoja » = la lame d'une scie (et aussi une feuille de papier ou de gypse !)."]],
+  molduras: [['Cuarenta y cinco', "Pour les coupes d'angle : « a cuarenta y cinco » (45°), « a noventa » (90°)."]],
+  mezcla: [['Aguado', "« Aguado » = trop liquide (avec trop d'eau). Le contraire : « muy seco » ou « muy duro »."]],
   hotel: [['Ne marche pas', "« No funciona » = ça ne marche pas. Très utile : « No funciona la regadera », « No funciona el wifi »."]],
 };
 /* Ordre d'apprentissage : la base et le voyage d'abord ; sur le chantier, les consignes
    et la sécurité avant les outils et les matériaux. Le tableau UNITS est trié selon cette liste. */
 const ORDER = [
   // Base
-  'saludos','cortesia','disculpas','presentarse','alfabeto','pronombres_pers','conversacion','articulos','demostrativos','tiempo','hora','adverbios_tiempo','lugares','preguntas','aprender_idiomas','palabras_clave','verbos','verbos_utiles','verbos_movimiento','llevar_traer','familia','semana','dias_relativos','estaciones','colores','describir','personalidad','cumplidos','formas_tamanos','opuestos','numeros2','numeros3','cantidades','meses','objetos','de_que_es','frutas_verduras',
+  'saludos','cortesia','necesito_quiero','respuestas','disculpas','presentarse','alfabeto','pronombres_pers','conversacion','articulos','demostrativos','tiempo','hora','horario','adverbios_tiempo','lugares','lugar_posicion','preguntas','aprender_idiomas','palabras_clave','verbos','verbos_utiles','prender_apagar','verbos_movimiento','llevar_traer','familia','semana','dias_relativos','estaciones','colores','describir','personalidad','cumplidos','formas_tamanos','opuestos','mas_menos','numeros2','numeros3','cantidades','meses','objetos','de_que_es','frutas_verduras',
   // Voyage
   'viaje','maleta','aeropuerto','abordar','avion','migracion','celular_viaje','ciudad','direcciones','cdmx','transporte','uber','autobus','autobus_largo','tren_ferry','dinero','casa_cambio','banco','restaurante','desayuno','cafeteria','reservar','restaurante2','comida_calle','mariscos','hotel','hospedaje','servicios','compras','mercado','artesanias','super','tiendita','playa','playa2','isla_mujeres','bacalar_holbox','playa_seguridad','vallarta','los_cabos','pesca','mazatlan','clima_tropical',
   'turismo','fotos','cultura','museo','ruinas','oaxaca','chiapas','san_miguel','puebla','guadalajara','taxco','valle_guadalupe','michoacan','veracruz','naturaleza','cenotes','temazcal_spa','aventura','camping','noche','bebidas','antro','espectaculos','fiesta','carro','rentar','carretera_cuota','accidente_carro','salud','farmacia','emergencias','seguridad_viaje','problemas_viaje','quejas','objetos_perdidos','experiencias','regreso',
@@ -7414,10 +7609,8 @@ const ORDER = [
   // Grammaire
   'ser_estar','que_cual','lo_que','estado_participio','presente','presente_er','irregulares','tener','tener_expr','hace_falta','gustar','como_gustar','poder_querer','reflexivos','verbos_cambio','reciprocos','posesivos','preposiciones','a_personal','adjetivos','diminutivos','comparativos','superlativos','muy_mucho','gerundio','pasado_progresivo','perifrasis','andar_gerundio',
   'futuro','pasado','preterito_el','pret_irreg','presente_perfecto','imperfecto','hace_tiempo','negativos','por_para','ordinales','prohibido','pronombres','pronombres_dobles','imperativo_tu','usted','ustedes_imp','usted_neg','conectores','relativos','preguntas_indirectas','conectores2','se_impersonal','se_accidental','futuro_simple','futuro_probabilidad','condicional','si_condicional','quisiera','subjuntivo','subjuntivo2','deseos',
-  // Chantier : d'abord parler avec l'équipe, ensuite les outils et les matériaux
-  'ordenes','junta','seguridad','altura','epp','primeros_auxilios','clima_obra','invierno_obra','planificar','problemas','evaluar','contratar','nomina','rh_empleo','cliente','cotizacion','extras','vecinos','verbos_obra','echar_mano','oficios',
-  'herramientas','manuales','electricas','mantenimiento_herr','medidas','medicion','fracciones','demolicion','tablaroca','resanes','plomeria','electricidad','tablero_electrico','pintura','tinte_barniz','carpinteria','maderas','puertas','ventanas','escaleras','ceramica','albanileria','cimientos','sotano','pisos','pisos_acabado',
-  'ventilacion','calefaccion','aislamiento','cocina_bano','cocina_instalar','bano_completo','exterior','techo','terraza','jardin','limpieza','entrega','ferreteria','material_cantidades','inspeccion','deficiencias','pendientes',
+  // Chantier : les mots du métier d'abord (outils, quincaillerie, matériaux), puis parler avec l'équipe
+  'herramientas','herrajes','ordenes','medidas','cintas_adhesivos','seguridad','manuales','material_electrico','conexiones_plomeria','herramientas_corte','molduras','mezcla','tablaroca','electricas','pintura','plomeria','carpinteria','junta','altura','epp','primeros_auxilios','clima_obra','invierno_obra','planificar','problemas','evaluar','contratar','nomina','rh_empleo','cliente','cotizacion','extras','vecinos','verbos_obra','echar_mano','oficios','mantenimiento_herr','medicion','fracciones','demolicion','resanes','electricidad','tablero_electrico','tinte_barniz','maderas','puertas','ventanas','escaleras','ceramica','albanileria','cimientos','sotano','pisos','pisos_acabado','ventilacion','calefaccion','aislamiento','cocina_bano','cocina_instalar','bano_completo','exterior','techo','terraza','jardin','limpieza','entrega','ferreteria','material_cantidades','inspeccion','deficiencias','pendientes',
 ];
 const rankOf = u => { const k = ORDER.indexOf(u.id); return k < 0 ? ORDER.length : k; };
 UNITS.sort((a, b) => rankOf(a) - rankOf(b));
@@ -7631,7 +7824,7 @@ const boostOn = () => S.boostUntil > Date.now();
 const floorOf = u => Math.min(FLOORS, Math.floor((S.done[u.id] || 0) / LPF));
 /* Trois parcours en parallèle (Chantier, Voyage, Quotidien) qui partent tous de l'unité de base */
 const TRACKS = [['Base', 'star'], ['Voyage', 'plane'], ['Quotidien', 'chat'], ['Grammaire', 'book'], ['Chantier', 'helmet']];
-const CHANTIER_AFTER = 'verbos'; // le chantier s'ouvre une fois l'étape 1 de cette unité de base terminée
+const CHANTIER_AFTER = 'saludos'; // le chantier s'ouvre une fois l'étape 1 de cette unité de base terminée
 function prereqOf(u) { const tr = UNITS.filter(x => x.tag === u.tag), j = tr.indexOf(u); return j > 0 ? tr[j - 1] : u.tag === 'Chantier' ? U(CHANTIER_AFTER) : UNITS[0]; }
 function unlocked(i) { const u = UNITS[i]; return i === 0 || (S.done[u.id] || 0) > 0 || (S.done[prereqOf(u).id] || 0) >= LPF; }
 
@@ -7851,6 +8044,18 @@ function goalCard() {
     <small>${t.lessons} / ${g} terminée${t.lessons > 1 ? 's' : ''}</small>
     <div class="pbar" style="margin-top:6px"><i style="width:${frac * 100}%"></i></div></div></div>`;
 }
+/* Le parcours Base mélange une leçon de base et une leçon de chantier, en alternance, pour les
+   12 premières unités du chantier (quand le chantier fait partie des intérêts). */
+const MIX_CHANTIER = 12;
+function trackUnits(tr) {
+  tr = tr || S.track;
+  if (tr !== 'Base') return [UNITS[0], ...UNITS.filter(u => u.tag === tr)];
+  const base = UNITS.filter(u => u.tag === 'Base');
+  if (!focusOn('Chantier')) return base;
+  const ch = UNITS.filter(u => u.tag === 'Chantier').slice(0, MIX_CHANTIER), out = [];
+  base.forEach((u, k) => { out.push(u); if (ch[k]) out.push(ch[k]); });
+  return out;
+}
 function pathView() {
   const due = dueItems();
   if (!focusOn(S.track)) S.track = 'Base';
@@ -7861,7 +8066,7 @@ function pathView() {
   h += `<div class="seg tracks" style="--n:${visibleTracks().length};margin-top:24px">${visibleTracks().map(([t, icn]) => {
     const tu = UNITS.filter(u => u.tag === t), dn = tu.filter(u => floorOf(u) >= FLOORS).length;
     return `<button class="${S.track === t ? 'on' : ''}" data-track="${t}">${ic(icn).replace('<svg', '<svg style="width:22px;height:22px;display:block;margin:0 auto 2px"')}${t === 'Grammaire' ? 'Gram&shy;maire' : t}<small>${dn}/${tu.length}</small></button>`; }).join('')}</div>`;
-  (S.track === 'Base' ? UNITS.filter(u => u.tag === 'Base') : [UNITS[0], ...UNITS.filter(u => u.tag === S.track)]).forEach((u, pos) => {
+  trackUnits().forEach((u, pos) => {
     const i = UNITS.indexOf(u);
     const open = unlocked(i), f = floorOf(u), n = S.done[u.id] || 0;
     const col = `--uc:var(--${u.color});--ud:var(--${u.color}-deep);--uc2:var(--${u.color === 'sun' ? 'sun-deep' : u.color})`;
@@ -8191,9 +8396,9 @@ function fieldDone() {
 
 /* ===================== ÉTIQUETTES À IMPRIMER ===================== */
 const LABEL_SETS = [
-  ['Outils', ['herramientas', 'manuales', 'electricas', 'medicion', 'mantenimiento_herr']],
-  ['Matériaux', ['tablaroca', 'pintura', 'carpinteria', 'ceramica', 'albanileria', 'cimientos', 'material_cantidades', 'pisos', 'ventilacion', 'aislamiento', 'demolicion', 'techo', 'ventanas', 'sotano', 'terraza', 'cocina_instalar', 'maderas', 'pisos_acabado', 'tinte_barniz']],
-  ['Plomberie et électricité', ['plomeria', 'electricidad', 'bano_completo', 'cocina_bano', 'tablero_electrico', 'calefaccion']],
+  ['Outils', ['herramientas', 'manuales', 'electricas', 'medicion', 'mantenimiento_herr', 'herramientas_corte', 'herrajes']],
+  ['Matériaux', ['tablaroca', 'pintura', 'carpinteria', 'ceramica', 'albanileria', 'cimientos', 'material_cantidades', 'pisos', 'ventilacion', 'aislamiento', 'demolicion', 'techo', 'ventanas', 'sotano', 'terraza', 'cocina_instalar', 'maderas', 'pisos_acabado', 'tinte_barniz', 'cintas_adhesivos', 'mezcla', 'molduras']],
+  ['Plomberie et électricité', ['plomeria', 'electricidad', 'bano_completo', 'cocina_bano', 'tablero_electrico', 'calefaccion', 'material_electrico', 'conexiones_plomeria']],
   ['Maison', ['casa', 'puertas', 'objetos', 'cocinar', 'escaleras']],
   ['Sécurité', ['seguridad', 'primeros_auxilios', 'altura', 'epp']],
 ];
@@ -9763,6 +9968,29 @@ const STORIES = [
     {w:'Marc', es:'Sí, y pide el recibo. El MDF lo usamos después para los cajones del clóset.', fr:"Oui, et demande le reçu. Le MDF, on l'utilisera plus tard pour les tiroirs du garde-robe."},
     {q:'Que doit acheter Luis ?', o:['Du contreplaqué extérieur de 3/4', 'Du MDF plus épais', 'Des planches de pin']},
     {w:'Luis', es:'Ahorita regreso, jefe.', fr:'Je reviens tout de suite, patron.'}]},
+  {id:'pijas', es:'Pijas y taquetes', fr:'Vis et chevilles', unit:'herrajes', color:'sun', lines:[
+    {w:'', es:'José tiene que colgar los gabinetes del baño en una pared de concreto.', fr:'José doit accrocher les armoires de la salle de bain sur un mur de béton.'},
+    {w:'José', es:'Jefe, las pijas no agarran. La pared es de concreto.', fr:'Patron, les vis ne tiennent pas. Le mur est en béton.'},
+    {w:'Marc', es:'Claro. Primero haz el hoyo con la broca para concreto, y pon un taquete.', fr:"Bien sûr. D'abord, fais le trou avec la mèche à béton, et mets une cheville."},
+    {q:'Que faut-il mettre avant la vis dans le béton ?', o:['Une cheville', 'Une rondelle', 'De la colle']},
+    {w:'José', es:'¿De qué tamaño el taquete?', fr:'De quelle grandeur, la cheville ?'},
+    {w:'Marc', es:'De un cuarto, con pijas de dos pulgadas. Y ponle rondana.', fr:'Un quart, avec des vis de deux pouces. Et mets une rondelle.'},
+    {w:'', es:'José trabaja un rato. Luego llama a Marc.', fr:'José travaille un moment. Puis il appelle Marc.'},
+    {w:'José', es:'Este tornillo está barrido. No entra ni sale.', fr:"Cette vis est foirée. Elle n'entre pas et ne sort pas."},
+    {w:'Marc', es:'Ni modo. Usa la otra punta del desarmador y sácalo con cuidado.', fr:"Tant pis. Prends l'autre embout du tournevis et sors-la doucement."},
+    {q:'Quel est le problème de la vis ?', o:['Elle est foirée', 'Elle est trop longue', 'Elle est perdue']},
+    {w:'José', es:'Listo, jefe. Los gabinetes ya están bien firmes.', fr:"C'est fait, patron. Les armoires sont bien solides."}]},
+  {id:'mezcla_aguada', es:'Mucha agua', fr:"Trop d'eau", unit:'mezcla', color:'teal', lines:[
+    {w:'', es:'Luis prepara la mezcla para pegar unos bloques en el garaje.', fr:'Luis prépare le mélange pour poser des blocs dans le garage.'},
+    {w:'Luis', es:'Jefe, ¿cuánta agua le pongo?', fr:"Patron, combien d'eau je mets ?"},
+    {w:'Marc', es:'Poco a poco. Una de cemento por tres de arena, y el agua al final.', fr:"Petit à petit. Une part de ciment pour trois de sable, et l'eau à la fin."},
+    {q:'Quelle est la proportion ?', o:['1 de ciment pour 3 de sable', '3 de ciment pour 1 de sable', 'Moitié-moitié']},
+    {w:'', es:'Diez minutos después…', fr:'Dix minutes plus tard…'},
+    {w:'Marc', es:'Uy, Luis, la mezcla está muy aguada. No va a aguantar los bloques.', fr:'Oh, Luis, le mélange est trop liquide. Il ne tiendra pas les blocs.'},
+    {w:'Luis', es:'Perdón, le eché demasiada agua.', fr:"Désolé, j'ai mis trop d'eau."},
+    {w:'Marc', es:'No pasa nada. Agrégale un poco más de cemento y arena.', fr:"Ce n'est pas grave. Ajoutes-y un peu plus de ciment et de sable."},
+    {q:'Comment Marc corrige-t-il le mélange ?', o:['Ajouter du ciment et du sable', "Ajouter de l'eau", 'Tout jeter']},
+    {w:'Marc', es:'Y úsala antes de que fragüe. Al terminar, lava la revolvedora.', fr:"Et utilise-le avant qu'il prenne. En finissant, lave la bétonnière."}]},
 ];
 /* ===================== HISTOIRES ===================== */
 const storyOpen = st => unlocked(UNITS.findIndex(u => u.id === st.unit));
@@ -10081,8 +10309,8 @@ function weekDaysStr() {
   return [0, 1, 2, 3, 4, 5, 6].map(k => { const d = new Date(ws); d.setDate(d.getDate() + k); return (S.hist || {})[dayKey(d)] > 0 ? '1' : '0'; }).join('');
 }
 function currentUnitTitle() {
-  const i = UNITS.findIndex((u, k) => unlocked(k) && floorOf(u) < FLOORS && (S.track === 'Base' ? u.tag === 'Base' : u.tag === S.track || u.tag === 'Base'));
-  const u = UNITS[i >= 0 ? i : UNITS.findIndex((x, k) => unlocked(k) && floorOf(x) < FLOORS)];
+  const cand = trackUnits().find(x => unlocked(UNITS.indexOf(x)) && floorOf(x) < FLOORS);
+  const u = cand || UNITS.find((x, k) => unlocked(k) && floorOf(x) < FLOORS);
   return u ? (u.es + ' · ' + u.fr).slice(0, 80) : 'Tout est terminé !';
 }
 function familyCard() {
