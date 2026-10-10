@@ -1,5 +1,5 @@
 // Paso a Paso : fonctionne hors ligne. L'app se met à jour en arrière-plan à chaque ouverture avec réseau.
-const CACHE = 'paso-v1791598133219';
+const CACHE = 'paso-v1791598775860';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

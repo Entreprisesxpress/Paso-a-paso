@@ -154,11 +154,12 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .stat svg{width:28px;height:28px;flex:none}
 .stat b{font-family:var(--font-display);font-size:22px;display:block;line-height:1;font-variant-numeric:tabular-nums}
 .stat small{color:var(--muted);font-size:12px;font-weight:700}
-.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
 .badge{display:grid;justify-items:center;text-align:center;gap:6px;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:12px 6px}
 .badge .medal{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--bc);box-shadow:0 4px 0 var(--bd);color:var(--on)}
 .badge .medal svg{width:28px;height:28px}
-.badge b{font-size:13px;font-weight:800;line-height:1.15}
+.badge b{font-size:13px;font-weight:800;line-height:1.15;overflow-wrap:anywhere;hyphens:auto}
+.badge small{overflow-wrap:anywhere}
 .badge small{font-size:11px;color:var(--muted);line-height:1.2}
 .badge.locked .medal{--bc:var(--lock);--bd:var(--lock-deep);color:var(--muted)}
 .badge.locked b{color:var(--muted)}
@@ -233,6 +234,9 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .fb .txt{min-width:0}
 .fb h3{font-size:24px;font-weight:800}
 .checkbar.ok .fb h3{color:var(--ok-deep)} .checkbar.bad .fb h3{color:var(--bad-deep)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .checkbar.bad .fb h3,:root:not([data-theme="light"]) .checkbar.bad .fb p{color:var(--bad)}:root:not([data-theme="light"]) .checkbar.ok .fb h3,:root:not([data-theme="light"]) .checkbar.ok .fb p{color:var(--ok)}}
+:root[data-theme="dark"] .checkbar.bad .fb h3,:root[data-theme="dark"] .checkbar.bad .fb p{color:var(--bad)}
+:root[data-theme="dark"] .checkbar.ok .fb h3,:root[data-theme="dark"] .checkbar.ok .fb p{color:var(--ok)}
 .checkbar.ok .fb p,.checkbar.bad .fb p{margin:2px 0 0;font-weight:700}
 .checkbar.ok .fb p{color:var(--ok-deep)} .checkbar.bad .fb p{color:var(--bad-deep)}
 .fb .note{font-weight:600!important;font-size:14px;color:var(--ink)!important;opacity:.85}
@@ -438,6 +442,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .hf-set{display:grid;gap:6px;margin-top:14px}
 .hf-set > b{font-family:var(--font-display);font-size:17px}
 .hf-set .seg{margin-top:0}
+.hf-seg button{min-width:0;overflow-wrap:anywhere;font-size:clamp(12px,3.6vw,16px);padding-inline:2px}
 .hf-now{text-align:center;display:grid;gap:10px;justify-items:center;padding-block:22px 10px;min-height:220px;align-content:center}
 .hf-now .phase{font-family:var(--font-display);font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
 .hf-now .es{font-family:var(--font-display);font-size:34px;font-weight:800;line-height:1.15;overflow-wrap:anywhere}
@@ -571,9 +576,11 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:
 .fam-unit b{color:var(--ink)}
 .lbl-link{display:flex;align-items:center;gap:6px;margin:12px auto 0;background:none;border:0;color:var(--muted);font:inherit;font-weight:800;font-size:14px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .lbl-link svg{width:16px;height:16px}
-.lbl-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.lbl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
 .lbl{border:2px dashed var(--line);border-radius:12px;padding:12px 8px;text-align:center;background:var(--surface)}
-.lbl b{display:block;font-family:var(--font-display);font-size:20px;line-height:1.1}
+.lbl b{display:block;font-family:var(--font-display);font-size:clamp(15px,4.8vw,20px);line-height:1.1;overflow-wrap:anywhere;hyphens:auto}
+.lbl small{overflow-wrap:anywhere}
+#labels .seg button{min-width:0;overflow-wrap:anywhere;font-size:clamp(12px,3.6vw,16px)}
 .lbl small{color:var(--muted);font-weight:700}
 #print-area{display:none}
 @media print{
@@ -7864,14 +7871,18 @@ const ARTICLE = /^(el|la|los|las|un|una|unos|unas) /;
 function typedVerdict(v, it) {
   const a = loose(v), b = loose(it.es);
   if (!a) return { ok: false };
-  const other = ALL.some(o => o !== it && loose(o.es) === a);
   if (a === b) return { ok: true, close: false };
+  // autre bonne traduction du même mot français (le médecin = el médico / el doctor)
+  const syn = ALL.find(o => o !== it && loose(o.es) === a && loose(o.fr) === loose(it.fr));
+  if (syn) return { ok: true, close: true, note: `Aussi correct ! La réponse attendue ici : « ${esc(it.es)} ».` };
+  const other = ALL.some(o => o !== it && loose(o.es) === a);
   if (other) return { ok: false };
   // trabajo / trabaja, vives / vive, grande / granda : une terminaison changée, c'est de la grammaire, pas une faute de frappe
   const A = a.split(' '), B = b.replace(ARTICLE, '').split(' '), B0 = b.split(' ');
   const gram = (w, y) => { if (w === y || Math.min(w.length, y.length) < 3) return false; let k = 0; while (k < w.length && k < y.length && w[k] === y[k]) k++; const rw = w.slice(k), ry = y.slice(k), E = /^[aeiou]?s?n?$/; return k >= 2 && rw.length <= 2 && ry.length <= 2 && E.test(rw) && E.test(ry); };
   const endSwap = (X, Y) => X.length === Y.length && X.some((w, i) => gram(w, Y[i]));
   if (endSwap(A, B0) || endSwap(A, B)) return { ok: false };
+  if (ARTICLE.test(b) && ARTICLE.test(a) && a.split(' ')[0] !== b.split(' ')[0]) return { ok: false }; // el / la : le genre compte
   if (ARTICLE.test(b) && a === b.replace(ARTICLE, '')) return { ok: true, close: true, note: `N'oublie pas l'article : on dit « ${esc(it.es)} ».` };
   const allowed = b.length <= 4 ? 0 : b.length <= 9 ? 1 : b.length <= 20 ? 2 : 3;
   const d = Math.min(editDist(a, b), ARTICLE.test(b) ? editDist(a, b.replace(ARTICLE, '')) + 1 : 99);
@@ -8256,6 +8267,7 @@ function pathView() {
   if (!focusOn(S.track)) S.track = 'Base';
   let h = focusCard() + challengeBanner() + goalCard();
   h += fieldCard();
+  if (frozeNotice) setTimeout(() => { frozeNotice = 0; }, 0);
   if (frozeNotice) h += `<div class="notice"><b>Ta série est sauvée</b>${frozeNotice > 1 ? frozeNotice + ' gels de série ont été utilisés' : 'Un gel de série a été utilisé'} pour ton absence.</div>`;
   if (due.length >= 3) h += `<div class="review"><div class="txt"><b>Révision</b><small>${due.length} mots à revoir avant de les oublier</small></div><button class="btn small teal" id="go-review">Réviser</button></div>`;
   h += `<div class="seg tracks" style="--n:${visibleTracks().length};margin-top:24px">${visibleTracks().map(([t, icn]) => {
@@ -8265,7 +8277,7 @@ function pathView() {
     const i = UNITS.indexOf(u);
     const open = unlocked(i), f = floorOf(u), n = S.done[u.id] || 0;
     const col = `--uc:var(--${u.color});--ud:var(--${u.color}-deep);--uc2:var(--${u.color === 'sun' ? 'sun-deep' : u.color})`;
-    h += `<div class="unit-banner${open ? '' : ' locked'}" style="${open ? col : ''}">
+    h += `<div class="unit-banner${open ? '' : ' locked'}" style="${open ? col + (u.color === 'sun' ? ';color:var(--sun-ink)' : '') : ''}">
       <div class="txt"><div class="eyebrow">Unité ${pos + 1} · ${u.tag}</div><h2>${esc(u.es)}</h2><p>${esc(u.fr)}</p></div>
       ${open ? `<button class="lexbtn" data-lex="${u.id}" style="${u.color === 'sun' ? 'color:var(--sun-ink)' : ''}">Guide</button>` : ic('lock').replace('<svg', '<svg style="width:30px;height:30px;flex:none"')}</div>
       <div class="floors" style="${col}">`;
@@ -8602,7 +8614,21 @@ function labelItems(k) {
   const seen = new Set();
   return LABEL_SETS[k][1].map(U).filter(Boolean).flatMap(u => u.items).filter(it => !isSentence(it) && !/^a /i.test(it.es) && !seen.has(it.es) && seen.add(it.es));
 }
+/* Bouton Retour d'Android / du navigateur : il ferme l'écran ouvert au lieu de quitter l'app. */
+let screenPushed = false;
+function pushScreen() { if (screenPushed) return; try { history.pushState({ paso: 1 }, ''); screenPushed = true; } catch (e) {} }
+const SCREENS = [['#lesson', '#quit'], ['#done', '#back'], ['#arcade', '#arc-quit'], ['#story', '#st-quit'], ['#cahier', '#ch-close'], ['#labels', '#lb-close'], ['#audio', '#hf-close'], ['#famille', '#fam-close'], ['#chat', '#chat-close']];
+addEventListener('popstate', () => {
+  screenPushed = false;
+  if ($('#layer').innerHTML.trim()) { $('#layer').innerHTML = ''; pushScreen(); return; }
+  const open = SCREENS.find(([w]) => $(w) && !$(w).hidden);
+  if (!open) { if (tab !== 'path') { tab = 'path'; render(); window.scrollTo(0, 0); } return; }
+  const btn = $(open[1]);
+  if (btn) btn.click(); else { SCREENS.forEach(([w]) => { if ($(w)) $(w).hidden = true; }); showHome(); }
+  if (SCREENS.some(([w]) => $(w) && !$(w).hidden)) pushScreen(); // écran à plusieurs niveaux (cahier) : on reste dedans
+});
 function openLabels() {
+  pushScreen();
   LB = { set: 0 };
   $('#home').hidden = true; $('#tabs').hidden = true; $('#labels').hidden = false;
   SFX.tap(); drawLabels(); window.scrollTo(0, 0);
@@ -8630,10 +8656,10 @@ function drawLabels() {
    indépendamment de la révision « due » (qui, elle, attend que l'oubli guette). */
 const RF_KEY = 'pasoapaso.rf';
 const rfTrack = () => { try { return localStorage.getItem(RF_KEY) || 'all'; } catch (e) { return 'all'; } };
-const learnedIn = tr => seenItems().filter(it => tr === 'all' || (U(it.unit) && U(it.unit).tag === tr));
+const learnedIn = tr => seenItems().filter(it => U(it.unit) && focusOn(U(it.unit).tag) && (tr === 'all' || U(it.unit).tag === tr));
 function reinforceCard() {
   const all = seenItems().length;
-  let tr = rfTrack(); if (tr !== 'all' && learnedIn(tr).length < 4) tr = 'all';
+  let tr = rfTrack(); if (tr !== 'all' && (!focusOn(tr) || learnedIn(tr).length < 4)) tr = 'all';
   const n = learnedIn(tr).length;
   const chips = [['all', 'Tout']].concat(visibleTracks().map(([t]) => [t, t])).filter(([k]) => k === 'all' || learnedIn(k).length >= 4);
   return `<div class="rf-card"><div class="rf-top"><div class="art">${ic('target')}</div><div class="txt"><b>Renforcer mes mots</b>
@@ -8642,7 +8668,7 @@ function reinforceCard() {
     ${chips.length > 2 ? `<div class="rf-chips">${chips.map(([k, l]) => `<button class="${k === tr ? 'on' : ''}" data-rf="${k}">${l}</button>`).join('')}</div>` : ''}</div>`;
 }
 function startReinforce() {
-  let tr = rfTrack(); if (tr !== 'all' && learnedIn(tr).length < 4) tr = 'all';
+  let tr = rfTrack(); if (tr !== 'all' && (!focusOn(tr) || learnedIn(tr).length < 4)) tr = 'all';
   const weak = learnedIn(tr).sort((a, b) => weakness(a) - weakness(b)).slice(0, 24);
   startLesson(null, false, { pool: shuffle(weak).slice(0, 10) });
 }
@@ -8833,13 +8859,14 @@ function conjugate(v) {
   const imper = v.noImp ? null : { tu: v.it || pres[2], usted: subj[2], ustedes: subj[4], neg: 'no ' + subj[1] };
   return { pres, pret, imp, fut, cond, subj, imper, pp, gr };
 }
-const TENSES = [['pres', 'Présent', 'je parle, je parle en ce moment'], ['pret', 'Prétérit (passé)', "hier, j'ai parlé — action terminée"], ['imp', 'Imparfait', 'je parlais, avant, en général'],
-  ['fut', 'Futur', 'je parlerai'], ['cond', 'Conditionnel', 'je parlerais'], ['subj', 'Subjonctif présent', 'que je parle (après « quiero que », « ojalá »…)']];
-const verbKind = v => v.o || v.fs || v.ss || v.it ? 'Irrégulier' : v.t ? `Radical ${v.t === 'ie' ? 'e → ie' : v.t === 'ue' ? 'o → ue' : 'e → i'}` : v.uir ? 'Ajoute un y' : 'Régulier';
+const TENSES = [['pres', 'Présent', "aujourd'hui, en ce moment, d'habitude"], ['pret', 'Prétérit (passé)', 'hier, une action terminée'], ['imp', 'Imparfait', 'avant, en général, le décor du passé'],
+  ['fut', 'Futur', 'plus tard, demain'], ['cond', 'Conditionnel', 'si…, poliment (je voudrais…)'], ['subj', 'Subjonctif présent', 'après « quiero que », « ojalá », « para que »…']];
+const verbKind = v => v.o || v.fs || v.ss || v.it ? 'Irrégulier' : v.t ? `Radical ${v.t === 'ie' ? 'e → ie' : v.t === 'ue' ? 'o → ue' : 'e → i'}` : v.uir ? 'Ajoute un y' : v.pp ? 'Participe irrégulier' : 'Régulier';
 
 let CB = null;
 const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 function openCahier(tab, id) {
+  pushScreen();
   CB = { tab: tab || 'gram', ch: tab === 'gram' ? id || null : null, verb: tab === 'verb' ? id || null : null, q: '' };
   $('#layer').innerHTML = '';
   $('#home').hidden = true; $('#tabs').hidden = true; $('#cahier').hidden = false;
@@ -8951,6 +8978,7 @@ function hfQueue(src) {
   return weak.concat(shuffle(pool.filter(it => !weak.includes(it))));
 }
 function openHandsFree() {
+  pushScreen();
   if (hasSpeech) speechSynthesis.cancel();
   HF = { prefs: hfPrefs(), running: false };
   $('#home').hidden = true; $('#tabs').hidden = true; $('#audio').hidden = false;
@@ -8958,7 +8986,7 @@ function openHandsFree() {
 }
 function drawHF() {
   if (['Voyage', 'Chantier'].includes(HF.prefs.src) && !focusOn(HF.prefs.src)) HF.prefs.src = 'seen';
-  const p = HF.prefs, seg = (key, opts) => `<div class="seg" style="grid-template-columns:repeat(${opts.length},1fr)">${opts.map(([v, l, sub]) => `<button class="${p[key] === v ? 'on' : ''}" data-hfset="${key}" data-v="${v}">${l}${sub ? `<small>${sub}</small>` : ''}</button>`).join('')}</div>`;
+  const p = HF.prefs, seg = (key, opts) => `<div class="seg hf-seg" style="grid-template-columns:repeat(${opts.length},minmax(0,1fr))">${opts.map(([v, l, sub]) => `<button class="${p[key] === v ? 'on' : ''}" data-hfset="${key}" data-v="${v}">${l}${sub ? `<small>${sub}</small>` : ''}</button>`).join('')}</div>`;
   let h = `<div class="lesson-top"><button class="x" id="hf-close" aria-label="Fermer l'écoute">${ic('close')}</button><b style="font-family:var(--font-display);font-size:20px;flex:1">Écoute mains libres</b></div>`;
   if (!HF.running) {
     h += `<div class="hf-set"><b>Quoi écouter</b>${seg('src', [['seen', 'Mes mots', 'déjà vus'], ...['Voyage', 'Chantier'].filter(focusOn).map(t => [t, t]), ['stories', 'Histoires']])}</div>
@@ -8972,7 +9000,7 @@ function drawHF() {
     const mins = Math.floor((Date.now() - HF.t0) / 60000);
     h += `<div class="hf-now">${c.title ? `<span class="phase">Histoire</span><span class="es">${esc(c.title)}</span><span class="fr">${esc(c.fr)}</span>`
       : `<span class="phase">${esc(HF.phase || '')}</span>${c.w ? `<span class="who">${esc(c.w)}</span>` : ''}<span class="es">${HF.showEs ? esc(c.es || '') : '…'}</span><span class="fr">${esc(c.fr || '')}</span>`}</div>
-      <div class="hf-ctl"><button id="hf-prev" aria-label="Précédent">${ic('prev')}</button><button class="main" id="hf-toggle" aria-label="${HF.paused ? 'Reprendre' : 'Pause'}">${ic(HF.paused ? 'play' : 'pause')}</button><button id="hf-next" aria-label="Suivant">${ic('next')}</button></div>
+      <div class="hf-ctl"><button id="hf-prev" aria-label="Précédent">${ic('prev')}</button><button class="main" id="hf-toggle" aria-label="${HF.tok && HF.tok.paused ? 'Reprendre' : 'Pause'}">${ic(HF.tok && HF.tok.paused ? 'play' : 'pause')}</button><button id="hf-next" aria-label="Suivant">${ic('next')}</button></div>
       <div class="hf-stats"><span>${HF.count} phrase${HF.count > 1 ? 's' : ''}</span><span>${mins} min</span></div>
       <button class="btn line wide" id="hf-stop" style="margin-top:22px">Terminer l'écoute</button>`;
   }
@@ -9056,6 +9084,7 @@ function examPrompt(u) {
   $('#exam-go').onclick = () => { $('#layer').innerHTML = ''; startLesson(u, true); };
 }
 function startLesson(unit, exam, opts) {
+  pushScreen();
   const b = exam ? { queue: shuffle(unit.items).map(it => ({ t: pick(typesFor(it, 3)), it })), fresh: [], floor: 3 } : buildLesson(unit, opts);
   L = { unit, floor: b.floor, queue: b.queue, fresh: b.fresh, pos: 0, total: b.queue.length, answered: 0, correct: 0, firstOk: 0,
         results: {}, xp: 0, combo: 0, best: 0, typed: 0, listen: 0, exam: !!exam, lives: 3 };
@@ -9100,7 +9129,7 @@ function feedback(ok, it, extra) {
     L.correct++; L.combo++; L.best = Math.max(L.best, L.combo);
     L.xp += 2 + (L.combo >= 5 ? 1 : 0) + (L.combo >= 10 ? 1 : 0);
     if (!ex.retry) L.firstOk++;
-    if (ex.t === 'type') L.typed++;
+    if (ex.t === 'type' || ex.typed) L.typed++;
     if (ex.t === 'listen' || ex.t === 'listenBuild') L.listen++;
     SFX.ok();
   } else {
@@ -9209,6 +9238,7 @@ const RENDER = {
     $('#no-mic').onclick = () => { if (graded) return; graded = true; S.noSpeakUntil = Date.now() + 15 * 60000; saveLocal(); toast('Pas de prononciation pendant 15 minutes.'); skipSpeak(); };
   },
   type(ex) {
+    ex.typed = true;
     const it = ex.it;
     $('#stage').innerHTML = `<div class="prompt-label">Écris en espagnol</div>${scene(`<span class="fr">« ${esc(it.fr)} »</span>`)}
       <textarea class="type-box" id="answer" rows="2" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="es" placeholder="Écris en espagnol"></textarea>
@@ -9377,6 +9407,7 @@ function arcadePool() {
   return seen.length >= 8 ? seen : open.length >= 8 ? open : ALL.filter(it => !isSentence(it)).slice(0, 24);
 }
 function openArcade(target) {
+  pushScreen();
   A = { target: target && target.score != null ? target : null, pool: arcadePool(), score: 0, combo: 0, best: 0, ends: Date.now() + 60000, lock: false, timer: null, answered: 0, right: 0, last: null };
   $('#home').hidden = true; $('#tabs').hidden = true; $('#arcade').hidden = false;
   SFX.tap(); window.scrollTo(0, 0); arcadeQ();
@@ -10235,6 +10266,7 @@ function whoStyle(st, who) {
   return { pitch: PITCHES[k % PITCHES.length], color: WHO_COLORS[k % WHO_COLORS.length] };
 }
 function openStory(st) {
+  pushScreen();
   ST = { st, i: 1, answered: {}, mistakes: 0, showFr: {}, order: {}, fresh: 0 };
   $('#home').hidden = true; $('#tabs').hidden = true; $('#story').hidden = false;
   SFX.tap(); drawStory(); window.scrollTo(0, 0); speakLine(st.lines[0]);
@@ -10557,6 +10589,7 @@ async function loadFamily() {
   FAM.loading = false; drawFamily();
 }
 function openFamily() {
+  pushScreen();
   $('#home').hidden = true; $('#tabs').hidden = true; $('#famille').hidden = false;
   SFX.tap(); window.scrollTo(0, 0); loadFamily();
 }
@@ -10841,6 +10874,7 @@ Réponds UNIQUEMENT avec un objet JSON, sans autre texte :
 function openScene(sc) {
   if (!SAMPLE) return;
   CH = { sc, turns: [], view: [], busy: false, err: '', sugs: [], ctl: null };
+  pushScreen();
   $('#home').hidden = true; $('#tabs').hidden = true; $('#chat').hidden = false;
   SFX.tap(); drawChat(); window.scrollTo(0, 0);
   ask('(Début de la scène : dis ta première réplique.)', null);
